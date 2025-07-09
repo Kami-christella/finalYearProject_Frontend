@@ -3,6 +3,9 @@ import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import './App.css';
 // import Home from './components/Home';
 import AdvisorDashboard from './components/AdvisorDashboard ';
+import LandingPage from './components/LandingPage';
+import { Signup } from './components/Signup';
+import  {Login}from './components/Login'
 import Layout from './components/Layout';
 // import Contact from './components/contact';
 // import Services from './components/Services';
@@ -28,7 +31,9 @@ function App() {
       <Routes>
         {/* Public Routes */}
         <Route path='/' element={<Layout />}>
-          <Route index element={<AdvisorDashboard/>} />
+          <Route index element={<LandingPage/>} />
+          <Route path='Signup' element={<Signup />} />
+          <Route path='Login' element={<Login />} />
           {/* <Route path='Signup' element={<Signup />} />
           <Route path='Login' element={<Login />} />
           <Route path='About' element={<About />} />
