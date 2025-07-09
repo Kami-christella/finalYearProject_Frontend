@@ -1,35 +1,63 @@
-import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from '/vite.svg'
-import './App.css'
+//import { useState } from 'react';
+import { BrowserRouter, Routes, Route } from 'react-router-dom';
+import './App.css';
+// import Home from './components/Home';
+import AdvisorDashboard from './components/AdvisorDashboard ';
+import Layout from './components/Layout';
+// import Contact from './components/contact';
+// import Services from './components/Services';
+// import Login from './components/Login';
+// import Signup from './components/Signup';
+// import About from './components/About';
+// import DashboardLayout from './Dashboard/DashboardLayout';
+// // CareerTest from './components/CareerTest';
+// import CareerTest from './Dashboard/CareerTest';
+// //import Navbar2 from './components/Navbar2';
+// import Assessment2 from './Dashboard/Assessment2';
+// import Assesment3 from './Dashboard/Assessment3';
+// import Results from './Dashboard/Results';
+// import Settings from './Dashboard/Settings';
+// import Profile from './Dashboard/Profile'
+// import { AuthProvider } from './Dashboard/context/AuthContext';
+
 
 function App() {
-  const [count, setCount] = useState(0)
-
   return (
-    <>
-      <div>
-        <a href="https://vite.dev" target="_blank">
-          <img src={viteLogo} className="logo" alt="Vite logo" />
-        </a>
-        <a href="https://react.dev" target="_blank">
-          <img src={reactLogo} className="logo react" alt="React logo" />
-        </a>
-      </div>
-      <h1>Vite + React</h1>
-      <div className="card">
-        <button onClick={() => setCount((count) => count + 1)}>
-          count is {count}
-        </button>
-        <p>
-          Edit <code>src/App.jsx</code> and save to test HMR
-        </p>
-      </div>
-      <p className="read-the-docs">
-        Click on the Vite and React logos to learn more
-      </p>
-    </>
-  )
+    // <AuthProvider>
+    <BrowserRouter>
+      <Routes>
+        {/* Public Routes */}
+        <Route path='/' element={<Layout />}>
+          <Route index element={<AdvisorDashboard/>} />
+          {/* <Route path='Signup' element={<Signup />} />
+          <Route path='Login' element={<Login />} />
+          <Route path='About' element={<About />} />
+          <Route path='Contact' element={<Contact />} />
+          <Route path='Services' element={<Services />} /> */}
+        </Route>
+
+        {/* Dashboard Routes (Protected) */}
+
+        {/* <Route path='/dashboard' element={<DashboardLayout />}>
+          <Route index element={<CareerTest />} />
+          <Route path='assessment2' element={<Assessment2 />} />
+          <Route path='Assessment2/assessment3' element={<Assesment3 />} />
+          <Route path='Assessment2/assessment3/Results' element={<Results />} />
+          <Route path='Settings' element={<Settings />} />
+          <Route path='Profile' element={<Profile />} />
+         
+        </Route> */}
+
+       {/* <Route path='/admindashboard' element={<AdminDashboardLayout/>}>
+       <Route index element={<AdminPage />} />
+       <Route path='adminSettings' element={<AdminSettings />} />
+       
+       </Route> */}
+
+      </Routes>
+    </BrowserRouter>
+    // </AuthProvider>
+  );
 }
 
-export default App
+export default App;
