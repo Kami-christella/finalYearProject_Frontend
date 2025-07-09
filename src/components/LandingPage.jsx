@@ -171,10 +171,12 @@
 // export default LandingPage;
 import React, { useState, useEffect, useRef } from 'react';
 import PropTypes from 'prop-types';
+import { useNavigate } from 'react-router-dom';
 import '../components/styles/LandingPage.css'
 // import LandingPage from './LandingPage';
 
 const LandingPage = () => {
+  const navigate = useNavigate();
   const [isScrolled, setIsScrolled] = useState(false);
   const statsRef = useRef(null);
   const [statsAnimated, setStatsAnimated] = useState(false);
@@ -294,7 +296,7 @@ const LandingPage = () => {
             className="cta-btn" 
             onClick={(e) => {
               handleButtonClick(e);
-              smoothScroll('signup');
+              navigate('Signup');
             }}
           >
             Get Started
