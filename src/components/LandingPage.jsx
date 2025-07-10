@@ -3,7 +3,6 @@ import React, { useState, useEffect, useRef } from 'react';
 import PropTypes from 'prop-types';
 import { useNavigate } from 'react-router-dom';
 import '../components/styles/LandingPage.css'
-// import LandingPage from './LandingPage';
 
 const LandingPage = () => {
   const navigate = useNavigate();
@@ -153,7 +152,7 @@ const LandingPage = () => {
               className="btn-primary pulse" 
               onClick={(e) => {
                 handleButtonClick(e);
-                smoothScroll('assessment');
+                navigate('StudentProfile')
               }}
             >
               Start Assessment

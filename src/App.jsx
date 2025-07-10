@@ -7,6 +7,7 @@ import LandingPage from './components/LandingPage';
 import { Signup } from './components/Signup';
 import  {Login}from './components/Login'
 import Layout from './components/Layout';
+import StudentProfile from './components/StudentProfile ';
 // import Contact from './components/contact';
 // import Services from './components/Services';
 // import Login from './components/Login';
@@ -34,6 +35,7 @@ function App() {
           <Route index element={<LandingPage/>} />
           <Route path='Signup' element={<Signup />} />
           <Route path='Login' element={<Login />} />
+          <Route path='StudentProfile' element={<StudentProfile/>} />
           {/* <Route path='Signup' element={<Signup />} />
           <Route path='Login' element={<Login />} />
           <Route path='About' element={<About />} />
