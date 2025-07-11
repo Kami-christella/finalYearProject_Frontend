@@ -1,6 +1,7 @@
 // components/Login.jsx
 import React, { useState } from 'react';
 import '../components/styles/auth.css'
+import { Notify } from 'notiflix';
 
 const Login = () => {
   const [formData, setFormData] = useState({
@@ -24,7 +25,7 @@ const Login = () => {
     setError('');
 
     try {
-      const response = await fetch('/api/login', {
+      const response = await fetch('http://localhost:5000/api/login', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json'
@@ -46,10 +47,11 @@ const Login = () => {
         
         // For demonstration - in real app, handle tokens securely
         console.log('Login successful:', userData);
-        
+        Notify.success('Login successful')
         // Redirect to dashboard
         window.location.href = '/dashboard';
       } else {
+        Notify.failure('Login failed')
         setError(data.msg || 'Login failed');
       }
     } catch (err) {

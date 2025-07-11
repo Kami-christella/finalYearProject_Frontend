@@ -1,6 +1,7 @@
 // components/Signup.jsx
 import React, { useState } from 'react';
 import '../components/styles/auth.css'
+import { Notify } from 'notiflix';
 
 const Signup = () => {
   const [formData, setFormData] = useState({
@@ -105,10 +106,11 @@ const Signup = () => {
       if (response.ok) {
         // For demonstration - in real app, handle tokens securely
         console.log('Registration successful:', data);
-        
+        Notify.success('Registration successful, you can Now Login')
         // Redirect to profile creation
-        window.location.href = '/StudentProfile';
+        window.location.href = '/Login';
       } else {
+        Notify.failure('Registration failed')
         setError(data.msg || 'Registration failed');
       }
     } catch (err) {
@@ -328,7 +330,7 @@ const Signup = () => {
           {/* Footer */}
           <div className="auth-footer">
             <p className="auth-footer-text">
-              Already have an account?{' '}
+              Already have an account?{'Login'}
               <button
                 onClick={handleLoginRedirect}
                 className="auth-link"
