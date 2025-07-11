@@ -146,8 +146,9 @@ const StudentProfile = () => {
 
     try {
       // Note: In a real application, you would get the token from your auth system
-      const token = 'your-auth-token'; // Replace with actual token retrieval
       
+      const token = localStorage.getItem('token')
+     
       if (!token) {
         setError('Please log in to continue');
         return;
