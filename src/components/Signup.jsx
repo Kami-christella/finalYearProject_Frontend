@@ -88,7 +88,7 @@ const Signup = () => {
     setLoading(true);
 
     try {
-      const response = await fetch('/api/register', {
+      const response = await fetch('http://localhost:5000/api/register', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json'
@@ -107,7 +107,7 @@ const Signup = () => {
         console.log('Registration successful:', data);
         
         // Redirect to profile creation
-        window.location.href = '/dashboard';
+        window.location.href = '/StudentProfile';
       } else {
         setError(data.msg || 'Registration failed');
       }
