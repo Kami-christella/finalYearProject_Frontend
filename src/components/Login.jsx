@@ -355,26 +355,7 @@ const Login = () => {
             </div>
             <p className="auth-subtitle">Sign in to continue your career journey</p>
           </div>
-
-          {/* ✅ ADDED: Debug button (remove in production) */}
-          <div style={{ textAlign: 'center', marginBottom: '1rem' }}>
-            <button 
-              type="button" 
-              onClick={checkStoredData}
-              style={{
-                background: 'rgba(255,255,255,0.1)',
-                border: '1px solid rgba(255,255,255,0.3)',
-                color: 'white',
-                padding: '0.5rem 1rem',
-                borderRadius: '8px',
-                fontSize: '0.8rem',
-                cursor: 'pointer'
-              }}
-            >
-              🔍 Check Stored Data
-            </button>
-          </div>
-
+          
           {/* Login Form */}
           <form onSubmit={handleSubmit} className="auth-form">
             {error && (
