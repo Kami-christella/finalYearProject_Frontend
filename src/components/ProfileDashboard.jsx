@@ -49,11 +49,11 @@ const ProfileDashboard = () => {
   };
 
   const goToEditProfile = () => {
-    window.location.href = '/edit-profile'; // You can create this route later
+    window.location.href = '/edit-profile'; 
   };
 
   const goToCreateProfile = () => {
-    window.location.href = '/create-profile';
+    window.location.href = '/StudentProfile';
   };
 
   const formatDate = (dateString) => {
