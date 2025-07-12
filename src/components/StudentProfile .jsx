@@ -2317,82 +2317,164 @@ const StudentProfile = () => {
   };
 
   // FIXED: Handle form submission with proper data formatting
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-    setLoading(true);
-    setError('');
-    setSuccess('');
+  // const handleSubmit = async (e) => {
+  //   e.preventDefault();
+  //   setLoading(true);
+  //   setError('');
+  //   setSuccess('');
 
-    try {
-      const token = localStorage.getItem('token');
-      if (!token) {
-        setError('Please log in to continue');
-        return;
-      }
+  //   try {
+  //     const token = localStorage.getItem('token');
+  //     if (!token) {
+  //       setError('Please log in to continue');
+  //       return;
+  //     }
 
-      // Create FormData for file uploads
-      const formDataToSend = new FormData();
+  //     // Create FormData for file uploads
+  //     const formDataToSend = new FormData();
       
-      // Add all basic form fields
-      Object.keys(formData).forEach(key => {
-        if (key === 'emergencyContact') {
-          formDataToSend.append(key, JSON.stringify(formData[key]));
-        } else if (key === 'interests') {
-          // Convert comma-separated string to array
-          const interestsArray = formData[key].split(',').map(item => item.trim()).filter(item => item);
-          formDataToSend.append(key, JSON.stringify(interestsArray));
-        } else if (key === 'coursesStudiedInSecondary') {
-          formDataToSend.append(key, formData[key]);
-        } else {
-          formDataToSend.append(key, formData[key]);
-        }
-      });
+  //     // Add all basic form fields
+  //     Object.keys(formData).forEach(key => {
+  //       if (key === 'emergencyContact') {
+  //         formDataToSend.append(key, JSON.stringify(formData[key]));
+  //       } else if (key === 'interests') {
+  //         // Convert comma-separated string to array
+  //         const interestsArray = formData[key].split(',').map(item => item.trim()).filter(item => item);
+  //         formDataToSend.append(key, JSON.stringify(interestsArray));
+  //       } else if (key === 'coursesStudiedInSecondary') {
+  //         formDataToSend.append(key, formData[key]);
+  //       } else {
+  //         formDataToSend.append(key, formData[key]);
+  //       }
+  //     });
       
-      // FIXED: Add properly structured complex arrays
-      formDataToSend.append('skills', JSON.stringify(skills));
-      formDataToSend.append('languagesSpoken', JSON.stringify(languagesSpoken));
-      formDataToSend.append('workExperience', JSON.stringify(workExperience));
-      formDataToSend.append('extracurricularActivities', JSON.stringify(extracurricularActivities));
+  //     // FIXED: Add properly structured complex arrays
+  //     formDataToSend.append('skills', JSON.stringify(skills));
+  //     formDataToSend.append('languagesSpoken', JSON.stringify(languagesSpoken));
+  //     formDataToSend.append('workExperience', JSON.stringify(workExperience));
+  //     formDataToSend.append('extracurricularActivities', JSON.stringify(extracurricularActivities));
       
-      // Add profile image
-      if (profileImage) {
-        formDataToSend.append('images', profileImage);
-      }
+  //     // Add profile image
+  //     if (profileImage) {
+  //       formDataToSend.append('images', profileImage);
+  //     }
       
-      // Add documents
-      documents.forEach(doc => {
-        formDataToSend.append('documents', doc);
-      });
+  //     // Add documents
+  //     documents.forEach(doc => {
+  //       formDataToSend.append('documents', doc);
+  //     });
 
-      const response = await fetch('http://localhost:5000/api/student/createprofile', {
-        method: 'POST',
-        headers: {
-          'Authorization': `Bearer ${token}`
-        },
-        body: formDataToSend
-      });
+  //     const response = await fetch('http://localhost:5000/api/student/createprofile', {
+  //       method: 'POST',
+  //       headers: {
+  //         'Authorization': `Bearer ${token}`
+  //       },
+  //       body: formDataToSend
+  //     });
 
-      const data = await response.json();
+  //     const data = await response.json();
 
-      if (response.ok) {
-        setSuccess('Profile created successfully! You can now take the assessment.');
-        Notify.success('Profile created successfully');
-        console.log('Profile created:', data);
+  //     if (response.ok) {
+  //       setSuccess('Profile created successfully! You can now take the assessment.');
+  //       Notify.success('Profile created successfully');
+  //       console.log('Profile created:', data);
         
-        setTimeout(() => {
-          console.log('Redirecting to assessment page...');
-        }, 2000);
-      } else {
-        setError(data.message || 'Failed to create profile');
-        Notify.failure('Failed to create profile');
-      }
-    } catch (err) {
-      setError('Network error. Please try again.');
-      Notify.failure('Network error. Please try again.');
-    } finally {
-      setLoading(false);
+  //       setTimeout(() => {
+  //         console.log('Redirecting to assessment page...');
+  //       }, 2000);
+  //     } else {
+  //       setError(data.message || 'Failed to create profile');
+  //       Notify.failure('Failed to create profile');
+  //     }
+  //   } catch (err) {
+  //     setError('Network error. Please try again.');
+  //     Notify.failure('Network error. Please try again.');
+  //   } finally {
+  //     setLoading(false);
+  //   }
+  // };
+
+  // UPDATED handleSubmit function for StudentProfile.jsx
+// Replace your existing handleSubmit function with this one:
+
+const handleSubmit = async (e) => {
+  e.preventDefault();
+  setLoading(true);
+  setError('');
+  setSuccess('');
+
+  try {
+    const token = localStorage.getItem('token');
+    if (!token) {
+      setError('Please log in to continue');
+      return;
     }
-  };
+
+    // Create FormData for file uploads
+    const formDataToSend = new FormData();
+    
+    // Add all basic form fields
+    Object.keys(formData).forEach(key => {
+      if (key === 'emergencyContact') {
+        formDataToSend.append(key, JSON.stringify(formData[key]));
+      } else if (key === 'interests') {
+        // Convert comma-separated string to array
+        const interestsArray = formData[key].split(',').map(item => item.trim()).filter(item => item);
+        formDataToSend.append(key, JSON.stringify(interestsArray));
+      } else if (key === 'coursesStudiedInSecondary') {
+        formDataToSend.append(key, formData[key]);
+      } else {
+        formDataToSend.append(key, formData[key]);
+      }
+    });
+    
+    // Add properly structured complex arrays
+    formDataToSend.append('skills', JSON.stringify(skills));
+    formDataToSend.append('languagesSpoken', JSON.stringify(languagesSpoken));
+    formDataToSend.append('workExperience', JSON.stringify(workExperience));
+    formDataToSend.append('extracurricularActivities', JSON.stringify(extracurricularActivities));
+    
+    // Add profile image
+    if (profileImage) {
+      formDataToSend.append('images', profileImage);
+    }
+    
+    // Add documents
+    documents.forEach(doc => {
+      formDataToSend.append('documents', doc);
+    });
+
+    const response = await fetch('http://localhost:5000/api/student/createprofile', {
+      method: 'POST',
+      headers: {
+        'Authorization': `Bearer ${token}`
+      },
+      body: formDataToSend
+    });
+
+    const data = await response.json();
+
+    if (response.ok) {
+      setSuccess('🎉 Profile created successfully! Redirecting to your dashboard...');
+      Notify.success('Profile created successfully! Redirecting to dashboard...');
+      console.log('Profile created:', data);
+      
+      // UPDATED: Redirect to profile dashboard
+      setTimeout(() => {
+        window.location.href = '/StudentProfile'; 
+        // If using React Router: navigate('/dashboard');
+      }, 2000);
+    } else {
+      setError(data.message || 'Failed to create profile');
+      Notify.failure('Failed to create profile');
+    }
+  } catch (err) {
+    setError('Network error. Please try again.');
+    Notify.failure('Network error. Please try again.');
+  } finally {
+    setLoading(false);
+  }
+};
 
   // Faculty and department options
   const facultyOptions = [
