@@ -10,6 +10,7 @@ import { Signup } from './components/Signup';
 import  {Login}from './components/Login'
 import Layout from './components/Layout';
 import StudentProfile from './components/StudentProfile ';
+import Assessment from './components/assessment';
 // import Contact from './components/contact';
 // import Services from './components/Services';
 // import Login from './components/Login';
@@ -40,7 +41,7 @@ function App() {
           <Route path='StudentProfile' element={<StudentProfile/>} />
           <Route path='ProfileDashboard' element={<ProfileDashboard/>} />
           <Route path='EditProfile' element={<EditProfile/>} />
-          
+          <Route path='assessment' element={<Assessment/>} />
           
           {/* <Route path='Signup' element={<Signup />} />
           <Route path='Login' element={<Login />} />

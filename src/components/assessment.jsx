@@ -17,10 +17,10 @@ const Assessment = () => {
   const [currentQuestions, setCurrentQuestions] = useState([]);
   const [currentQuestion, setCurrentQuestion] = useState(null);
   
-  // Answers storage
-  const [careerAnswers, setCareerAnswers] = useState({});
-  const [skillsAnswers, setSkillsAnswers] = useState({});
-  const [personalityAnswers, setPersonalityAnswers] = useState({});
+  // Answers storage (matching your backend structure)
+  const [careerTest, setCareerTest] = useState({});
+  const [skillsAssessment, setSkillsAssessment] = useState({});
+  const [personalityAssessment, setPersonalityAssessment] = useState({});
   
   // UI states
   const [loading, setLoading] = useState(true);
@@ -30,13 +30,13 @@ const Assessment = () => {
   
   // Progress calculation
   const [totalQuestions, setTotalQuestions] = useState(0);
-  const [answeredQuestions, setAnsweredQuestions] = useState(0);
   
   // Assessment completion
   const [isCompleted, setIsCompleted] = useState(false);
-  const [canGenerateRecommendations, setCanGenerateRecommendations] = useState(false);
+  const [hasProfile, setHasProfile] = useState(false);
 
   useEffect(() => {
+    checkProfileStatus();
     fetchAllQuestions();
     checkAssessmentStatus();
   }, []);
@@ -52,6 +52,27 @@ const Assessment = () => {
     }
   }, [currentQuestions, currentQuestionIndex]);
 
+  const checkProfileStatus = async () => {
+    try {
+      const token = localStorage.getItem('token');
+      const response = await fetch('http://localhost:5000/api/student/profile', {
+        headers: { 'Authorization': `Bearer ${token}` }
+      });
+
+      if (response.ok) {
+        setHasProfile(true);
+        console.log('✅ Profile found - user can take assessment');
+      } else {
+        setHasProfile(false);
+        setError('Please complete your profile before taking the assessment');
+      }
+    } catch (err) {
+      console.error('Error checking profile:', err);
+      setHasProfile(false);
+      setError('Please complete your profile before taking the assessment');
+    }
+  };
+
   const fetchAllQuestions = async () => {
     try {
       const token = localStorage.getItem('token');
@@ -61,7 +82,6 @@ const Assessment = () => {
         return;
       }
 
-      // Fetch all question types
       const [careerRes, skillsRes, personalityRes] = await Promise.all([
         fetch('http://localhost:5000/api/questions/career', {
           headers: { 'Authorization': `Bearer ${token}` }
@@ -79,19 +99,19 @@ const Assessment = () => {
         const skillsData = await skillsRes.json();
         const personalityData = await personalityRes.json();
 
-        setCareerQuestions(careerData.questions || []);
-        setSkillsQuestions(skillsData.questions || []);
-        setPersonalityQuestions(personalityData.questions || []);
+        setCareerQuestions(careerData || []);
+        setSkillsQuestions(skillsData || []);
+        setPersonalityQuestions(personalityData || []);
 
-        const total = (careerData.questions?.length || 0) + 
-                     (skillsData.questions?.length || 0) + 
-                     (personalityData.questions?.length || 0);
+        const total = (careerData?.length || 0) + 
+                     (skillsData?.length || 0) + 
+                     (personalityData?.length || 0);
         setTotalQuestions(total);
 
         console.log('✅ Questions loaded:', {
-          career: careerData.questions?.length || 0,
-          skills: skillsData.questions?.length || 0,
-          personality: personalityData.questions?.length || 0,
+          career: careerData?.length || 0,
+          skills: skillsData?.length || 0,
+          personality: personalityData?.length || 0,
           total
         });
       } else {
@@ -115,18 +135,19 @@ const Assessment = () => {
 
       if (response.ok) {
         const data = await response.json();
-        if (data.assessment) {
-          // Load previous answers
-          setCareerAnswers(data.assessment.careerAnswers || {});
-          setSkillsAnswers(data.assessment.skillsAnswers || {});
-          setPersonalityAnswers(data.assessment.personalityAnswers || {});
-          setIsCompleted(data.assessment.isCompleted || false);
+        if (data.assessments && data.assessments.length > 0) {
+          const latestAssessment = data.assessments[0];
+          setCareerTest(latestAssessment.careerTest || {});
+          setSkillsAssessment(latestAssessment.skillsAssessment || {});
+          setPersonalityAssessment(latestAssessment.personalityAssessment || {});
           
-          // Count answered questions
-          const answered = Object.keys(data.assessment.careerAnswers || {}).length +
-                          Object.keys(data.assessment.skillsAnswers || {}).length +
-                          Object.keys(data.assessment.personalityAnswers || {}).length;
-          setAnsweredQuestions(answered);
+          const hasCareer = Object.keys(latestAssessment.careerTest || {}).length > 0;
+          const hasSkills = Object.keys(latestAssessment.skillsAssessment || {}).length > 0;
+          const hasPersonality = Object.keys(latestAssessment.personalityAssessment || {}).length > 0;
+          
+          if (hasCareer && hasSkills && hasPersonality) {
+            setIsCompleted(true);
+          }
         }
       }
     } catch (err) {
@@ -159,13 +180,13 @@ const Assessment = () => {
     
     switch (sectionName) {
       case 'career':
-        savedAnswers = careerAnswers;
+        savedAnswers = careerTest;
         break;
       case 'skills':
-        savedAnswers = skillsAnswers;
+        savedAnswers = skillsAssessment;
         break;
       case 'personality':
-        savedAnswers = personalityAnswers;
+        savedAnswers = personalityAssessment;
         break;
     }
     
@@ -184,18 +205,15 @@ const Assessment = () => {
     
     switch (sectionName) {
       case 'career':
-        setCareerAnswers(prev => ({ ...prev, [questionId]: selectedAnswer }));
+        setCareerTest(prev => ({ ...prev, [questionId]: selectedAnswer }));
         break;
       case 'skills':
-        setSkillsAnswers(prev => ({ ...prev, [questionId]: selectedAnswer }));
+        setSkillsAssessment(prev => ({ ...prev, [questionId]: selectedAnswer }));
         break;
       case 'personality':
-        setPersonalityAnswers(prev => ({ ...prev, [questionId]: selectedAnswer }));
+        setPersonalityAssessment(prev => ({ ...prev, [questionId]: selectedAnswer }));
         break;
     }
-    
-    // Update answered questions count
-    setAnsweredQuestions(prev => prev + 1);
   };
 
   const handleNext = () => {
@@ -206,19 +224,16 @@ const Assessment = () => {
 
     saveCurrentAnswer();
 
-    // Check if there are more questions in current section
     if (currentQuestionIndex < currentQuestions.length - 1) {
       setCurrentQuestionIndex(prev => prev + 1);
       setSelectedAnswer('');
     } else {
-      // Move to next section or complete assessment
       if (currentSection < assessmentSections.length - 1) {
         setCurrentSection(prev => prev + 1);
         setCurrentQuestionIndex(0);
         setSelectedAnswer('');
         Notify.success(`${assessmentSections[currentSection]} section completed!`);
       } else {
-        // All sections completed
         completeAssessment();
       }
     }
@@ -248,13 +263,14 @@ const Assessment = () => {
     setSubmitting(true);
     try {
       const token = localStorage.getItem('token');
+      
       const assessmentData = {
-        careerAnswers,
-        skillsAnswers,
-        personalityAnswers,
-        isCompleted: true,
-        completedAt: new Date().toISOString()
+        careerTest,
+        skillsAssessment,
+        personalityAssessment
       };
+
+      console.log('📤 Submitting assessment:', assessmentData);
 
       const response = await fetch('http://localhost:5000/api/assessments', {
         method: 'POST',
@@ -266,73 +282,69 @@ const Assessment = () => {
       });
 
       if (response.ok) {
+        const result = await response.json();
+        console.log('✅ Assessment submitted successfully:', result);
         setIsCompleted(true);
-        setCanGenerateRecommendations(true);
         Notify.success('🎉 Assessment completed successfully!');
+        localStorage.setItem('assessmentCompleted', 'true');
       } else {
-        throw new Error('Failed to submit assessment');
+        const errorData = await response.json();
+        throw new Error(errorData.message || 'Failed to submit assessment');
       }
     } catch (err) {
       console.error('Error submitting assessment:', err);
-      Notify.failure('Failed to submit assessment');
+      Notify.failure('Failed to submit assessment: ' + err.message);
     } finally {
       setSubmitting(false);
     }
   };
 
-  const generateRecommendations = async () => {
-    try {
-      const token = localStorage.getItem('token');
-      const response = await fetch('http://localhost:5000/api/careers/recommend', {
-        method: 'POST',
-        headers: {
-          'Authorization': `Bearer ${token}`,
-          'Content-Type': 'application/json'
-        },
-        body: JSON.stringify({
-          careerAnswers,
-          skillsAnswers,
-          personalityAnswers
-        })
-      });
-
-      if (response.ok) {
-        const data = await response.json();
-        Notify.success('Recommendations generated successfully!');
-        // Navigate to recommendations page or show recommendations
-        window.location.href = '/recommendations';
-      } else {
-        throw new Error('Failed to generate recommendations');
-      }
-    } catch (err) {
-      console.error('Error generating recommendations:', err);
-      Notify.failure('Failed to generate recommendations');
-    }
+  const goToComprehensiveDashboard = () => {
+    window.location.href = '/comprehensive-dashboard';
   };
 
   const getSectionProgress = () => {
     const sectionName = assessmentSections[currentSection];
     switch (sectionName) {
       case 'career':
-        return Object.keys(careerAnswers).length;
+        return Object.keys(careerTest).length;
       case 'skills':
-        return Object.keys(skillsAnswers).length;
+        return Object.keys(skillsAssessment).length;
       case 'personality':
-        return Object.keys(personalityAnswers).length;
+        return Object.keys(personalityAssessment).length;
       default:
         return 0;
     }
   };
 
   const getOverallProgress = () => {
-    const total = Object.keys(careerAnswers).length + 
-                 Object.keys(skillsAnswers).length + 
-                 Object.keys(personalityAnswers).length;
+    const total = Object.keys(careerTest).length + 
+                 Object.keys(skillsAssessment).length + 
+                 Object.keys(personalityAssessment).length;
     return totalQuestions > 0 ? Math.round((total / totalQuestions) * 100) : 0;
   };
 
   const canShowNext = () => selectedAnswer !== '';
   const canShowPrevious = () => currentQuestionIndex > 0 || currentSection > 0;
+
+  if (!hasProfile && !loading) {
+    return (
+      <div className="assessment-container">
+        <div className="error-card">
+          <div className="error-icon">👤</div>
+          <h2>Profile Required</h2>
+          <p>You need to complete your profile before taking the assessment.</p>
+          <button 
+            onClick={() => window.location.href = '/StudentProfile'} 
+            className="create-profile-btn"
+          >
+            <span className="btn-icon">✨</span>
+            Complete Your Profile
+          </button>
+        </div>
+      </div>
+    );
+  }
 
   if (loading) {
     return (
@@ -370,6 +382,7 @@ const Assessment = () => {
             <h1 className="completion-title">Assessment Completed!</h1>
             <p className="completion-subtitle">
               Congratulations! You've successfully completed all sections of the career assessment.
+              Your profile and assessment data are now linked together.
             </p>
             
             <div className="completion-stats">
@@ -389,20 +402,20 @@ const Assessment = () => {
 
             <div className="completion-actions">
               <button 
-                onClick={generateRecommendations}
+                onClick={goToComprehensiveDashboard}
                 className="generate-recommendations-btn"
               >
-                <span className="btn-icon">🎯</span>
+                <span className="btn-icon">📊</span>
                 <div className="btn-content">
-                  <span className="btn-title">Generate Career Recommendations</span>
-                  <span className="btn-subtitle">Get personalized faculty and department suggestions</span>
+                  <span className="btn-title">View Complete Dashboard</span>
+                  <span className="btn-subtitle">See your profile, assessment results, and recommendations</span>
                 </div>
                 <span className="btn-arrow">→</span>
               </button>
 
               <button 
                 onClick={() => window.location.href = '/dashboard'}
-                className="dashboard-btn"
+                className="secondary-btn"
               >
                 Return to Dashboard
               </button>
@@ -416,7 +429,6 @@ const Assessment = () => {
   return (
     <div className="assessment-container">
       <div className="assessment-content">
-        {/* Header */}
         <div className="assessment-header">
           <div className="header-info">
             <h1 className="assessment-title">Career Assessment</h1>
@@ -437,7 +449,6 @@ const Assessment = () => {
           </div>
         </div>
 
-        {/* Section Progress */}
         <div className="section-progress">
           {assessmentSections.map((section, index) => (
             <div 
@@ -457,7 +468,6 @@ const Assessment = () => {
           ))}
         </div>
 
-        {/* Question Card */}
         {currentQuestion && (
           <div className="question-card">
             <div className="question-header">
@@ -470,7 +480,7 @@ const Assessment = () => {
             </div>
 
             <div className="question-content">
-              <h2 className="question-text">{currentQuestion.questionText}</h2>
+              <h2 className="question-text">{currentQuestion.question}</h2>
               
               <div className="answer-options">
                 {currentQuestion.options && currentQuestion.options.map((option, index) => (
@@ -517,7 +527,6 @@ const Assessment = () => {
           </div>
         )}
 
-        {/* Assessment Info */}
         <div className="assessment-info">
           <div className="info-item">
             <span className="info-icon">📊</span>
