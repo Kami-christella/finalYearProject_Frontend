@@ -11,6 +11,7 @@ import  {Login}from './components/Login'
 import Layout from './components/Layout';
 import StudentProfile from './components/StudentProfile ';
 import Assessment from './components/assessment';
+import ComprehensiveDashboard from './components/ComprehensiveDashboard '
 // import Contact from './components/contact';
 // import Services from './components/Services';
 // import Login from './components/Login';
@@ -42,6 +43,7 @@ function App() {
           <Route path='ProfileDashboard' element={<ProfileDashboard/>} />
           <Route path='EditProfile' element={<EditProfile/>} />
           <Route path='assessment' element={<Assessment/>} />
+          <Route path='ComprehensiveDashboard' element={<ComprehensiveDashboard/>} />
           
           {/* <Route path='Signup' element={<Signup />} />
           <Route path='Login' element={<Login />} />
