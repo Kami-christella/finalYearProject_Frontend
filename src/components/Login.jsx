@@ -569,7 +569,7 @@ const Login = () => {
         Notify.info('Please complete your profile to continue...');
         
         setTimeout(() => {
-          window.location.href = '/create-profile';
+          window.location.href = '/StudentProfile';
         }, 1500);
         
       } else {
@@ -577,7 +577,7 @@ const Login = () => {
         console.log('⚠️ Error checking profile, redirecting to create profile');
         
         setTimeout(() => {
-          window.location.href = '/create-profile';
+          window.location.href = '/StudentProfile';
         }, 1500);
       }
     } catch (error) {
@@ -587,7 +587,7 @@ const Login = () => {
       Notify.warning('Redirecting to profile creation...');
       
       setTimeout(() => {
-        window.location.href = '/create-profile';
+        window.location.href = '/StudentProfile';
       }, 1500);
     }
   };
