@@ -1779,28 +1779,28 @@ const ProfileDashboard = () => {
             <div className="stat-icon">📊</div>
             <div className="stat-content">
               <div className="stat-number">{profile.completionPercentage || 100}%</div>
-              <div className="stat-label">Profile Complete</div>
+              <div> Profile Complete </div>
             </div>
           </div>
           <div className="stat-card">
             <div className="stat-icon">⚡</div>
             <div className="stat-content">
               <div className="stat-number">{profile.skills?.length || 0}</div>
-              <div className="stat-label">Skills Listed</div>
+              <div>Skills Listed</div>
             </div>
           </div>
           <div className="stat-card">
             <div className="stat-icon">💡</div>
             <div className="stat-content">
               <div className="stat-number">{profile.interests?.length || 0}</div>
-              <div className="stat-label">Interests</div>
+              <div>Interests</div>
             </div>
           </div>
           <div className="stat-card">
             <div className="stat-icon">💼</div>
             <div className="stat-content">
               <div className="stat-number">{profile.workExperience?.length || 0}</div>
-              <div className="stat-label">Work Experience</div>
+              <div>Work Experience</div>
             </div>
           </div>
         </div>
