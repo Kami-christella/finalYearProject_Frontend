@@ -626,11 +626,11 @@ const ProfileDashboard = () => {
   };
 
   const goToEditProfile = () => {
-    window.location.href = '/edit-profile'; // You can create this route later
+    window.location.href = '/EditProfile'; // You can create this route later
   };
 
   const goToCreateProfile = () => {
-    window.location.href = '/create-profile';
+    window.location.href = '/StudentProfile';
   };
 
   // ADDED: Logout function
@@ -760,28 +760,28 @@ const ProfileDashboard = () => {
             <div className="stat-icon">📊</div>
             <div className="stat-content">
               <div className="stat-number">{profile.completionPercentage || 100}%</div>
-              <div className="stat-label">Profile Complete</div>
+              <div>Profile Complete</div>
             </div>
           </div>
           <div className="stat-card">
             <div className="stat-icon">⚡</div>
             <div className="stat-content">
               <div className="stat-number">{profile.skills?.length || 0}</div>
-              <div className="stat-label">Skills Listed</div>
+              <div>Skills Listed</div>
             </div>
           </div>
           <div className="stat-card">
             <div className="stat-icon">💡</div>
             <div className="stat-content">
               <div className="stat-number">{profile.interests?.length || 0}</div>
-              <div className="stat-label">Interests</div>
+              <div>Interests</div>
             </div>
           </div>
           <div className="stat-card">
             <div className="stat-icon">💼</div>
             <div className="stat-content">
               <div className="stat-number">{profile.workExperience?.length || 0}</div>
-              <div className="stat-label">Work Experience</div>
+              <div>Work Experience</div>
             </div>
           </div>
         </div>

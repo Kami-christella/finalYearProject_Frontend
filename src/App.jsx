@@ -4,6 +4,7 @@ import './App.css';
 // import Home from './components/Home';
 import AdvisorDashboard from './components/AdvisorDashboard ';
 import ProfileDashboard from './components/ProfileDashboard';
+import EditProfile from './components/EditProfile';
 import LandingPage from './components/LandingPage';
 import { Signup } from './components/Signup';
 import  {Login}from './components/Login'
@@ -38,6 +39,9 @@ function App() {
           <Route path='Login' element={<Login />} />
           <Route path='StudentProfile' element={<StudentProfile/>} />
           <Route path='ProfileDashboard' element={<ProfileDashboard/>} />
+          <Route path='EditProfile' element={<EditProfile/>} />
+          
+          
           {/* <Route path='Signup' element={<Signup />} />
           <Route path='Login' element={<Login />} />
           <Route path='About' element={<About />} />
