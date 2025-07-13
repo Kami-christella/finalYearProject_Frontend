@@ -324,11 +324,40 @@
 //         }
 //       });
       
-//       // Add complex arrays
-//       formDataToSend.append('skills', JSON.stringify(skills));
-//       formDataToSend.append('languagesSpoken', JSON.stringify(languagesSpoken));
-//       formDataToSend.append('workExperience', JSON.stringify(workExperience));
-//       formDataToSend.append('extracurricularActivities', JSON.stringify(extracurricularActivities));
+//       // Add complex arrays (clean them first to remove any _id fields from existing data)
+//       const cleanSkills = skills.map(skill => ({
+//         skillName: skill.skillName,
+//         proficiencyLevel: skill.proficiencyLevel
+//       }));
+      
+//       const cleanLanguages = languagesSpoken.map(lang => ({
+//         language: lang.language,
+//         proficiency: lang.proficiency
+//       }));
+      
+//       const cleanWorkExperience = workExperience.map(exp => ({
+//         jobTitle: exp.jobTitle,
+//         company: exp.company,
+//         startDate: exp.startDate,
+//         endDate: exp.endDate,
+//         duration: exp.duration,
+//         description: exp.description,
+//         isCurrent: exp.isCurrent
+//       }));
+      
+//       const cleanActivities = extracurricularActivities.map(activity => ({
+//         activity: activity.activity,
+//         role: activity.role,
+//         organization: activity.organization,
+//         startDate: activity.startDate,
+//         endDate: activity.endDate,
+//         description: activity.description
+//       }));
+
+//       formDataToSend.append('skills', JSON.stringify(cleanSkills));
+//       formDataToSend.append('languagesSpoken', JSON.stringify(cleanLanguages));
+//       formDataToSend.append('workExperience', JSON.stringify(cleanWorkExperience));
+//       formDataToSend.append('extracurricularActivities', JSON.stringify(cleanActivities));
       
 //       // Add new profile image
 //       if (profileImage) {
@@ -344,7 +373,6 @@
 //       formDataToSend.append('existingImages', JSON.stringify(existingImages));
 //       formDataToSend.append('existingDocuments', JSON.stringify(existingDocuments));
 
-//       // route to update student profile
 //       const response = await fetch('http://localhost:5000/api/student/profile', {
 //         method: 'PUT',
 //         headers: {
@@ -706,8 +734,8 @@
 //                     <option value="">Select Level</option>
 //                     <option value="O-Level">O-Level</option>
 //                     <option value="A-Level">A-Level</option>
-//                     <option value="Bachelor's Degree">Bachelor`&apos;`s Degree</option>
-//                     <option value="Master's Degree">Master`&apos;` Degree</option>
+//                     <option value="Bachelor's Degree">Bachelor's Degree</option>
+//                     <option value="Master's Degree">Master's Degree</option>
 //                     <option value="PhD">PhD</option>
 //                     <option value="Other">Other</option>
 //                   </select>
@@ -1886,7 +1914,7 @@ const EditProfile = () => {
               <div className="image-upload-section">
                 <h4 className="subsection-title">Profile Picture</h4>
                 <div className="current-image">
-                  {existingImages && existingImages.length > 0 && (
+                  {existingImages && existingImages.length > 0 && !profileImage && (
                     <div className="existing-image">
                       <img 
                         src={`http://localhost:5000/uploads/${existingImages[0].filename}`} 
@@ -1897,6 +1925,16 @@ const EditProfile = () => {
                         }}
                       />
                       <p className="image-label">Current Image</p>
+                      <button 
+                        type="button" 
+                        onClick={() => {
+                          setExistingImages([]);
+                          setError('Current image will be removed when you save changes');
+                        }}
+                        className="remove-current-image"
+                      >
+                        🗑️ Remove Current Image
+                      </button>
                     </div>
                   )}
                   
@@ -1907,14 +1945,28 @@ const EditProfile = () => {
                         alt="New profile" 
                         className="new-profile-img"
                       />
-                      <p className="image-label">New Image</p>
+                      <p className="image-label">
+                        {existingImages.length > 0 ? 'Replacing Current Image' : 'New Image'}
+                      </p>
                       <button 
                         type="button" 
-                        onClick={() => setProfileImage(null)}
+                        onClick={() => {
+                          setProfileImage(null);
+                          setError('');
+                        }}
                         className="remove-new-image"
                       >
-                        Remove
+                        🗑️ Cancel New Image
                       </button>
+                    </div>
+                  )}
+
+                  {!existingImages.length && !profileImage && (
+                    <div className="no-image">
+                      <div className="no-image-placeholder">
+                        <span className="no-image-icon">👤</span>
+                        <p>No profile image</p>
+                      </div>
                     </div>
                   )}
                 </div>
@@ -1925,7 +1977,7 @@ const EditProfile = () => {
                     onClick={() => fileInputRef.current?.click()}
                     className="upload-btn"
                   >
-                    📷 Choose New Image
+                    📷 {existingImages.length > 0 || profileImage ? 'Change Image' : 'Upload Image'}
                   </button>
                   <input
                     ref={fileInputRef}
@@ -1934,6 +1986,20 @@ const EditProfile = () => {
                     onChange={handleImageUpload}
                     style={{ display: 'none' }}
                   />
+                  
+                  {(existingImages.length > 0 || profileImage) && (
+                    <button
+                      type="button"
+                      onClick={() => {
+                        setProfileImage(null);
+                        setExistingImages([]);
+                        setError('Profile image will be removed when you save changes');
+                      }}
+                      className="remove-all-btn"
+                    >
+                      🗑️ Remove All Images
+                    </button>
+                  )}
                 </div>
               </div>
 

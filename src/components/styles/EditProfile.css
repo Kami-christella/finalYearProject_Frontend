@@ -382,10 +382,36 @@
   gap: 30px;
   margin-bottom: 20px;
   flex-wrap: wrap;
+  justify-content: center;
 }
 
-.existing-image, .new-image {
+.existing-image, .new-image, .no-image {
   text-align: center;
+  position: relative;
+}
+
+.no-image-placeholder {
+  width: 120px;
+  height: 120px;
+  border: 3px dashed #dee2e6;
+  border-radius: 50%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  background: #f8f9fa;
+}
+
+.no-image-icon {
+  font-size: 40px;
+  color: #adb5bd;
+  margin-bottom: 5px;
+}
+
+.no-image p {
+  font-size: 12px;
+  color: #6c757d;
+  margin: 0;
 }
 
 .current-profile-img, .new-profile-img {
@@ -398,14 +424,14 @@
 }
 
 .image-label {
-  margin-top: 10px;
+  margin: 10px 0 8px 0;
   font-size: 14px;
   font-weight: 600;
   color: #666;
 }
 
-.remove-new-image {
-  margin-top: 10px;
+.remove-new-image, .remove-current-image {
+  margin-top: 5px;
   padding: 6px 12px;
   background: #dc3545;
   color: white;
@@ -414,9 +440,14 @@
   font-size: 12px;
   cursor: pointer;
   transition: background 0.3s ease;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  margin-left: auto;
+  margin-right: auto;
 }
 
-.remove-new-image:hover {
+.remove-new-image:hover, .remove-current-image:hover {
   background: #c82333;
 }
 
@@ -424,6 +455,7 @@
   display: flex;
   gap: 15px;
   justify-content: center;
+  flex-wrap: wrap;
 }
 
 .upload-btn {
@@ -449,6 +481,26 @@
 .upload-btn:disabled {
   background: #ccc;
   cursor: not-allowed;
+}
+
+.remove-all-btn {
+  padding: 12px 20px;
+  background: #dc3545;
+  color: white;
+  border: none;
+  border-radius: 8px;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.remove-all-btn:hover {
+  background: #c82333;
+  transform: translateY(-2px);
 }
 
 /* Dynamic Sections */
