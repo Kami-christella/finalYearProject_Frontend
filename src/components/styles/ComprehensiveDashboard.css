@@ -7,6 +7,13 @@
   padding: 20px;
   font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
 }
+.logout-btn:hover {
+  background: #fed7d7;
+  border-color: #fc8181;
+  color: #e53e3e;
+  transform: translateY(-1px);
+}
+
 
 .dashboard-content {
   max-width: 1200px;
