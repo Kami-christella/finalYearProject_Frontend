@@ -81,6 +81,24 @@ const ComprehensiveDashboard = () => {
     }
   };
 
+   const handleLogout = () => {
+      // Show confirmation
+      if (window.confirm('Are you sure you want to logout?')) {
+        // Clear all stored data
+        localStorage.removeItem('token');
+        localStorage.removeItem('user');
+        localStorage.removeItem('profileCompleted');
+        localStorage.removeItem('profileId');
+        
+        // Show success message
+        Notify.success('Logged out successfully!');
+        
+        // Redirect to landing page
+        setTimeout(() => {
+          window.location.href = '/';
+        }, 1000);
+      }
+    };
   const fetchQuestions = async () => {
     try {
       const token = localStorage.getItem('token');
@@ -291,13 +309,17 @@ const ComprehensiveDashboard = () => {
               <span className="btn-icon">✏️</span>
               Edit Profile
             </button>
-            <button 
+            <button onClick={handleLogout} className="logout-btn">
+              <span className="btn-icon">🚪</span>
+              Logout
+            </button>
+            {/* <button 
               onClick={() => window.location.href = '/assessment'} 
               className="action-btn assessment-btn"
             >
               <span className="btn-icon">📝</span>
               {hasAssessment ? 'Retake Assessment' : 'Take Assessment'}
-            </button>
+            </button> */}
             <button 
               onClick={generateNewRecommendations}
               className="action-btn recommend-btn"

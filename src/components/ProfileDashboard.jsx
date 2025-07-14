@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Notify } from 'notiflix';
-import './styles/ProfileDashboard.css'; // We'll create this CSS file
+import './styles/ProfileDashboard.css'; 
 
 const ProfileDashboard = () => {
   const [profile, setProfile] = useState(null);
@@ -50,7 +50,7 @@ const ProfileDashboard = () => {
   };
 
   const goToEditProfile = () => {
-    window.location.href = '/EditProfile'; // You can create this route later
+    window.location.href = '/EditProfile'; 
   };
 
   const goToCreateProfile = () => {

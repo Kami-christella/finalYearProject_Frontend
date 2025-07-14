@@ -300,7 +300,7 @@ const Assessment = () => {
   };
 
   const goToComprehensiveDashboard = () => {
-    window.location.href = '/comprehensive-dashboard';
+    window.location.href = '/ComprehensiveDashboard';
   };
 
   const getSectionProgress = () => {
