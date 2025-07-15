@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Notify } from 'notiflix';
 import './styles/Assessment.css';
+import aiRecommendationService from '../utils/aiRecommendationService';
 
 const Assessment = () => {
   // Assessment sections and questions
@@ -248,6 +249,7 @@ const Assessment = () => {
       setCurrentQuestionIndex(prevSectionQuestions.length - 1);
     }
   };
+  
 
   const getPreviousSectionQuestions = () => {
     const prevSectionName = assessmentSections[currentSection - 1];
@@ -258,47 +260,95 @@ const Assessment = () => {
       default: return [];
     }
   };
+const completeAssessment = async () => {
+  setSubmitting(true);
+  try {
+    const token = localStorage.getItem('token');
+    
+    const assessmentData = {
+      careerTest,
+      skillsAssessment,
+      personalityAssessment
+    };
 
-  const completeAssessment = async () => {
-    setSubmitting(true);
-    try {
-      const token = localStorage.getItem('token');
+    // Submit assessment first
+    const response = await fetch('http://localhost:5000/api/assessments', {
+      method: 'POST',
+      headers: {
+        'Authorization': `Bearer ${token}`,
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify(assessmentData)
+    });
+
+    if (response.ok) {
+      setIsCompleted(true);
+      localStorage.setItem('assessmentCompleted', 'true');
       
-      const assessmentData = {
-        careerTest,
-        skillsAssessment,
-        personalityAssessment
-      };
-
-      console.log('📤 Submitting assessment:', assessmentData);
-
-      const response = await fetch('http://localhost:5000/api/assessments', {
-        method: 'POST',
-        headers: {
-          'Authorization': `Bearer ${token}`,
-          'Content-Type': 'application/json'
-        },
-        body: JSON.stringify(assessmentData)
-      });
-
-      if (response.ok) {
-        const result = await response.json();
-        console.log('✅ Assessment submitted successfully:', result);
-        setIsCompleted(true);
-        Notify.success('🎉 Assessment completed successfully!');
-        localStorage.setItem('assessmentCompleted', 'true');
-      } else {
-        const errorData = await response.json();
-        throw new Error(errorData.message || 'Failed to submit assessment');
+      // Try to auto-generate recommendations
+      try {
+        Notify.info('🤖 Generating AI recommendations...');
+        const recommendationResult = await aiRecommendationService.generateRecommendations();
+        
+        if (recommendationResult.success) {
+          localStorage.setItem('hasRecommendations', 'true');
+          Notify.success('🎉 Assessment completed with AI recommendations!');
+        }
+      } catch (recError) {
+        console.log('Recommendations will be generated later:', recError.message);
+        Notify.success('✅ Assessment completed! Generate recommendations from your dashboard.');
       }
-    } catch (err) {
-      console.error('Error submitting assessment:', err);
-      Notify.failure('Failed to submit assessment: ' + err.message);
-    } finally {
-      setSubmitting(false);
+    } else {
+      const errorData = await response.json();
+      throw new Error(errorData.message || 'Failed to submit assessment');
     }
-  };
+  } catch (err) {
+    console.error('Error submitting assessment:', err);
+    Notify.failure('Failed to submit assessment: ' + err.message);
+  } finally {
+    setSubmitting(false);
+  }
+};
+  // const completeAssessment = async () => {
+  //   setSubmitting(true);
+  //   try {
+  //     const token = localStorage.getItem('token');
+      
+  //     const assessmentData = {
+  //       careerTest,
+  //       skillsAssessment,
+  //       personalityAssessment
+  //     };
 
+  //     console.log('📤 Submitting assessment:', assessmentData);
+
+  //     const response = await fetch('http://localhost:5000/api/assessments', {
+  //       method: 'POST',
+  //       headers: {
+  //         'Authorization': `Bearer ${token}`,
+  //         'Content-Type': 'application/json'
+  //       },
+  //       body: JSON.stringify(assessmentData)
+  //     });
+
+  //     if (response.ok) {
+  //       const result = await response.json();
+  //       console.log('✅ Assessment submitted successfully:', result);
+  //       setIsCompleted(true);
+  //       Notify.success('🎉 Assessment completed successfully!');
+  //       localStorage.setItem('assessmentCompleted', 'true');
+  //     } else {
+  //       const errorData = await response.json();
+  //       throw new Error(errorData.message || 'Failed to submit assessment');
+  //     }
+  //   } catch (err) {
+  //     console.error('Error submitting assessment:', err);
+  //     Notify.failure('Failed to submit assessment: ' + err.message);
+  //   } finally {
+  //     setSubmitting(false);
+  //   }
+  // };
+//end
   const goToComprehensiveDashboard = () => {
     window.location.href = '/ComprehensiveDashboard';
   };

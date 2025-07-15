@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Notify } from 'notiflix';
+import aiRecommendationService from '../utils/aiRecommendationService';
 import './styles/ComprehensiveDashboard.css';
 
 const ComprehensiveDashboard = () => {
@@ -152,40 +153,52 @@ const ComprehensiveDashboard = () => {
   };
 
   const generateNewRecommendations = async () => {
-    if (!hasAssessment) {
-      Notify.warning('Please complete the assessment first');
-      return;
+  try {
+    const result = await aiRecommendationService.generateRecommendations();
+    if (result.success) {
+      setRecommendations(result.recommendations || []);
+      Notify.success('New AI recommendations generated!');
     }
+  } catch (err) {
+    Notify.failure('Failed to generate recommendations: ' + err.message);
+  }
+};
 
-    try {
-      const token = localStorage.getItem('token');
-      const latestAssessment = assessments[0];
+  // const generateNewRecommendations = async () => {
+  //   if (!hasAssessment) {
+  //     Notify.warning('Please complete the assessment first');
+  //     return;
+  //   }
+
+  //   try {
+  //     const token = localStorage.getItem('token');
+  //     const latestAssessment = assessments[0];
       
-      const response = await fetch('http://localhost:5000/api/careers/recommend', {
-        method: 'POST',
-        headers: {
-          'Authorization': `Bearer ${token}`,
-          'Content-Type': 'application/json'
-        },
-        body: JSON.stringify({
-          careerTest: latestAssessment.careerTest,
-          skillsAssessment: latestAssessment.skillsAssessment,
-          personalityAssessment: latestAssessment.personalityAssessment
-        })
-      });
+  //     const response = await fetch('http://localhost:5000/api/careers/recommend', {
+  //       method: 'POST',
+  //       headers: {
+  //         'Authorization': `Bearer ${token}`,
+  //         'Content-Type': 'application/json'
+  //       },
+  //       body: JSON.stringify({
+  //         careerTest: latestAssessment.careerTest,
+  //         skillsAssessment: latestAssessment.skillsAssessment,
+  //         personalityAssessment: latestAssessment.personalityAssessment
+  //       })
+  //     });
 
-      if (response.ok) {
-        const data = await response.json();
-        setRecommendations(data.recommendations || []);
-        Notify.success('New recommendations generated!');
-      } else {
-        throw new Error('Failed to generate recommendations');
-      }
-    } catch (err) {
-      console.error('Error generating recommendations:', err);
-      Notify.failure('Failed to generate recommendations');
-    }
-  };
+  //     if (response.ok) {
+  //       const data = await response.json();
+  //       setRecommendations(data.recommendations || []);
+  //       Notify.success('New recommendations generated!');
+  //     } else {
+  //       throw new Error('Failed to generate recommendations');
+  //     }
+  //   } catch (err) {
+  //     console.error('Error generating recommendations:', err);
+  //     Notify.failure('Failed to generate recommendations');
+  //   }
+  // };
 
   const getQuestionById = (questionId, type) => {
     let questions = [];
