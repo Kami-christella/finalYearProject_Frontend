@@ -1058,15 +1058,8 @@ const ComprehensiveDashboard = () => {
               {generatingRecommendations ? 'Generating...' : 'Generate Recommendations'}
             </button>
             
-            {/* DEBUG: Test button - remove in production */}
-            <button 
-              onClick={testRecommendationGeneration}
-              className="action-btn test-btn"
-              style={{ background: '#17a2b8' }}
-            >
-              <span className="btn-icon">🧪</span>
-              Test API
-            </button>
+           
+           
           </div>
         </div>
 
