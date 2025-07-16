@@ -1057,9 +1057,6 @@ const ComprehensiveDashboard = () => {
               <span className="btn-icon">🎯</span>
               {generatingRecommendations ? 'Generating...' : 'Generate Recommendations'}
             </button>
-            
-           
-           
           </div>
         </div>
 
