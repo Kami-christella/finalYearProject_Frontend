@@ -464,7 +464,7 @@ const completeAssessment = async () => {
               </button>
 
               <button 
-                onClick={() => window.location.href = '/dashboard'}
+                onClick={() => window.location.href = '/ComprehensiveDashboard'}
                 className="secondary-btn"
               >
                 Return to Dashboard

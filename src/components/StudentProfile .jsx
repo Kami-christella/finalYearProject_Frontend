@@ -2465,12 +2465,12 @@ const StudentProfile = () => {
 
       if (response.ok) {
         setSuccess('🎉 Profile created successfully! Redirecting to your dashboard...');
-        Notify.success('Profile created successfully! Redirecting to dashboard...');
+        Notify.success('Profile created successfully! Redirecting to assessment...');
         console.log('Profile created:', data);
         
         // UPDATED: Redirect to dashboard
         setTimeout(() => {
-          window.location.href = '/dashboard'; 
+          window.location.href = '/assessment'; 
           // If using React Router: navigate('/dashboard');
         }, 2000);
       } else {
