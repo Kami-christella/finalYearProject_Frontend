@@ -43,7 +43,9 @@ function App() {
           <Route path='ProfileDashboard' element={<ProfileDashboard/>} />
           <Route path='EditProfile' element={<EditProfile/>} />
           <Route path='assessment' element={<Assessment/>} />
+          <Route path='advisorDashboard' element={<AdvisorDashboard/>} />
           <Route path='ComprehensiveDashboard' element={<ComprehensiveDashboard/>} />
+          AdvisorDashboard
           
           {/* <Route path='Signup' element={<Signup />} />
           <Route path='Login' element={<Login />} />
