@@ -572,6 +572,7 @@
 
 .document-item {
   background: white;
+  /* color: black; */
   border-radius: 10px;
   padding: 1rem;
   border: 1px solid #e2e8f0;
