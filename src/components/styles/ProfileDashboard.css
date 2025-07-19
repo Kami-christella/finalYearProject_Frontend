@@ -5,6 +5,62 @@
   background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
   padding: 2rem;
 }
+.bulk-actions {
+  display: flex;
+  gap: 10px;
+  align-items: center;
+}
+
+.select-all-btn, .bulk-review-btn {
+  padding: 8px 16px;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  background: #f8f9fa;
+  cursor: pointer;
+}
+
+.student-checkbox {
+  margin-right: 10px;
+}
+
+.loading-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0,0,0,0.5);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+}
+
+.radio-group {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.radio-option {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.students-preview-list {
+  max-height: 200px;
+  overflow-y: auto;
+  border: 1px solid #ddd;
+  padding: 10px;
+  border-radius: 4px;
+}
+
+.preview-student {
+  padding: 5px 0;
+  border-bottom: 1px solid #eee;
+}
 
 .dashboard-content {
   max-width: 1200px;
