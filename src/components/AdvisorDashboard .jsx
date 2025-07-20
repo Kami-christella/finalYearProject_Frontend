@@ -852,9 +852,9 @@ const AdvisorDashboard = () => {
       let endpoint = 'http://localhost:5000/api/profiles/pending';
       
       if (activeTab === 'students') {
-        endpoint = `http://localhost:5000/api/profiles/search?page=${page}&limit=${pagination.itemsPerPage}`;
+        endpoint = 'http://localhost:5000/api/student/allprofiles';
       } else if (activeTab === 'approved') {
-        endpoint = `http://localhost:5000/api/profiles/search?status=approved&page=${page}&limit=${pagination.itemsPerPage}`;
+        endpoint = 'http://localhost:5000/api/student/profiles/status/approved';
       }
 
       const response = await fetch(endpoint, {
