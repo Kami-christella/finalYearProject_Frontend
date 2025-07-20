@@ -859,7 +859,7 @@ const AdvisorDashboard = () => {
 
       const response = await fetch(endpoint, {
         headers: { 'Authorization': `Bearer ${token}` }
-      });
+      });   
 
       if (response.ok) {
         const data = await response.json();
