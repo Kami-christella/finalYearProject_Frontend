@@ -2201,15 +2201,8 @@ const ComprehensiveDashboard = () => {
               <h2 className="section-title">Assessment Results</h2>
               {hasAssessment && assessments.length > 0 ? (
                 <div className="assessment-content">
-                  {/* Debug Information */}
-                  <div className="debug-info" style={{ marginBottom: '20px', padding: '10px', background: '#f8f9fa', borderRadius: '5px' }}>
-                    <small>
-                      <strong>Debug Info:</strong> 
-                      Questions loaded - Career: {careerQuestions.length}, Skills: {skillsQuestions.length}, Personality: {personalityQuestions.length}
-                      <br />
-                      Assessment data keys: {assessments[0] ? Object.keys(assessments[0]).join(', ') : 'No assessment data'}
-                    </small>
-                  </div>
+                 
+                  
 
                   {/* Assessment Type Selector */}
                   <div className="assessment-type-selector">

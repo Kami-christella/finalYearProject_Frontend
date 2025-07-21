@@ -772,6 +772,271 @@
   cursor: pointer;
   transition: all 0.2s ease;
 }
+/* Transfer Student Styles */
+.transfer-badge {
+  background: #ff9500;
+  color: white;
+  padding: 2px 8px;
+  border-radius: 12px;
+  font-size: 0.8em;
+  font-weight: 500;
+}
+
+.program-badge {
+  background: #007AFF;
+  color: white;
+  padding: 2px 8px;
+  border-radius: 12px;
+  font-size: 0.8em;
+  font-weight: 500;
+}
+
+.ai-recommendation {
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  color: white;
+  padding: 2px 8px;
+  border-radius: 12px;
+  font-size: 0.85em;
+  font-weight: 500;
+}
+
+/* Document Actions */
+.document-buttons {
+  display: flex;
+  gap: 4px;
+  flex-direction: column;
+}
+
+.view-btn {
+  background: #34C759;
+  color: white;
+  border: none;
+  padding: 4px 8px;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 0.8em;
+}
+
+.view-btn:hover {
+  background: #28a745;
+}
+
+.more-docs {
+  font-size: 0.7em;
+  color: #666;
+  font-style: italic;
+}
+
+/* Document Viewer Modal */
+.document-modal {
+  max-width: 90vw;
+  max-height: 90vh;
+  width: 1000px;
+}
+
+.document-viewer {
+  max-height: 70vh;
+  overflow: auto;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+}
+
+.document-image {
+  max-width: 100%;
+  height: auto;
+}
+
+.document-iframe {
+  border: none;
+  width: 100%;
+  min-height: 600px;
+}
+
+.document-actions {
+  display: flex;
+  justify-content: center;
+  margin-top: 16px;
+}
+
+.btn-download {
+  background: #007AFF;
+  color: white;
+  border: none;
+  padding: 10px 20px;
+  border-radius: 6px;
+  cursor: pointer;
+  font-weight: 500;
+}
+
+.btn-download:hover {
+  background: #0056b3;
+}
+
+/* Enhanced Review Modal */
+.large-modal {
+  max-width: 95vw;
+  width: 1200px;
+  max-height: 90vh;
+  overflow-y: auto;
+}
+
+.courses-section {
+  margin-top: 16px;
+  padding: 12px;
+  background: #f8f9fa;
+  border-radius: 6px;
+}
+
+.courses-list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-top: 8px;
+}
+
+.course-tag {
+  background: #e9ecef;
+  padding: 4px 8px;
+  border-radius: 12px;
+  font-size: 0.8em;
+  color: #495057;
+}
+
+.transfer-courses {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  margin-top: 8px;
+}
+
+.transfer-course {
+  display: flex;
+  justify-content: space-between;
+  padding: 8px;
+  background: white;
+  border-radius: 4px;
+  border: 1px solid #dee2e6;
+}
+
+.course-name {
+  font-weight: 500;
+  flex: 1;
+}
+
+.course-code {
+  color: #6c757d;
+  font-size: 0.9em;
+}
+
+.course-grade {
+  color: #28a745;
+  font-weight: 500;
+}
+
+/* AI Recommendations Section */
+.ai-recommendations-section {
+  margin-top: 16px;
+  padding: 16px;
+  background: linear-gradient(135deg, #f8f9ff 0%, #f0f4ff 100%);
+  border-radius: 8px;
+  border: 1px solid #e1e8ff;
+}
+
+.recommendations-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+  margin-top: 12px;
+}
+
+.recommendation-item {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.recommendation-item.full-width {
+  grid-column: 1 / -1;
+}
+
+.rec-label {
+  font-weight: 500;
+  color: #495057;
+  font-size: 0.9em;
+}
+
+.rec-value {
+  font-size: 0.95em;
+}
+
+/* Activity Log Enhancements */
+.activity-details {
+  margin: 4px 0;
+  font-size: 0.85em;
+  color: #6c757d;
+}
+
+.no-activity-icon {
+  font-size: 3em;
+  margin-bottom: 16px;
+}
+
+/* Faculty Stats */
+.faculty-stats {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.faculty-item {
+  display: flex;
+  justify-content: space-between;
+  padding: 8px 12px;
+  background: #f8f9fa;
+  border-radius: 6px;
+  border-left: 4px solid #007AFF;
+}
+
+.faculty-name {
+  font-weight: 500;
+}
+
+.faculty-count {
+  color: #6c757d;
+  font-size: 0.9em;
+}
+
+/* Transfer Indicator in Bulk Modal */
+.transfer-indicator {
+  background: #ff9500;
+  color: white;
+  padding: 2px 6px;
+  border-radius: 8px;
+  font-size: 0.7em;
+  font-weight: 500;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+  .document-modal {
+    width: 95vw;
+    max-width: none;
+  }
+  
+  .large-modal {
+    width: 95vw;
+    max-width: none;
+  }
+  
+  .recommendations-grid {
+    grid-template-columns: 1fr;
+  }
+  
+  .document-buttons {
+    flex-direction: row;
+    gap: 4px;
+  }
+}
 
 .btn-submit:hover {
   transform: translateY(-1px);
