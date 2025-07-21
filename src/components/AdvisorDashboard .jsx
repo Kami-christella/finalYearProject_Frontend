@@ -1146,35 +1146,124 @@ const handleSubmitReview = async (e) => {
     }
   };
 
-  const downloadDocument = async (profileId, documentType, fileName) => {
-    try {
-      const token = localStorage.getItem('token');
-      const response = await fetch(
-        `http://localhost:5000/api/profiles/${profileId}/download/${documentType}/${fileName}`,
-        {
-          headers: { 'Authorization': `Bearer ${token}` }
-        }
-      );
+// IMPROVED FRONTEND DOWNLOAD FUNCTION
+const downloadDocument = async (profileId, documentType, fileName) => {
+  try {
+    const token = localStorage.getItem('token');
+    
+    if (!token) {
+      Notify.failure('Please log in to download documents');
+      return;
+    }
 
-      if (response.ok) {
-        const blob = await response.blob();
-        const url = window.URL.createObjectURL(blob);
-        const a = document.createElement('a');
-        a.href = url;
-        a.download = fileName;
-        document.body.appendChild(a);
-        a.click();
+    console.log('Downloading:', { profileId, documentType, fileName });
+
+    // Show loading notification
+    Notify.info('Preparing download...');
+
+    const response = await fetch(
+      `http://localhost:5000/api/profiles/${profileId}/download/${documentType}/${fileName}`,
+      {
+        headers: { 
+          'Authorization': `Bearer ${token}`,
+          'Accept': '*/*'
+        }
+      }
+    );
+
+    if (response.ok) {
+      // Get the blob data
+      const blob = await response.blob();
+      
+      // Get the original filename from response headers or use the provided filename
+      const contentDisposition = response.headers.get('Content-Disposition');
+      let downloadFileName = fileName;
+      
+      if (contentDisposition) {
+        const filenameMatch = contentDisposition.match(/filename[^;=\n]*=((['"]).*?\2|[^;\n]*)/);
+        if (filenameMatch && filenameMatch[1]) {
+          downloadFileName = filenameMatch[1].replace(/['"]/g, '');
+        }
+      }
+
+      // Create download URL and trigger download
+      const url = window.URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = downloadFileName;
+      a.style.display = 'none';
+      
+      // Add to DOM, click, and remove
+      document.body.appendChild(a);
+      a.click();
+      
+      // Cleanup
+      setTimeout(() => {
         window.URL.revokeObjectURL(url);
         document.body.removeChild(a);
-        Notify.success('Document downloaded successfully');
-      } else {
-        throw new Error('Failed to download document');
+      }, 100);
+
+      Notify.success(`Document "${downloadFileName}" downloaded successfully`);
+      
+    } else {
+      // Handle different error statuses
+      let errorMessage = 'Failed to download document';
+      
+      try {
+        const errorData = await response.json();
+        errorMessage = errorData.message || errorMessage;
+        
+        if (response.status === 404) {
+          errorMessage = 'Document not found on server';
+        } else if (response.status === 403) {
+          errorMessage = 'Access denied. Please check your permissions.';
+        } else if (response.status === 500) {
+          errorMessage = 'Server error. Please try again later.';
+        }
+      } catch (e) {
+        // If we can't parse the error response, use default message
+        console.log('Could not parse error response');
       }
-    } catch (error) {
-      console.error('Error downloading document:', error);
-      Notify.failure('Failed to download document');
+
+      throw new Error(errorMessage);
     }
-  };
+    
+  } catch (error) {
+    console.error('Error downloading document:', error);
+    Notify.failure(error.message || 'Failed to download document');
+  }
+};
+
+// ALTERNATIVE: Simple download function using window.open
+const downloadDocumentSimple = (profileId, documentType, fileName) => {
+  try {
+    const token = localStorage.getItem('token');
+    
+    if (!token) {
+      Notify.failure('Please log in to download documents');
+      return;
+    }
+
+    // Create download URL with token as query parameter (if your backend supports it)
+    const downloadUrl = `http://localhost:5000/api/profiles/${profileId}/download-simple/${documentType}/${fileName}?token=${token}`;
+    
+    // Open in new window/tab to trigger download
+    const newWindow = window.open(downloadUrl, '_blank');
+    
+    // Close the window after a short delay (optional)
+    setTimeout(() => {
+      if (newWindow) {
+        newWindow.close();
+      }
+    }, 1000);
+
+    Notify.success('Download started...');
+    
+  } catch (error) {
+    console.error('Error downloading document:', error);
+    Notify.failure('Failed to download document');
+  }
+};
 
   const handleLogout = () => {
     if (window.confirm('Are you sure you want to logout?')) {
