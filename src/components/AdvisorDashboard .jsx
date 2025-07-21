@@ -1423,7 +1423,7 @@ const handleSubmitReview = async (e) => {
                 onKeyPress={(e) => e.key === 'Enter' && handleSearch()}
                 className="search-input"
               />
-              <button onClick={handleSearch} className="search-btn">Search</button>
+              {/* <button onClick={handleSearch} className="search-btn">Search</button> */}
             </div>
             <div className="filter-dropdown">
               <select
