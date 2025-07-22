@@ -107,7 +107,7 @@ const Signup = () => {
         // For demonstration - in real app, handle tokens securely
         console.log('Registration successful:', data);
         Notify.success('Registration successful, you can Now Login')
-        // Redirect to profile creation
+       
         window.location.href = '/Login';
       } else {
         Notify.failure('Registration failed')

@@ -57,9 +57,9 @@ const ProfileDashboard = () => {
     window.location.href = '/StudentProfile';
   };
 
-  // ADDED: Logout function
+ 
   const handleLogout = () => {
-    // Show confirmation
+  
     if (window.confirm('Are you sure you want to logout?')) {
       // Clear all stored data
       localStorage.removeItem('token');
@@ -67,7 +67,7 @@ const ProfileDashboard = () => {
       localStorage.removeItem('profileCompleted');
       localStorage.removeItem('profileId');
       
-      // Show success message
+    
       Notify.success('Logged out successfully!');
       
       // Redirect to landing page
@@ -131,7 +131,7 @@ const ProfileDashboard = () => {
   return (
     <div className="dashboard-container">
       <div className="dashboard-content">
-        {/* Header with Profile Info */}
+       
         <div className="profile-header">
           <div className="header-main">
 
