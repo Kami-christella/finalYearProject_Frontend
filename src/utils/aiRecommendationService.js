@@ -62,7 +62,7 @@ class AIRecommendationService {
   constructor() {
     // Direct URL for development - change this for production
     this.baseURL = 'http://localhost:5000/api';
-    this.recommendationsEndpoint = `${this.baseURL}/recommendations`;
+    this.recommendationsEndpoint = `${this.baseURL}/recommendations/generate`;
   }
 
   // Helper method to get auth headers
@@ -373,7 +373,7 @@ const aiRecommendationService = new AIRecommendationService();
 
 // ===== LEGACY COMPATIBILITY =====
 // Keep the old method names for backward compatibility
-aiRecommendationService.getRecommendations = aiRecommendationService.getRecommendationsWithFallback;
+//aiRecommendationService.getRecommendations = aiRecommendationService.getRecommendationsWithFallback;
 
 export default aiRecommendationService;
 
