@@ -60,7 +60,8 @@
 // frontend/src/utils/aiRecommendationService.js
 class AIRecommendationService {
   constructor() {
-    this.baseURL = process.env.REACT_APP_API_URL || 'http://localhost:5000/api';
+    // Direct URL for development - change this for production
+    this.baseURL = 'http://localhost:5000/api';
     this.recommendationsEndpoint = `${this.baseURL}/recommendations`;
   }
 

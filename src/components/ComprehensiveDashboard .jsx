@@ -1629,20 +1629,43 @@ const ComprehensiveDashboard = () => {
     }
   };
 
-  const fetchRecommendations = async () => {
-    try {
-      console.log('📡 Fetching existing recommendations...');
-      const response = await aiRecommendationService.getRecommendations();
+  // const fetchRecommendations = async () => {
+  //   try {
+  //     console.log('📡 Fetching existing recommendations...');
+  //     const response = await aiRecommendationService.getRecommendations();
       
-      if (response.success && response.recommendations) {
-        console.log('✅ Existing recommendations loaded:', response.recommendations);
-        setRecommendations(response.recommendations || []);
-      }
-    } catch (err) {
-      console.log('ℹ️ No existing recommendations found:', err.message);
-      setRecommendations([]);
+  //     if (response.success && response.recommendations) {
+  //       console.log('✅ Existing recommendations loaded:', response.recommendations);
+  //       setRecommendations(response.recommendations || []);
+  //     }
+  //   } catch (err) {
+  //     console.log('ℹ️ No existing recommendations found:', err.message);
+  //     setRecommendations([]);
+  //   }
+  // };
+
+  const fetchRecommendations = async () => {
+  try {
+    console.log('📡 Checking for existing recommendations...');
+    
+    // Try to get recommendation history first
+    const historyResponse = await aiRecommendationService.getRecommendationHistory();
+    
+    if (historyResponse.success && historyResponse.data?.history?.length > 0) {
+      console.log('✅ Found existing recommendations in history:', historyResponse.data.history);
+      setRecommendations(historyResponse.data.history);
+      return;
     }
-  };
+    
+    // If no history, check if we can generate new ones
+    console.log('ℹ️ No existing recommendations found');
+    setRecommendations([]);
+    
+  } catch (err) {
+    console.log('ℹ️ No existing recommendations available:', err.message);
+    setRecommendations([]);
+  }
+};
 
   const handleLogout = () => {
     if (window.confirm('Are you sure you want to logout?')) {
@@ -1662,35 +1685,66 @@ const ComprehensiveDashboard = () => {
   };
 
   const generateNewRecommendations = async () => {
-    if (!hasAssessment) {
-      Notify.warning('Please complete the assessment first');
-      return;
-    }
+  if (!hasAssessment) {
+    Notify.warning('Please complete the assessment first');
+    return;
+  }
 
-    setGeneratingRecommendations(true);
-    try {
-      console.log('🎯 Generating new recommendations...');
-      Notify.info('🤖 AI is analyzing your profile and assessment data...');
+  setGeneratingRecommendations(true);
+  try {
+    console.log('🎯 Generating new recommendations...');
+    Notify.info('🤖 AI is analyzing your profile and assessment data...');
+    
+    // Use the correct method name
+    const result = await aiRecommendationService.generateRecommendations();
+    
+    if (result.success && result.data?.recommendations) {
+      console.log('✅ New recommendations received:', result.data.recommendations);
+      setRecommendations(result.data.recommendations);
+      Notify.success('🎉 New AI recommendations generated successfully!');
       
-      const result = await aiRecommendationService.generateRecommendations();
-      
-      if (result.success && result.recommendations) {
-        console.log('✅ New recommendations received:', result.recommendations);
-        setRecommendations(result.recommendations || []);
-        Notify.success('🎉 New AI recommendations generated successfully!');
-        
-        // Switch to recommendations tab to show results
-        setActiveSection('recommendations');
-      } else {
-        throw new Error('No recommendations received');
-      }
-    } catch (err) {
-      console.error('❌ Failed to generate recommendations:', err);
-      Notify.failure('Failed to generate recommendations: ' + err.message);
-    } finally {
-      setGeneratingRecommendations(false);
+      // Switch to recommendations tab to show results
+      setActiveSection('recommendations');
+    } else {
+      throw new Error('No recommendations received from server');
     }
-  };
+  } catch (err) {
+    console.error('❌ Failed to generate recommendations:', err);
+    Notify.failure('Failed to generate recommendations: ' + err.message);
+  } finally {
+    setGeneratingRecommendations(false);
+  }
+};
+  // const generateNewRecommendations = async () => {
+  //   if (!hasAssessment) {
+  //     Notify.warning('Please complete the assessment first');
+  //     return;
+  //   }
+
+  //   setGeneratingRecommendations(true);
+  //   try {
+  //     console.log('🎯 Generating new recommendations...');
+  //     Notify.info('🤖 AI is analyzing your profile and assessment data...');
+      
+  //     const result = await aiRecommendationService.generateRecommendations();
+      
+  //     if (result.success && result.recommendations) {
+  //       console.log('✅ New recommendations received:', result.recommendations);
+  //       setRecommendations(result.recommendations || []);
+  //       Notify.success('🎉 New AI recommendations generated successfully!');
+        
+  //       // Switch to recommendations tab to show results
+  //       setActiveSection('recommendations');
+  //     } else {
+  //       throw new Error('No recommendations received');
+  //     }
+  //   } catch (err) {
+  //     console.error('❌ Failed to generate recommendations:', err);
+  //     Notify.failure('Failed to generate recommendations: ' + err.message);
+  //   } finally {
+  //     setGeneratingRecommendations(false);
+  //   }
+  // };
 
   const getQuestionById = (questionId, type) => {
     let questions = [];
