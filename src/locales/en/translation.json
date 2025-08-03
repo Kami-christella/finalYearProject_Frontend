@@ -1,4 +1,16 @@
 {
+  "nav": {
+    "home": "Home",
+    "features": "Features",
+    "about": "About",
+    "services": "Services",
+    "contact": "Contact",
+    "login": "Login",
+    "register": "Register",
+    "dashboard": "Dashboard",
+    "profile": "Profile",
+    "logout": "Logout"
+  },
   "navigation": {
     "home": "Home",
     "about": "About",
