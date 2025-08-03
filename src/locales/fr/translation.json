@@ -1,0 +1,192 @@
+{
+  "navigation": {
+    "home": "Accueil",
+    "about": "À propos",
+    "services": "Services",
+    "contact": "Contact",
+    "login": "Connexion",
+    "register": "S'inscrire",
+    "dashboard": "Tableau de bord",
+    "profile": "Profil",
+    "logout": "Déconnexion"
+  },
+  "landing": {
+    "hero": {
+      "title": "Bienvenue sur Notre Plateforme",
+      "subtitle": "Découvrez des fonctionnalités incroyables et portez votre expérience au niveau supérieur",
+      "description": "Nous fournissons des solutions innovantes qui vous aident à atteindre vos objectifs efficacement.",
+      "cta_primary": "Commencer",
+      "cta_secondary": "En savoir plus"
+    },
+    "features": {
+      "title": "Nos Fonctionnalités",
+      "subtitle": "Tout ce dont vous avez besoin en un seul endroit",
+      "feature1": {
+        "title": "Rapide et Fiable",
+        "description": "Performance ultra-rapide avec garantie de disponibilité de 99,9%"
+      },
+      "feature2": {
+        "title": "Sécurisé et Sûr",
+        "description": "Sécurité de niveau entreprise pour protéger vos données"
+      },
+      "feature3": {
+        "title": "Facile à Utiliser",
+        "description": "Interface intuitive conçue pour tout le monde"
+      },
+      "feature4": {
+        "title": "Support 24h/24 7j/7",
+        "description": "Support client disponible 24h/24 quand vous en avez besoin"
+      }
+    },
+    "testimonials": {
+      "title": "Ce Que Disent Nos Utilisateurs",
+      "subtitle": "Fait confiance par des milliers de clients dans le monde entier"
+    },
+    "pricing": {
+      "title": "Choisissez Votre Plan",
+      "subtitle": "Tarification flexible pour tous les besoins",
+      "monthly": "Mensuel",
+      "yearly": "Annuel",
+      "free": {
+        "title": "Gratuit",
+        "price": "0€",
+        "description": "Parfait pour commencer",
+        "features": [
+          "Jusqu'à 5 projets",
+          "Support de base",
+          "1 Go de stockage"
+        ]
+      },
+      "pro": {
+        "title": "Pro",
+        "price": "29€",
+        "description": "Pour les entreprises en croissance",
+        "features": [
+          "Projets illimités",
+          "Support prioritaire",
+          "50 Go de stockage",
+          "Analyses avancées"
+        ]
+      },
+      "enterprise": {
+        "title": "Entreprise",
+        "price": "99€",
+        "description": "Pour les grandes organisations",
+        "features": [
+          "Tout ce qui est dans Pro",
+          "Intégrations personnalisées",
+          "Stockage illimité",
+          "Gestionnaire de compte dédié"
+        ]
+      },
+      "get_started": "Commencer",
+      "most_popular": "Le Plus Populaire"
+    },
+    "footer": {
+      "description": "Construire l'avenir des expériences numériques",
+      "links": {
+        "product": "Produit",
+        "company": "Entreprise",
+        "resources": "Ressources",
+        "legal": "Légal"
+      },
+      "product_links": {
+        "features": "Fonctionnalités",
+        "pricing": "Tarification",
+        "api": "API",
+        "documentation": "Documentation"
+      },
+      "company_links": {
+        "about": "À propos de nous",
+        "careers": "Carrières",
+        "blog": "Blog",
+        "press": "Presse"
+      },
+      "resource_links": {
+        "help_center": "Centre d'aide",
+        "community": "Communauté",
+        "tutorials": "Tutoriels",
+        "status": "Statut"
+      },
+      "legal_links": {
+        "privacy": "Politique de confidentialité",
+        "terms": "Conditions d'utilisation",
+        "cookies": "Politique des cookies"
+      },
+      "copyright": "© 2025 Votre Entreprise. Tous droits réservés.",
+      "newsletter": {
+        "title": "Restez Informé",
+        "description": "Recevez les dernières nouvelles et mises à jour dans votre boîte mail",
+        "placeholder": "Entrez votre email",
+        "subscribe": "S'abonner"
+      }
+    }
+  },
+  "auth": {
+    "login": {
+      "title": "Bon Retour",
+      "subtitle": "Connectez-vous à votre compte",
+      "email": "Adresse Email",
+      "email_placeholder": "Entrez votre email",
+      "password": "Mot de passe",
+      "password_placeholder": "Entrez votre mot de passe",
+      "remember_me": "Se souvenir de moi",
+      "forgot_password": "Mot de passe oublié ?",
+      "sign_in": "Se connecter",
+      "no_account": "Vous n'avez pas de compte ?",
+      "sign_up": "Inscrivez-vous ici"
+    },
+    "register": {
+      "title": "Créer un Compte",
+      "subtitle": "Rejoignez-nous aujourd'hui",
+      "first_name": "Prénom",
+      "first_name_placeholder": "Entrez votre prénom",
+      "last_name": "Nom de famille",
+      "last_name_placeholder": "Entrez votre nom de famille",
+      "email": "Adresse Email",
+      "email_placeholder": "Entrez votre email",
+      "password": "Mot de passe",
+      "password_placeholder": "Créez un mot de passe",
+      "confirm_password": "Confirmer le mot de passe",
+      "confirm_password_placeholder": "Confirmez votre mot de passe",
+      "terms": "J'accepte les Conditions d'utilisation et la Politique de confidentialité",
+      "create_account": "Créer un compte",
+      "have_account": "Vous avez déjà un compte ?",
+      "sign_in": "Connectez-vous ici"
+    }
+  },
+  "common": {
+    "loading": "Chargement...",
+    "error": "Une erreur s'est produite",
+    "success": "Succès !",
+    "save": "Enregistrer",
+    "cancel": "Annuler",
+    "delete": "Supprimer",
+    "edit": "Modifier",
+    "update": "Mettre à jour",
+    "create": "Créer",
+    "search": "Rechercher",
+    "filter": "Filtrer",
+    "sort": "Trier",
+    "refresh": "Actualiser",
+    "back": "Retour",
+    "next": "Suivant",
+    "previous": "Précédent",
+    "close": "Fermer",
+    "open": "Ouvrir",
+    "yes": "Oui",
+    "no": "Non",
+    "confirm": "Confirmer",
+    "submit": "Soumettre"
+  },
+  "errors": {
+    "required": "Ce champ est requis",
+    "invalid_email": "Veuillez entrer une adresse email valide",
+    "password_min": "Le mot de passe doit contenir au moins 8 caractères",
+    "passwords_match": "Les mots de passe ne correspondent pas",
+    "network_error": "Erreur réseau. Veuillez réessayer.",
+    "server_error": "Erreur serveur. Veuillez réessayer plus tard.",
+    "unauthorized": "Vous n'êtes pas autorisé à effectuer cette action",
+    "not_found": "La ressource demandée n'a pas été trouvée"
+  }
+}
