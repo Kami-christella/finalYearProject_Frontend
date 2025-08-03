@@ -69,11 +69,12 @@ body {
 }
 
 .nav-container {
-  max-width: 1200px;
+   max-width: 1200px;
   margin: 0 auto;
   display: flex;
   justify-content: space-between;
   align-items: center;
+  gap: 1rem; /* Add gap for better spacing */
 }
 
 .logo {
@@ -117,6 +118,11 @@ body {
 .nav-links button:hover::after {
   width: 100%;
 }
+.nav-actions {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
 
 .cta-btn {
   background: linear-gradient(45deg, #667eea, #764ba2);
@@ -129,7 +135,7 @@ body {
   transition: all 0.3s ease;
   position: relative;
   overflow: hidden;
-  margin-left: 20px;
+  /* margin-left: 20px; */
 }
 
 .cta-btn:hover {
@@ -417,7 +423,91 @@ body {
   color: rgba(255, 255, 255, 0.8);
   font-weight: 600;
 }
+/* Mobile Responsiveness Updates */
+@media (max-width: 768px) {
+  .nav-links {
+    display: none;
+  }
+  
+  .nav-actions {
+    gap: 0.5rem;
+  }
+  
+  .cta-btn {
+    padding: 0.6rem 1.2rem;
+    font-size: 0.9rem;
+  }
+  
+  /* Hero buttons responsive */
+  .hero-buttons {
+    flex-direction: column;
+    align-items: center;
+    gap: 1rem;
+  }
+  
+  .btn-primary,
+  .btn-secondary {
+    width: 100%;
+    max-width: 300px;
+  }
+  
+  /* Language switcher mobile adjustments */
+  .nav-actions .language-switcher {
+    order: -1; /* Put language switcher first on mobile */
+  }
+}
 
+@media (max-width: 480px) {
+  .nav-container {
+    padding: 0 1rem;
+  }
+  
+  .logo {
+    font-size: 1.5rem;
+  }
+  
+  .nav-actions {
+    flex-direction: column-reverse;
+    gap: 0.5rem;
+  }
+  
+  .cta-btn {
+    padding: 0.5rem 1rem;
+    font-size: 0.8rem;
+  }
+}
+
+/* Language transition animation */
+.language-transition {
+  transition: all 0.3s ease;
+}
+
+/* Ensure language switcher works well with existing navbar styles */
+.navbar .language-switcher {
+  z-index: 1100; /* Higher than navbar z-index */
+}
+
+/* Responsive text handling for different languages */
+.hero-title,
+.section-title,
+.cta-title {
+  word-wrap: break-word;
+  hyphens: auto;
+}
+
+/* French text tends to be longer, so ensure good wrapping */
+[lang="fr"] .hero-title {
+  font-size: clamp(2.5rem, 7vw, 5.5rem);
+}
+
+[lang="fr"] .hero-subtitle {
+  font-size: clamp(1.1rem, 2.8vw, 1.4rem);
+}
+
+[lang="fr"] .feature-title {
+  font-size: 1.4rem;
+  line-height: 1.3;
+}
 /* CTA Section */
 .cta-section {
   padding: 8rem 2rem;

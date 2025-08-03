@@ -12,21 +12,7 @@ import Layout from './components/Layout';
 import StudentProfile from './components/StudentProfile ';
 import Assessment from './components/assessment';
 import ComprehensiveDashboard from './components/ComprehensiveDashboard '
-// import Contact from './components/contact';
-// import Services from './components/Services';
-// import Login from './components/Login';
-// import Signup from './components/Signup';
-// import About from './components/About';
-// import DashboardLayout from './Dashboard/DashboardLayout';
-// // CareerTest from './components/CareerTest';
-// import CareerTest from './Dashboard/CareerTest';
-// //import Navbar2 from './components/Navbar2';
-// import Assessment2 from './Dashboard/Assessment2';
-// import Assesment3 from './Dashboard/Assessment3';
-// import Results from './Dashboard/Results';
-// import Settings from './Dashboard/Settings';
-// import Profile from './Dashboard/Profile'
-// import { AuthProvider } from './Dashboard/context/AuthContext';
+
 
 
 function App() {

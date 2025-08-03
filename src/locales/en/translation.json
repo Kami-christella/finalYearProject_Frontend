@@ -1,0 +1,192 @@
+{
+  "navigation": {
+    "home": "Home",
+    "about": "About",
+    "services": "Services",
+    "contact": "Contact",
+    "login": "Login",
+    "register": "Register",
+    "dashboard": "Dashboard",
+    "profile": "Profile",
+    "logout": "Logout"
+  },
+  "landing": {
+    "hero": {
+      "title": "Welcome to Our Platform",
+      "subtitle": "Discover amazing features and take your experience to the next level",
+      "description": "We provide innovative solutions that help you achieve your goals efficiently and effectively.",
+      "cta_primary": "Get Started",
+      "cta_secondary": "Learn More"
+    },
+    "features": {
+      "title": "Our Features",
+      "subtitle": "Everything you need in one place",
+      "feature1": {
+        "title": "Fast & Reliable",
+        "description": "Lightning-fast performance with 99.9% uptime guarantee"
+      },
+      "feature2": {
+        "title": "Secure & Safe",
+        "description": "Enterprise-grade security to protect your data"
+      },
+      "feature3": {
+        "title": "Easy to Use",
+        "description": "Intuitive interface designed for everyone"
+      },
+      "feature4": {
+        "title": "24/7 Support",
+        "description": "Round-the-clock customer support when you need it"
+      }
+    },
+    "testimonials": {
+      "title": "What Our Users Say",
+      "subtitle": "Trusted by thousands of customers worldwide"
+    },
+    "pricing": {
+      "title": "Choose Your Plan",
+      "subtitle": "Flexible pricing for every need",
+      "monthly": "Monthly",
+      "yearly": "Yearly",
+      "free": {
+        "title": "Free",
+        "price": "$0",
+        "description": "Perfect for getting started",
+        "features": [
+          "Up to 5 projects",
+          "Basic support",
+          "1GB storage"
+        ]
+      },
+      "pro": {
+        "title": "Pro",
+        "price": "$29",
+        "description": "For growing businesses",
+        "features": [
+          "Unlimited projects",
+          "Priority support",
+          "50GB storage",
+          "Advanced analytics"
+        ]
+      },
+      "enterprise": {
+        "title": "Enterprise",
+        "price": "$99",
+        "description": "For large organizations",
+        "features": [
+          "Everything in Pro",
+          "Custom integrations",
+          "Unlimited storage",
+          "Dedicated account manager"
+        ]
+      },
+      "get_started": "Get Started",
+      "most_popular": "Most Popular"
+    },
+    "footer": {
+      "description": "Building the future of digital experiences",
+      "links": {
+        "product": "Product",
+        "company": "Company",
+        "resources": "Resources",
+        "legal": "Legal"
+      },
+      "product_links": {
+        "features": "Features",
+        "pricing": "Pricing",
+        "api": "API",
+        "documentation": "Documentation"
+      },
+      "company_links": {
+        "about": "About Us",
+        "careers": "Careers",
+        "blog": "Blog",
+        "press": "Press"
+      },
+      "resource_links": {
+        "help_center": "Help Center",
+        "community": "Community",
+        "tutorials": "Tutorials",
+        "status": "Status"
+      },
+      "legal_links": {
+        "privacy": "Privacy Policy",
+        "terms": "Terms of Service",
+        "cookies": "Cookie Policy"
+      },
+      "copyright": "© 2025 Your Company. All rights reserved.",
+      "newsletter": {
+        "title": "Stay Updated",
+        "description": "Get the latest news and updates delivered to your inbox",
+        "placeholder": "Enter your email",
+        "subscribe": "Subscribe"
+      }
+    }
+  },
+  "auth": {
+    "login": {
+      "title": "Welcome Back",
+      "subtitle": "Sign in to your account",
+      "email": "Email Address",
+      "email_placeholder": "Enter your email",
+      "password": "Password",
+      "password_placeholder": "Enter your password",
+      "remember_me": "Remember me",
+      "forgot_password": "Forgot password?",
+      "sign_in": "Sign In",
+      "no_account": "Don't have an account?",
+      "sign_up": "Sign up here"
+    },
+    "register": {
+      "title": "Create Account",
+      "subtitle": "Join us today",
+      "first_name": "First Name",
+      "first_name_placeholder": "Enter your first name",
+      "last_name": "Last Name",
+      "last_name_placeholder": "Enter your last name",
+      "email": "Email Address",
+      "email_placeholder": "Enter your email",
+      "password": "Password",
+      "password_placeholder": "Create a password",
+      "confirm_password": "Confirm Password",
+      "confirm_password_placeholder": "Confirm your password",
+      "terms": "I agree to the Terms of Service and Privacy Policy",
+      "create_account": "Create Account",
+      "have_account": "Already have an account?",
+      "sign_in": "Sign in here"
+    }
+  },
+  "common": {
+    "loading": "Loading...",
+    "error": "An error occurred",
+    "success": "Success!",
+    "save": "Save",
+    "cancel": "Cancel",
+    "delete": "Delete",
+    "edit": "Edit",
+    "update": "Update",
+    "create": "Create",
+    "search": "Search",
+    "filter": "Filter",
+    "sort": "Sort",
+    "refresh": "Refresh",
+    "back": "Back",
+    "next": "Next",
+    "previous": "Previous",
+    "close": "Close",
+    "open": "Open",
+    "yes": "Yes",
+    "no": "No",
+    "confirm": "Confirm",
+    "submit": "Submit"
+  },
+  "errors": {
+    "required": "This field is required",
+    "invalid_email": "Please enter a valid email address",
+    "password_min": "Password must be at least 8 characters",
+    "passwords_match": "Passwords do not match",
+    "network_error": "Network error. Please try again.",
+    "server_error": "Server error. Please try again later.",
+    "unauthorized": "You are not authorized to perform this action",
+    "not_found": "The requested resource was not found"
+  }
+}
