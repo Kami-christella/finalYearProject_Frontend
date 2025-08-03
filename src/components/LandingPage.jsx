@@ -125,7 +125,7 @@ const LandingPage = () => {
             className="cta-btn" 
             onClick={(e) => {
               handleButtonClick(e);
-              navigate('Signup');
+              navigate('Login');
             }}
           >
             Get Started
