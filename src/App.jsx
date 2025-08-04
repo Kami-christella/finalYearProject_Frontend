@@ -1,7 +1,7 @@
-//import { useState } from 'react';
+//App.jsx
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import './App.css';
-// import Home from './components/Home';
+// import './i18n';
 import AdvisorDashboard from './components/AdvisorDashboard ';
 import ProfileDashboard from './components/ProfileDashboard';
 import EditProfile from './components/EditProfile';
