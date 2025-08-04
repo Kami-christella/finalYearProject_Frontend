@@ -65,14 +65,10 @@ const LanguageSwitcher = () => {
   const { i18n } = useTranslation();
 
   const languages = [
-    { code: 'en', name: 'English', flag: '🇺🇸' },
-    { code: 'fr', name: 'Français', flag: '🇫🇷' },
-    { code: 'es', name: 'Español', flag: '🇪🇸' },
-    { code: 'de', name: 'Deutsch', flag: '🇩🇪' },
-    { code: 'zh', name: '中文', flag: '🇨🇳' },
-    { code: 'ja', name: '日本語', flag: '🇯🇵' },
-    { code: 'ar', name: 'العربية', flag: '🇸🇦' },
-    { code: 'ru', name: 'Русский', flag: '🇷🇺' }
+    // { code: 'en', name: 'English', flag: '🇺🇸' },
+    // { code: 'fr', name: 'Français', flag: '🇫🇷' },
+      { code: 'en', name: 'English'},
+     { code: 'fr', name: 'Français'},
   ];
 
   const currentLanguage = languages.find(lang => lang.code === i18n.language) || languages[0];

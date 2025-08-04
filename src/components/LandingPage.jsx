@@ -122,7 +122,7 @@ const LandingPage = () => {
             <li><button onClick={() => smoothScroll('about')}>About</button></li>
             <li><button onClick={() => smoothScroll('contact')}>Contact</button></li>
           </ul>
-          <LanguageSwitcher />
+          
           <button
             className="cta-btn"
             onClick={(e) => {
@@ -132,6 +132,7 @@ const LandingPage = () => {
           >
             Get Started
           </button>
+          <LanguageSwitcher/>
         </div>
       </nav>
 
