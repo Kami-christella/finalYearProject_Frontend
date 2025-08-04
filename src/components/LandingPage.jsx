@@ -340,13 +340,13 @@
 import React, { useState, useEffect, useRef } from 'react';
 import PropTypes from 'prop-types';
 import { useNavigate } from 'react-router-dom';
-import { useLocalization } from '../localization/LocalizationContext'; // Changed this line
-import LanguageSwitcher from './LanguageSwitcher'; // Changed this line
+import { useLocalization } from '../localization/LocalizationContext'; 
+import LanguageSwitcher from './LanguageSwitcher'; 
 import '../components/styles/LandingPage.css'
 
 const LandingPage = () => {
   const navigate = useNavigate();
-  const { t } = useLocalization(); // Changed this line
+  const { t } = useLocalization(); 
   const [isScrolled, setIsScrolled] = useState(false);
   const statsRef = useRef(null);
   const [statsAnimated, setStatsAnimated] = useState(false);
@@ -465,7 +465,7 @@ const LandingPage = () => {
           
           {/* Language Switcher */}
           <div className="nav-actions">
-            <LanguageSwitcher />
+           
             <button 
               className="cta-btn" 
               onClick={(e) => {
@@ -475,6 +475,7 @@ const LandingPage = () => {
             >
               {t('nav.getStarted')}
             </button>
+             <LanguageSwitcher />
           </div>
         </div>
       </nav>
@@ -498,7 +499,7 @@ const LandingPage = () => {
               className="btn-primary pulse" 
               onClick={(e) => {
                 handleButtonClick(e);
-                navigate('StudentProfile')
+                navigate('Login')
               }}
             >
               {t('hero.startAssessment')}
@@ -587,7 +588,7 @@ const LandingPage = () => {
             className="btn-primary cta-large" 
             onClick={(e) => {
               handleButtonClick(e);
-              navigate('StudentProfile');
+              navigate('Login');
             }}
           >
             {t('cta.startJourney')}
