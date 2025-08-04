@@ -632,6 +632,7 @@ const LandingPage = () => {
           <p>{t('footer.copyright')}</p>
         </div>
       </footer>
+      
     </div>
   );
 };

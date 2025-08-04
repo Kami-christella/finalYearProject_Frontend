@@ -38,10 +38,10 @@ const translations = {
     'footer.faq': 'FAQ',
     'footer.privacyPolicy': 'Privacy Policy',
     'footer.termsOfService': 'Terms of Service',
-    'footer.email': 'Email: support@careerpath.com',
-    'footer.phone': 'Phone: +1 (555) 123-4567',
-    'footer.address': 'Address: 123 Career St, Future City, FC 12345',
-    'footer.copyright': '© 2025 CareerPath. All rights reserved.'
+    'footer.email': 'Email: www.auca.ac.rw',
+    'footer.phone': 'Phone: +250 724796998',
+    'footer.address': 'Address: Kigali, Rwanda',
+    'footer.copyright': '© 2025 AUCA CareerPath. All rights reserved.'
   },
   fr: {
     'nav.home': 'Accueil',
@@ -81,10 +81,10 @@ const translations = {
     'footer.faq': 'FAQ',
     'footer.privacyPolicy': 'Politique de Confidentialité',
     'footer.termsOfService': 'Conditions d\'Utilisation',
-    'footer.email': 'Email: support@careerpath.com',
-    'footer.phone': 'Téléphone: +1 (555) 123-4567',
-    'footer.address': 'Adresse: 123 Career St, Future City, FC 12345',
-    'footer.copyright': '© 2025 CareerPath. Tous droits réservés.'
+    'footer.email': 'Email: www.auca.ac.rw',
+    'footer.phone': 'Téléphone: +250 724796998',
+    'footer.address': 'Adresse: Kigali, Rwanda',
+    'footer.copyright': '© 2025 AUCA CareerPath. Tous droits réservés.'
   },
   es: {
     'nav.home': 'Inicio',
@@ -124,10 +124,10 @@ const translations = {
     'footer.faq': 'Preguntas Frecuentes',
     'footer.privacyPolicy': 'Política de Privacidad',
     'footer.termsOfService': 'Términos de Servicio',
-    'footer.email': 'Email: support@careerpath.com',
-    'footer.phone': 'Teléfono: +1 (555) 123-4567',
-    'footer.address': 'Dirección: 123 Career St, Future City, FC 12345',
-    'footer.copyright': '© 2025 CareerPath. Todos los derechos reservados.'
+    'footer.email': 'Email: www.auca.ac.rw',
+    'footer.phone': 'Teléfono: +250 724796998',
+    'footer.address': 'Dirección: Kigali, Rwanda',
+    'footer.copyright': '© 2025 AUCA CareerPath. Todos los derechos reservados.'
   }
 };
 
