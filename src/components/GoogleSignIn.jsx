@@ -1,10 +1,9 @@
-// Method 1: Using Google Identity Services (Recommended - New API)
 // src/components/GoogleSignIn.jsx
 
 import React, { useEffect } from 'react';
 
 const GoogleSignIn = ({ onSuccess, onError }) => {
-  const GOOGLE_CLIENT_ID = "YOUR_GOOGLE_CLIENT_ID.apps.googleusercontent.com"; // Replace with your actual Client ID
+  const GOOGLE_CLIENT_ID = "800358726952-lqihldijgthlltjqcnsqgq36rb88rqkh.apps.googleusercontent.com";
 
   useEffect(() => {
     // Load Google Identity Services
@@ -96,7 +95,7 @@ const GoogleSignIn = ({ onSuccess, onError }) => {
 // src/components/GoogleSignInPopup.jsx
 
 const GoogleSignInPopup = ({ onSuccess, onError }) => {
-  const GOOGLE_CLIENT_ID = "YOUR_GOOGLE_CLIENT_ID.apps.googleusercontent.com";
+  const GOOGLE_CLIENT_ID = "800358726952-lqihldijgthlltjqcnsqgq36rb88rqkh.apps.googleusercontent.com";
 
   useEffect(() => {
     // Load Google Identity Services
@@ -176,12 +175,6 @@ const GoogleSignInPopup = ({ onSuccess, onError }) => {
     </button>
   );
 };
-
-// Method 3: Environment Variable Configuration
-// Create .env file in your project root:
-/*
-VITE_GOOGLE_CLIENT_ID=your_actual_client_id_here.apps.googleusercontent.com
-*/
 
 // Updated component using environment variables
 const GoogleSignInEnv = ({ onSuccess, onError }) => {
