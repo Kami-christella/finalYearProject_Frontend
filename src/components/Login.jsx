@@ -450,7 +450,7 @@ export const tokenUtils = {
   }
 };
 
-// ADDED: Route protection utility
+
 export const routeProtection = {
   // Check if current user can access advisor routes
   canAccessAdvisorRoutes: () => {
@@ -462,7 +462,7 @@ export const routeProtection = {
     return tokenUtils.isStudent();
   },
   
-  // Redirect unauthorized users
+  
   redirectIfUnauthorized: (requiredRole = 'student') => {
     if (!tokenUtils.isAuthenticated()) {
       window.location.href = '/login';
@@ -472,12 +472,12 @@ export const routeProtection = {
     const userRole = tokenUtils.getUserRole();
     
     if (requiredRole === 'advisor' && !tokenUtils.isAdvisorOrAdmin()) {
-      window.location.href = '/ProfileDashboard'; // Redirect students to their dashboard
+      window.location.href = '/ProfileDashboard'; 
       return false;
     }
     
     if (requiredRole === 'student' && !tokenUtils.isStudent()) {
-      window.location.href = '/advisorDashboard'; // Redirect advisors to their dashboard
+      window.location.href = '/advisorDashboard'; 
       return false;
     }
     
