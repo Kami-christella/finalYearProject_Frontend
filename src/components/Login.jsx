@@ -1,4 +1,4 @@
-// components/Login.jsx - UPDATED WITH ADVISOR REDIRECT
+// components/Login.jsx 
 import React, { useState } from 'react';
 import '../components/styles/auth.css'
 import { Notify } from 'notiflix';
@@ -342,7 +342,7 @@ const Login = () => {
   );
 };
 
-// UPDATED: Enhanced utility functions for role-based navigation
+
 export const tokenUtils = {
   // Get stored token
   getToken: () => {
@@ -428,7 +428,6 @@ export const tokenUtils = {
     }
   },
 
-  // ADDED: Redirect user to appropriate dashboard based on role
   redirectToDashboard: async () => {
     const role = tokenUtils.getUserRole();
     
