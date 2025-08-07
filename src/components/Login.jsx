@@ -488,7 +488,6 @@
 
 
 // components/Login.jsx - Updated with Google Sign-In
-// components/Login.jsx - Clean version without JSX warnings
 import React, { useState, useEffect } from 'react';
 import '../components/styles/auth.css';
 import { Notify } from 'notiflix';
@@ -515,7 +514,7 @@ const Login = () => {
     document.head.appendChild(script);
 
     script.onload = () => {
-      if (window.google && GOOGLE_CLIENT_ID !== "YOUR_GOOGLE_CLIENT_ID.apps.googleusercontent.com") {
+      if (window.google && GOOGLE_CLIENT_ID !== "800358726952-lqihldijgthlltjqcnsqgq36rb88rqkh.apps.googleusercontent.com") {
         window.google.accounts.id.initialize({
           client_id: GOOGLE_CLIENT_ID,
           callback: handleGoogleResponse
