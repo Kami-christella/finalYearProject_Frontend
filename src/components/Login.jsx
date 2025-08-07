@@ -488,8 +488,9 @@
 
 
 // components/Login.jsx - Updated with Google Sign-In
+// components/Login.jsx - Clean version without JSX warnings
 import React, { useState, useEffect } from 'react';
-import '../components/styles/auth.css'
+import '../components/styles/auth.css';
 import { Notify } from 'notiflix';
 
 const Login = () => {
@@ -522,9 +523,30 @@ const Login = () => {
       }
     };
 
+    // Add CSS for spinner animation
+    const style = document.createElement('style');
+    style.textContent = `
+      @keyframes spin {
+        0% { transform: rotate(0deg); }
+        100% { transform: rotate(360deg); }
+      }
+      .google-spinner {
+        width: 20px;
+        height: 20px;
+        border: 2px solid #f3f3f3;
+        border-top: 2px solid #4285f4;
+        border-radius: 50%;
+        animation: spin 1s linear infinite;
+      }
+    `;
+    document.head.appendChild(style);
+
     return () => {
       if (script.parentNode) {
         script.parentNode.removeChild(script);
+      }
+      if (style.parentNode) {
+        style.parentNode.removeChild(style);
       }
     };
   }, []);
@@ -589,7 +611,7 @@ const Login = () => {
           id: data._id || data.user?.id || userInfo.sub,
           name: data.name || data.user?.name || userInfo.name,
           email: data.email || data.user?.email || userInfo.email,
-          role: data.role || data.user?.role || data.userRole || 'student', // Default to student
+          role: data.role || data.user?.role || data.userRole || 'student',
           picture: userInfo.picture,
           authMethod: 'google'
         };
@@ -643,7 +665,7 @@ const Login = () => {
     });
   };
 
-  // UPDATED: Enhanced redirect logic based on user role
+  // Enhanced redirect logic based on user role
   const redirectBasedOnRole = async (userData, token) => {
     const userRole = userData.role || userData.userRole;
     
@@ -674,7 +696,7 @@ const Login = () => {
     }
   };
 
-  // UPDATED: Function to check student profile and redirect accordingly
+  // Function to check student profile and redirect accordingly
   const checkStudentProfileAndRedirect = async (token, userData) => {
     try {
       console.log('🔍 Checking if student has a profile...');
@@ -687,11 +709,9 @@ const Login = () => {
       });
 
       if (response.ok) {
-        // Student has a profile - redirect to student dashboard
         const profileData = await response.json();
         console.log('✅ Student has profile, redirecting to student dashboard');
         
-        // Store profile completion status
         localStorage.setItem('profileCompleted', 'true');
         if (profileData.profile?._id) {
           localStorage.setItem('profileId', profileData.profile._id);
@@ -704,7 +724,6 @@ const Login = () => {
         }, 1500);
         
       } else if (response.status === 404) {
-        // Student doesn't have a profile - redirect to create profile
         console.log('📝 Student needs to create profile');
         
         localStorage.setItem('profileCompleted', 'false');
@@ -716,7 +735,6 @@ const Login = () => {
         }, 1500);
         
       } else {
-        // Some other error - redirect to create profile as fallback
         console.log('⚠️ Error checking profile, redirecting to create profile');
         
         Notify.warning('Please complete your profile to continue...');
@@ -728,7 +746,6 @@ const Login = () => {
     } catch (error) {
       console.error('❌ Error checking student profile:', error);
       
-      // Fallback - redirect to create profile
       Notify.warning('Redirecting to profile creation...');
       
       setTimeout(() => {
@@ -754,22 +771,19 @@ const Login = () => {
       const data = await response.json();
 
       if (response.ok) {
-        // Store the authentication token
         localStorage.setItem('token', data.token);
         
-        // Store user data with comprehensive role handling
         const userData = {
           id: data._id || data.user?.id,
           name: data.name || data.user?.name,
           email: data.email || data.user?.email,
-          role: data.role || data.user?.role || data.userRole, // Handle different role field names
+          role: data.role || data.user?.role || data.userRole,
           authMethod: 'email'
         };
         
         localStorage.setItem('user', JSON.stringify(userData));
         localStorage.setItem('authMethod', 'email');
         
-        // Store additional data if available
         if (data.profileCompleted) {
           localStorage.setItem('profileCompleted', 'true');
         }
@@ -783,7 +797,6 @@ const Login = () => {
         
         Notify.success('Login successful! Redirecting...');
         
-        // UPDATED: Redirect based on user role
         await redirectBasedOnRole(userData, data.token);
         
       } else {
@@ -844,7 +857,6 @@ const Login = () => {
               type="button"
               onClick={handleGoogleSignIn}
               disabled={googleLoading || GOOGLE_CLIENT_ID === "YOUR_GOOGLE_CLIENT_ID.apps.googleusercontent.com"}
-              className={`social-btn google-btn ${googleLoading ? 'loading' : ''}`}
               style={{
                 width: '100%',
                 marginBottom: '1rem',
@@ -865,19 +877,11 @@ const Login = () => {
             >
               {googleLoading ? (
                 <>
-                  <div className="spinner" style={{
-                    width: '20px',
-                    height: '20px',
-                    border: '2px solid #f3f3f3',
-                    borderTop: '2px solid #4285f4',
-                    borderRadius: '50%',
-                    animation: 'spin 1s linear infinite'
-                  }}></div>
+                  <div className="google-spinner"></div>
                   Signing in with Google...
                 </>
               ) : (
                 <>
-                  {/* Google Logo SVG */}
                   <svg width="20" height="20" viewBox="0 0 24 24">
                     <path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/>
                     <path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/>
@@ -967,8 +971,6 @@ const Login = () => {
             </button>
           </div>
 
-          {/* Remove the old social login section since Google is now integrated above */}
-
           <div className="auth-footer">
             <p className="auth-footer-text">
               Don't have an account?{' '}
@@ -990,67 +992,36 @@ const Login = () => {
           Back to Home
         </button>
       </div>
-
-      {/* Add spinner animation */}
-      <style jsx>{`
-        @keyframes spin {
-          0% { transform: rotate(0deg); }
-          100% { transform: rotate(360deg); }
-        }
-      `}</style>
     </div>
   );
 };
 
-// Updated tokenUtils to handle Google authentication
+// Token utilities (unchanged)
 export const tokenUtils = {
-  // Get stored token
-  getToken: () => {
-    return localStorage.getItem('token');
-  },
-  
-  // Get stored user data
+  getToken: () => localStorage.getItem('token'),
   getUser: () => {
     const userData = localStorage.getItem('user');
     return userData ? JSON.parse(userData) : null;
   },
-  
-  // Get authentication method
-  getAuthMethod: () => {
-    return localStorage.getItem('authMethod') || 'email';
-  },
-  
-  // Check if user is authenticated
+  getAuthMethod: () => localStorage.getItem('authMethod') || 'email',
   isAuthenticated: () => {
     const token = localStorage.getItem('token');
     const user = localStorage.getItem('user');
     return !!(token && user);
   },
-  
-  // Get user role
   getUserRole: () => {
     const user = tokenUtils.getUser();
     return user?.role || user?.userRole || 'student';
   },
-  
-  // Check if user is advisor or admin
   isAdvisorOrAdmin: () => {
     const role = tokenUtils.getUserRole();
     return role === 'advisor' || role === 'admin';
   },
-  
-  // Check if user is student
   isStudent: () => {
     const role = tokenUtils.getUserRole();
-    return role === 'student' || !role; // Default to student if no role
+    return role === 'student' || !role;
   },
-  
-  // Check if user signed in with Google
-  isGoogleUser: () => {
-    return tokenUtils.getAuthMethod() === 'google';
-  },
-  
-  // Clear all stored data (for logout)
+  isGoogleUser: () => tokenUtils.getAuthMethod() === 'google',
   clearStorage: () => {
     localStorage.removeItem('token');
     localStorage.removeItem('user');
@@ -1060,20 +1031,15 @@ export const tokenUtils = {
     localStorage.removeItem('hasRecommendations');
     localStorage.removeItem('authMethod');
   },
-  
-  // Get authorization header for API calls
   getAuthHeader: () => {
     const token = localStorage.getItem('token');
     return token ? { 'Authorization': `Bearer ${token}` } : {};
   },
-
-  // UPDATED: Check if user has profile (for students only)
   checkUserProfile: async () => {
     try {
       const token = tokenUtils.getToken();
       if (!token) return null;
 
-      // Only check profile for students
       if (!tokenUtils.isStudent()) {
         return { hasProfile: true, isAdvisor: true };
       }
@@ -1089,7 +1055,7 @@ export const tokenUtils = {
         const data = await response.json();
         return { hasProfile: true, profile: data.profile };
       } else if (response.status === 404) {
-        return { hasProfile: false }; // No profile exists
+        return { hasProfile: false };
       } else {
         throw new Error('Failed to check profile');
       }
@@ -1098,7 +1064,6 @@ export const tokenUtils = {
       return { hasProfile: false, error: true };
     }
   },
-
   redirectToDashboard: async () => {
     const role = tokenUtils.getUserRole();
     
@@ -1121,16 +1086,8 @@ export const tokenUtils = {
 };
 
 export const routeProtection = {
-  // Check if current user can access advisor routes
-  canAccessAdvisorRoutes: () => {
-    return tokenUtils.isAdvisorOrAdmin();
-  },
-  
-  // Check if current user can access student routes
-  canAccessStudentRoutes: () => {
-    return tokenUtils.isStudent();
-  },
-  
+  canAccessAdvisorRoutes: () => tokenUtils.isAdvisorOrAdmin(),
+  canAccessStudentRoutes: () => tokenUtils.isStudent(),
   redirectIfUnauthorized: (requiredRole = 'student') => {
     if (!tokenUtils.isAuthenticated()) {
       window.location.href = '/login';
