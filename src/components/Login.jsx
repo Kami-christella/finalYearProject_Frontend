@@ -664,7 +664,6 @@ const Login = () => {
     });
   };
 
-  // Enhanced redirect logic based on user role
   const redirectBasedOnRole = async (userData, token) => {
     const userRole = userData.role || userData.userRole;
     
