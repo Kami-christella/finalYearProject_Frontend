@@ -81,12 +81,14 @@ body {
   top: 0;
   width: 100%;
   padding: 1rem 2rem;
-  background: rgba(255, 255, 255, 0.95);
+  /* background: rgba(255, 255, 255, 0.95); */
+   background: rgba(255, 255, 255, 0.95);
+  box-shadow: 0 2px 20px rgba(37, 99, 235, 0.05);
   backdrop-filter: blur(20px);
   border-bottom: 1px solid rgba(37, 99, 235, 0.1);
   z-index: 1000;
   transition: all 0.3s ease;
-  box-shadow: 0 2px 20px rgba(37, 99, 235, 0.05);
+  /* box-shadow: 0 2px 20px rgba(37, 99, 235, 0.05); */
   
 }
 
@@ -140,7 +142,8 @@ body {
 .nav-links button {
   background: none;
   border: none;
-  color: #1e40af;
+  color: #000000;          /* ← BOLD BLACK TEXT */
+  font-weight: 800; 
   font-weight: 500;
   cursor: pointer;
   transition: all 0.3s ease;
