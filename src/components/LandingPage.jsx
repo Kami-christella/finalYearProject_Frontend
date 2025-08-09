@@ -1,4 +1,4 @@
-// 📁 frontend/src/components/LandingPage.jsx - Updated with i18n
+// 📁 frontend/src/components/LandingPage.jsx 
 
 import React, { useState, useEffect, useRef } from 'react';
 import PropTypes from 'prop-types';
