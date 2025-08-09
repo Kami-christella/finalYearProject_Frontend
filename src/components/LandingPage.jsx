@@ -135,7 +135,9 @@ const LandingPage = () => {
     <button className="cta-btn" onClick={(e) => { handleButtonClick(e); navigate('Login'); }}>
       {t('nav.getStarted')}
     </button>
-    <LanguageSwitcher />
+    <div className="language-switcher">
+      <LanguageSwitcher />
+    </div>
   </div>
 </div>
       </nav>

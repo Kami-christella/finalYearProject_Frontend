@@ -94,6 +94,12 @@ body {
   box-shadow: 0 4px 30px rgba(37, 99, 235, 0.1);
 }
 
+.nav-center {
+  display: flex;
+  justify-content: center;
+  flex: 1;
+}
+
 .nav-container {
   max-width: 1200px;
   margin: 0 auto;
@@ -101,6 +107,7 @@ body {
   justify-content: space-between;
   align-items: center;
   gap: 1rem;
+  
 }
 
 .logo {
@@ -111,6 +118,12 @@ body {
   -webkit-text-fill-color: transparent;
   background-clip: text;
   position: relative;
+
+}
+
+.logo-container {
+  margin-left: -250px;
+  margin-right: 170px;
 }
 
 .logo::after {
@@ -149,6 +162,7 @@ body {
   border-radius: 8px;
   /* text-transform: uppercase; */
   letter-spacing: 0.5px;
+  text-align: center;
 }
 
 .nav-links button::before {
@@ -178,6 +192,8 @@ body {
   display: flex;
   align-items: center;
   gap: 1rem;
+   order: 3;
+
 }
 
 .cta-btn {
@@ -192,6 +208,8 @@ body {
   position: relative;
   overflow: hidden;
   box-shadow: 0 4px 15px rgba(37, 99, 235, 0.3);
+  margin-left: 40px !important;
+  /* order:10; */
 }
 
 .cta-btn::before {
@@ -258,7 +276,10 @@ body {
   flex-wrap: wrap;
   animation: slideInUp 1s ease-out 0.4s both;
 }
-
+.language-switcher{
+  /* order: 15; */
+  margin-right: -220px;
+}
 .btn-primary {
   background: linear-gradient(135deg, #2563eb, #1d4ed8);
   color: white;
