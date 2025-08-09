@@ -111,6 +111,13 @@ body {
 }
 
 .logo {
+  /* font-size: 1.8rem;
+  font-weight: 800;
+  background: linear-gradient(135deg, #2563eb, #1d4ed8);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  position: relative; */
   font-size: 1.8rem;
   font-weight: 800;
   background: linear-gradient(135deg, #2563eb, #1d4ed8);
@@ -118,12 +125,11 @@ body {
   -webkit-text-fill-color: transparent;
   background-clip: text;
   position: relative;
-
+  margin-right: auto;
 }
 
 .logo-container {
-  margin-left: -250px;
-  margin-right: 170px;
+  /* order: 1;  */
 }
 
 .logo::after {
@@ -162,7 +168,6 @@ body {
   border-radius: 8px;
   /* text-transform: uppercase; */
   letter-spacing: 0.5px;
-  text-align: center;
 }
 
 .nav-links button::before {
@@ -193,7 +198,6 @@ body {
   align-items: center;
   gap: 1rem;
    order: 3;
-
 }
 
 .cta-btn {
@@ -208,8 +212,6 @@ body {
   position: relative;
   overflow: hidden;
   box-shadow: 0 4px 15px rgba(37, 99, 235, 0.3);
-  margin-left: 40px !important;
-  /* order:10; */
 }
 
 .cta-btn::before {
@@ -253,7 +255,9 @@ body {
   font-size: clamp(3rem, 8vw, 6rem);
   font-weight: 900;
   margin-bottom: 1rem;
-  background: linear-gradient(135deg, #1e40af, #2563eb, #3b82f6);
+  background-color: #000000;
+  font-weight: bold;
+  /* background: linear-gradient(135deg, #1e40af, #2563eb, #3b82f6); */
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   background-clip: text;
@@ -276,10 +280,7 @@ body {
   flex-wrap: wrap;
   animation: slideInUp 1s ease-out 0.4s both;
 }
-.language-switcher{
-  /* order: 15; */
-  margin-right: -220px;
-}
+
 .btn-primary {
   background: linear-gradient(135deg, #2563eb, #1d4ed8);
   color: white;
@@ -463,7 +464,9 @@ body {
   font-size: 3rem;
   font-weight: 800;
   margin-bottom: 3rem;
-  background: linear-gradient(135deg, #1e40af, #2563eb);
+  background-color: #000000;
+  font-weight: bold;
+  /* background: linear-gradient(135deg, #1e40af, #2563eb); */
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   background-clip: text;
@@ -542,7 +545,8 @@ body {
   font-size: 1.5rem;
   font-weight: 700;
   margin-bottom: 1rem;
-  color: #1e40af;
+  /* color: #1e40af; */
+  color:#000000;
   position: relative;
   z-index: 1;
 }
