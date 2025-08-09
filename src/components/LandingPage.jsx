@@ -118,29 +118,26 @@ const LandingPage = () => {
       {/* Navigation */}
       <nav className={`navbar ${isScrolled ? 'scrolled' : ''}`}>
         <div className="nav-container">
-          <div className="logo">CareerPath</div>
-          <ul className="nav-links">
-            <li><button onClick={() => smoothScroll('home')}>{t('nav.home')}</button></li>
-            <li><button onClick={() => smoothScroll('features')}>{t('nav.features')}</button></li>
-            <li><button onClick={() => smoothScroll('about')}>{t('nav.about')}</button></li>
-            <li><button onClick={() => smoothScroll('contact')}>{t('nav.contact')}</button></li>
-          </ul>
-          
-          {/* Language Switcher */}
-          <div className="nav-actions">
-           
-            <button 
-              className="cta-btn" 
-              onClick={(e) => {
-                handleButtonClick(e);
-                navigate('Login');
-              }}
-            >
-              {t('nav.getStarted')}
-            </button>
-             <LanguageSwitcher />
-          </div>
-        </div>
+  <div className="logo-container">
+    <div className="logo">CareerPath</div>
+  </div>
+  
+  <div className="nav-center">
+    <ul className="nav-links">
+      <li><button onClick={() => smoothScroll('home')}>{t('nav.home')}</button></li>
+      <li><button onClick={() => smoothScroll('features')}>{t('nav.features')}</button></li>
+      <li><button onClick={() => smoothScroll('about')}>{t('nav.about')}</button></li>
+      <li><button onClick={() => smoothScroll('contact')}>{t('nav.contact')}</button></li>
+    </ul>
+  </div>
+  
+  <div className="nav-actions">
+    <button className="cta-btn" onClick={(e) => { handleButtonClick(e); navigate('Login'); }}>
+      {t('nav.getStarted')}
+    </button>
+    <LanguageSwitcher />
+  </div>
+</div>
       </nav>
 
       {/* Hero Section */}
