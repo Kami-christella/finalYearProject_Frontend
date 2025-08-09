@@ -502,7 +502,7 @@ const Login = () => {
   const [showPassword, setShowPassword] = useState(false);
   const [googleLoading, setGoogleLoading] = useState(false);
 
-  // Google Client ID - Replace with your actual Client ID
+
   const GOOGLE_CLIENT_ID = import.meta.env.VITE_GOOGLE_CLIENT_ID || "YOUR_GOOGLE_CLIENT_ID.apps.googleusercontent.com";
 
   // Initialize Google Sign-In
@@ -602,7 +602,7 @@ const Login = () => {
       const data = await loginResponse.json();
 
       if (loginResponse.ok) {
-        // Store the authentication token
+        // Store  authentication token
         localStorage.setItem('token', data.token);
         
         // Store user data with comprehensive role handling
