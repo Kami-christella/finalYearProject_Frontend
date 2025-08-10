@@ -495,7 +495,7 @@ const StudentProfile = () => {
           {/* Logout Button */}
           <div className="header-actions">
             <button onClick={handleLogout} className="logout-btn">
-              <span className="logout-icon">🚪</span>
+              <span className="logout-icon"></span>
               <span className="logout-text">Logout</span>
             </button>
           </div>
@@ -1811,13 +1811,13 @@ const StudentProfile = () => {
                             >
                               Upload Image
                             </button>
-                            <button
+                            {/* <button
                               type="button"
                               onClick={() => cameraInputRef.current?.click()}
                               className="upload-btn secondary"
                             >
                               Take Photo
-                            </button>
+                            </button> */}
                           </div>
                           <p className="upload-info">JPG, PNG up to 5MB</p>
                         </div>
