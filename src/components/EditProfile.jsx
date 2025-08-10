@@ -1,3 +1,4 @@
+// EditProfile.jsx
 import React, { useState, useEffect, useRef } from 'react';
 import { Notify } from 'notiflix';
 import './styles/EditProfile.css';
