@@ -1809,7 +1809,7 @@ const StudentProfile = () => {
                               onClick={() => fileInputRef.current?.click()}
                               className="upload-btn primary"
                             >
-                              Upload Image
+                              Upload Your Image (Passport Picture)
                             </button>
                             {/* <button
                               type="button"
@@ -1820,6 +1820,7 @@ const StudentProfile = () => {
                             </button> */}
                           </div>
                           <p className="upload-info">JPG, PNG up to 5MB</p>
+                          <p className="upload-info">Upload High School Transcripts for 3 years, University Transcript (For Transfer Students), Diploma, Other Certificates</p>
                         </div>
                       )}
 
