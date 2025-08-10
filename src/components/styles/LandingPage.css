@@ -561,6 +561,7 @@ body {
 /* Stats Section */
 .stats {
   padding: 6rem 2rem;
+  /* background-color: #000000; */
   background: linear-gradient(135deg, #2563eb 0%, #1d4ed8 100%);
   position: relative;
   overflow: hidden;
@@ -589,7 +590,8 @@ body {
 
 .stat-item {
   padding: 2rem;
-  background: rgba(255, 255, 255, 0.1);
+  background: rgba(255, 255, 255, 0.9);
+  /* background: rgba(255, 255, 255, 0.1); */
   border-radius: 15px;
   backdrop-filter: blur(10px);
   border: 1px solid rgba(255, 255, 255, 0.2);
