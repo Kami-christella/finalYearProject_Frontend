@@ -311,7 +311,7 @@
 }
 
 .edit-btn, .logout-btn {
-  background: rgba(255, 255, 255, 0.9);
+  background: rgba(169, 58, 58, 0.9);
   color: #374151;
   border: 2px solid #e5e7eb;
   padding: 1rem 1.5rem;
@@ -1353,7 +1353,145 @@
   }
 }
 
-/* Dark mode support (optional) */
+/* Additional Blue Color Fixes - Removing ALL Purple References */
+
+/* Ensure CTA section uses blue gradients */
+.cta-section {
+  background: linear-gradient(135deg, rgba(59, 130, 246, 0.05), rgba(37, 99, 235, 0.08));
+  border: 2px solid rgba(59, 130, 246, 0.15);
+}
+
+/* Fix any remaining purple gradients in buttons */
+.create-profile-btn, 
+.retry-btn,
+.assessment-cta-btn {
+  background: linear-gradient(135deg, #3b82f6, #1d4ed8) !important;
+  box-shadow: 0 6px 20px rgba(59, 130, 246, 0.3) !important;
+}
+
+.create-profile-btn:hover, 
+.retry-btn:hover,
+.assessment-cta-btn:hover {
+  box-shadow: 0 12px 40px rgba(59, 130, 246, 0.4) !important;
+}
+
+/* Fix tab active state to use blue instead of purple */
+.tab-btn.active {
+  background: linear-gradient(135deg, #3b82f6, #1d4ed8) !important;
+  color: white;
+  box-shadow: 0 6px 20px rgba(59, 130, 246, 0.3);
+}
+
+/* Ensure avatar placeholder uses blue */
+.avatar-placeholder {
+  background: linear-gradient(135deg, #3b82f6, #1d4ed8) !important;
+}
+
+/* Fix any purple references in borders */
+.profile-header,
+.stat-card,
+.tab-content,
+.info-card,
+.document-item,
+.experience-item,
+.activity-item,
+.skill-item,
+.language-item {
+  border-color: rgba(59, 130, 246, 0.1) !important;
+}
+
+/* Ensure all gradient backgrounds use blue */
+.stat-icon,
+.document-icon {
+  background: linear-gradient(135deg, #3b82f6, #1d4ed8) !important;
+}
+
+/* Fix badge colors to use blue */
+.badge.info {
+  background: linear-gradient(135deg, #3b82f6, #1d4ed8) !important;
+}
+
+/* Ensure interest tags use blue */
+.interest-tag {
+  background: linear-gradient(135deg, #3b82f6, #1d4ed8) !important;
+}
+
+/* Fix verified badge and current badge colors */
+.verified-badge,
+.current-badge {
+  background: linear-gradient(135deg, #10b981, #059669) !important;
+}
+
+/* Ensure view document button uses blue */
+.view-doc-btn {
+  background: linear-gradient(135deg, #3b82f6, #1d4ed8) !important;
+}
+
+/* Fix any remaining purple in animations and effects */
+.dashboard-container::before {
+  background: 
+    radial-gradient(circle at 20% 20%, rgba(59, 130, 246, 0.03) 0%, transparent 50%),
+    radial-gradient(circle at 80% 80%, rgba(37, 99, 235, 0.05) 0%, transparent 50%),
+    radial-gradient(circle at 40% 60%, rgba(147, 197, 253, 0.02) 0%, transparent 50%) !important;
+}
+
+/* Ensure shimmer effects use blue */
+.profile-header::before,
+.stat-card::before,
+.cta-section::before {
+  background: linear-gradient(90deg, transparent, rgba(59, 130, 246, 0.03), transparent) !important;
+}
+
+/* Fix any purple in hover states */
+.stat-card:hover,
+.info-card:hover,
+.document-item:hover,
+.experience-item:hover,
+.activity-item:hover,
+.skill-item:hover,
+.language-item:hover {
+  border-color: rgba(59, 130, 246, 0.2) !important;
+  box-shadow: 0 12px 35px rgba(59, 130, 246, 0.15) !important;
+}
+
+/* Ensure all blue accent elements are consistent */
+.card-title::before {
+  background: linear-gradient(135deg, #3b82f6, #1d4ed8) !important;
+}
+
+/* Fix experience/activity left border */
+.experience-item,
+.activity-item {
+  border-left: 6px solid #3b82f6 !important;
+}
+
+/* Ensure document type badges use blue */
+.document-type {
+  color: #3b82f6 !important;
+  background: rgba(59, 130, 246, 0.1) !important;
+}
+
+/* Fix profile title and other text gradients */
+.profile-name,
+.cta-title,
+.card-title,
+.exp-title,
+.activity-name {
+  background: linear-gradient(135deg, #1e40af, #3b82f6) !important;
+  -webkit-background-clip: text !important;
+  -webkit-text-fill-color: transparent !important;
+  background-clip: text !important;
+}
+
+/* Ensure error icon uses blue gradient */
+.error-icon {
+  background: linear-gradient(135deg, #3b82f6, #1d4ed8) !important;
+  -webkit-background-clip: text !important;
+  -webkit-text-fill-color: transparent !important;
+  background-clip: text !important;
+}
+
+/* Dark mode support with blue theme */
 @media (prefers-color-scheme: dark) {
   .dashboard-container {
     background: linear-gradient(135deg, #0f172a 0%, #1e293b 25%, #334155 50%, #475569 75%, #64748b 100%);
@@ -1364,7 +1502,7 @@
   .tab-content,
   .info-card {
     background: rgba(30, 41, 59, 0.95);
-    border-color: rgba(59, 130, 246, 0.2);
+    border-color: rgba(59, 130, 246, 0.2) !important;
   }
 
   .profile-name,
@@ -1387,6 +1525,73 @@
   .goals-text {
     color: #94a3b8;
   }
+}
+
+/* Final override to ensure no purple remains */
+* {
+  /* Remove any potential purple color inheritance */
+}
+
+/* Specific Logout Button Blue Color Fix */
+.logout-btn {
+  background: rgba(255, 255, 255, 0.9) !important;
+  color: #374151 !important;
+  border: 2px solid #e5e7eb !important;
+  padding: 1rem 1.5rem;
+  border-radius: 16px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  backdrop-filter: blur(10px);
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
+}
+
+.logout-btn:hover {
+  background: rgba(59, 130, 246, 0.05) !important;
+  border-color: #3b82f6 !important;
+  color: #3b82f6 !important;
+  transform: translateY(-2px);
+  box-shadow: 0 8px 25px rgba(59, 130, 246, 0.15) !important;
+}
+
+/* Alternative logout button style if you want it to be fully blue */
+.logout-btn.blue-style {
+  background: linear-gradient(135deg, #3b82f6, #1d4ed8) !important;
+  color: white !important;
+  border: 2px solid #3b82f6 !important;
+}
+
+.logout-btn.blue-style:hover {
+  background: linear-gradient(135deg, #1d4ed8, #1e40af) !important;
+  border-color: #1e40af !important;
+  box-shadow: 0 8px 25px rgba(59, 130, 246, 0.3) !important;
+}
+
+/* Ensure logout icon uses blue color on hover */
+.logout-btn:hover .btn-icon {
+  color: #3b82f6 !important;
+}
+
+.logout-btn.blue-style:hover .btn-icon {
+  color: white !important;
+}
+
+/* Override any purple colors in logout button */
+.logout-btn,
+.logout-btn:hover,
+.logout-btn:focus,
+.logout-btn:active {
+  /* Remove any purple background */
+  background-image: none !important;
+}
+
+/* Ensure logout button text is never purple */
+.logout-btn .logout-text,
+.logout-btn .btn-icon {
+  color: inherit !important;
 }
 
 /* Print styles */
