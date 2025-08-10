@@ -287,7 +287,7 @@ const Signup = () => {
                   onChange={(e) => setAgreedToTerms(e.target.checked)}
                 />
                 <span className="checkmark"></span>
-                I agree to the terms Of Service and Privacy Policy
+                I agree to the terms and Privacy Policy
                 {/* <button type="button" className="terms-link">Terms of Service</button>
                 {' '}and{' '}
                 <button type="button" className="terms-link">Privacy Policy</button> */}
