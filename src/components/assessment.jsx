@@ -309,46 +309,6 @@ const completeAssessment = async () => {
     setSubmitting(false);
   }
 };
-  // const completeAssessment = async () => {
-  //   setSubmitting(true);
-  //   try {
-  //     const token = localStorage.getItem('token');
-      
-  //     const assessmentData = {
-  //       careerTest,
-  //       skillsAssessment,
-  //       personalityAssessment
-  //     };
-
-  //     console.log('📤 Submitting assessment:', assessmentData);
-
-  //     const response = await fetch('http://localhost:5000/api/assessments', {
-  //       method: 'POST',
-  //       headers: {
-  //         'Authorization': `Bearer ${token}`,
-  //         'Content-Type': 'application/json'
-  //       },
-  //       body: JSON.stringify(assessmentData)
-  //     });
-
-  //     if (response.ok) {
-  //       const result = await response.json();
-  //       console.log('✅ Assessment submitted successfully:', result);
-  //       setIsCompleted(true);
-  //       Notify.success('🎉 Assessment completed successfully!');
-  //       localStorage.setItem('assessmentCompleted', 'true');
-  //     } else {
-  //       const errorData = await response.json();
-  //       throw new Error(errorData.message || 'Failed to submit assessment');
-  //     }
-  //   } catch (err) {
-  //     console.error('Error submitting assessment:', err);
-  //     Notify.failure('Failed to submit assessment: ' + err.message);
-  //   } finally {
-  //     setSubmitting(false);
-  //   }
-  // };
-//end
   const goToComprehensiveDashboard = () => {
     window.location.href = '/ComprehensiveDashboard';
   };
