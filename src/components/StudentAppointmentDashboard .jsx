@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Calendar, Clock, MapPin, Monitor, User, Mail, Phone, CheckCircle, AlertCircle, Send } from 'lucide-react';
+import './styles/StudentAppointmentDashboard.css';
 
 const StudentAppointmentDashboard = () => {
   const [availableSlots, setAvailableSlots] = useState([]);
@@ -165,11 +166,11 @@ const StudentAppointmentDashboard = () => {
 
   const getStatusColor = (status) => {
     switch (status) {
-      case 'pending': return 'bg-yellow-100 text-yellow-800 border-yellow-300';
-      case 'confirmed': return 'bg-green-100 text-green-800 border-green-300';
-      case 'rejected': return 'bg-red-100 text-red-800 border-red-300';
-      case 'completed': return 'bg-blue-100 text-blue-800 border-blue-300';
-      default: return 'bg-gray-100 text-gray-800 border-gray-300';
+      case 'pending': return 'appointment-card pending';
+      case 'confirmed': return 'appointment-card confirmed';
+      case 'rejected': return 'appointment-card rejected';
+      case 'completed': return 'appointment-card completed';
+      default: return 'appointment-card';
     }
   };
 
@@ -184,91 +185,91 @@ const StudentAppointmentDashboard = () => {
   };
 
   return (
-    <div className="min-h-screen bg-gray-50">
+    <div className="student-dashboard">
       {/* Header */}
-      <header className="bg-white shadow-sm border-b">
-        <div className="max-w-7xl mx-auto px-6 py-4">
-          <div className="flex items-center gap-3">
-            <div className="w-10 h-10 bg-gradient-to-r from-blue-600 to-blue-700 rounded-lg flex items-center justify-center">
-              <span className="text-white font-bold text-lg">A</span>
+      <header className="student-header">
+        <div className="student-header-content">
+          <div className="student-header-flex">
+            <div className="student-logo">
+              <span>A</span>
             </div>
             <div>
-              <h1 className="text-xl font-bold text-gray-800">AUCA Student Portal</h1>
-              <p className="text-sm text-gray-600">Book Appointments with Academic Advisors</p>
+              <h1 className="student-header-title">AUCA Student Portal</h1>
+              <p className="student-header-subtitle">Book Appointments with Academic Advisors</p>
             </div>
           </div>
         </div>
       </header>
 
-      <div className="max-w-7xl mx-auto px-6 py-8">
-        <div className="grid lg:grid-cols-3 gap-8">
+      <div className="student-main">
+        <div className="student-grid">
           
           {/* Booking Form - Left Side */}
-          <div className="lg:col-span-2">
-            <div className="bg-white rounded-2xl shadow-lg overflow-hidden">
-              {/* Form Header */}
-              <div className="bg-gradient-to-r from-blue-600 to-blue-700 text-white p-6">
-                <div className="flex items-center gap-3">
-                  <Calendar className="h-8 w-8" />
-                  <div>
-                    <h2 className="text-2xl font-bold">Book New Appointment</h2>
-                    <p className="text-blue-100">Schedule your consultation with AUCA academic advisors</p>
-                  </div>
+          <div className="booking-form-card">
+            {/* Form Header */}
+            <div className="booking-form-header">
+              <div className="booking-form-header-flex">
+                <Calendar className="booking-form-icon" />
+                <div>
+                  <h2 className="booking-form-title">Book New Appointment</h2>
+                  <p className="booking-form-subtitle">Schedule your consultation with AUCA academic advisors</p>
                 </div>
               </div>
+            </div>
 
-              <div className="p-6 space-y-6">
+            <div className="booking-form-content">
+              <div className="booking-form-sections">
                 {/* Personal Information */}
-                <div className="bg-gray-50 rounded-xl p-6">
-                  <h3 className="text-lg font-semibold text-gray-800 mb-4 flex items-center gap-2">
-                    <User className="h-5 w-5 text-blue-600" />
+                <div className="form-section">
+                  <h3 className="form-section-title">
+                    <User className="form-section-icon" />
                     Personal Information
                   </h3>
-                  <div className="grid md:grid-cols-2 gap-4">
-                    <div>
-                      <label className="block text-sm font-medium text-gray-700 mb-2">
+                  <div className="form-grid">
+                    <div className="form-field">
+                      <label className="form-label">
                         Full Name *
                       </label>
                       <input
                         type="text"
                         value={formData.studentName}
                         onChange={(e) => handleInputChange('studentName', e.target.value)}
-                        className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-colors"
+                        className="form-input"
                         placeholder="Enter your full name"
                       />
                     </div>
-                    <div>
-                      <label className="block text-sm font-medium text-gray-700 mb-2">
+                    <div className="form-field">
+                      <label className="form-label">
                         Email Address *
                       </label>
                       <input
                         type="email"
                         value={formData.studentEmail}
                         onChange={(e) => handleInputChange('studentEmail', e.target.value)}
-                        className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-colors"
+                        className="form-input"
                         placeholder="your.email@student.auca.ac.rw"
                       />
                     </div>
-                    <div>
-                      <label className="block text-sm font-medium text-gray-700 mb-2">
+                    <div className="form-field">
+                      <label className="form-label">
                         Phone Number
                       </label>
                       <input
                         type="tel"
                         value={formData.phone}
                         onChange={(e) => handleInputChange('phone', e.target.value)}
-                        className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-colors"
+                        className="form-input"
                         placeholder="+250 XXX XXX XXX"
                       />
                     </div>
-                    <div>
-                      <label className="block text-sm font-medium text-gray-700 mb-2">
+                    <div className="form-field">
+                      <label className="form-label">
                         Preferred Meeting Type *
                       </label>
                       <select
                         value={formData.preferredType}
                         onChange={(e) => handleInputChange('preferredType', e.target.value)}
-                        className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-colors"
+                        className="form-select"
                       >
                         <option value="both">Either Online or Physical</option>
                         <option value="online">Online Only (Tawk Chat)</option>
@@ -279,101 +280,97 @@ const StudentAppointmentDashboard = () => {
                 </div>
 
                 {/* Reason for Appointment */}
-                <div className="bg-gray-50 rounded-xl p-6">
-                  <h3 className="text-lg font-semibold text-gray-800 mb-4">
+                <div className="form-section">
+                  <h3 className="form-section-title">
                     Reason for Appointment *
                   </h3>
                   <textarea
                     value={formData.reason}
                     onChange={(e) => handleInputChange('reason', e.target.value)}
                     rows="4"
-                    className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-colors"
+                    className="form-textarea"
                     placeholder="Please describe what you would like to discuss during the appointment (e.g., course selection, career guidance, academic support, etc.)"
                   />
                 </div>
 
                 {/* Available Time Slots */}
-                <div className="bg-gray-50 rounded-xl p-6">
-                  <h3 className="text-lg font-semibold text-gray-800 mb-4 flex items-center gap-2">
-                    <Clock className="h-5 w-5 text-blue-600" />
+                <div className="form-section">
+                  <h3 className="form-section-title">
+                    <Clock className="form-section-icon" />
                     Select Available Time Slot *
                   </h3>
-                  <div className="space-y-3">
+                  <div className="time-slots-container">
                     {getAvailableSlots().map((slot) => (
                       <div
                         key={slot.id}
                         onClick={() => handleSlotSelect(slot)}
-                        className={`p-4 border-2 rounded-lg cursor-pointer transition-all hover:shadow-md ${
-                          selectedSlot?.id === slot.id
-                            ? 'border-blue-500 bg-blue-50 shadow-md'
-                            : 'border-gray-200 hover:border-blue-300 hover:bg-blue-50'
-                        }`}
+                        className={`time-slot ${selectedSlot?.id === slot.id ? 'selected' : ''}`}
                       >
-                        <div className="flex items-center justify-between">
-                          <div className="flex items-center gap-4">
-                            <div className="text-center bg-white rounded-lg p-3 shadow-sm">
-                              <div className="text-xs font-medium text-gray-600 uppercase">
+                        <div className="time-slot-content">
+                          <div className="time-slot-info">
+                            <div className="time-slot-date">
+                              <div className="time-slot-weekday">
                                 {new Date(slot.date).toLocaleDateString('en-US', { weekday: 'short' })}
                               </div>
-                              <div className="text-xl font-bold text-blue-600">
+                              <div className="time-slot-day">
                                 {new Date(slot.date).getDate()}
                               </div>
-                              <div className="text-xs text-gray-600">
+                              <div className="time-slot-month">
                                 {new Date(slot.date).toLocaleDateString('en-US', { month: 'short' })}
                               </div>
                             </div>
-                            <div className="flex-1">
-                              <div className="flex items-center gap-2 text-gray-800 mb-1">
-                                <Clock className="h-4 w-4 text-blue-600" />
-                                <span className="font-semibold">{slot.time}</span>
-                                <span className="text-sm text-gray-600">with {slot.advisorName}</span>
+                            <div className="time-slot-details">
+                              <div className="time-slot-time">
+                                <Clock className="time-slot-time-icon" />
+                                <span className="time-slot-time-text">{slot.time}</span>
+                                <span className="time-slot-advisor">with {slot.advisorName}</span>
                               </div>
-                              <div className="flex items-center gap-2 text-gray-600">
+                              <div className="time-slot-location">
                                 {slot.type === 'online' ? (
                                   <Monitor className="h-4 w-4 text-green-600" />
                                 ) : slot.type === 'physical' ? (
                                   <MapPin className="h-4 w-4 text-orange-600" />
                                 ) : (
-                                  <div className="flex gap-1">
+                                  <div style={{display: 'flex', gap: '0.25rem'}}>
                                     <Monitor className="h-4 w-4 text-green-600" />
                                     <MapPin className="h-4 w-4 text-orange-600" />
                                   </div>
                                 )}
-                                <span className="text-sm">{slot.location}</span>
+                                <span>{slot.location}</span>
                               </div>
                             </div>
                           </div>
-                          <div className="text-green-500">
-                            {selectedSlot?.id === slot.id && <CheckCircle className="h-6 w-6" />}
+                          <div className="time-slot-check">
+                            {selectedSlot?.id === slot.id && <CheckCircle />}
                           </div>
                         </div>
                       </div>
                     ))}
                   </div>
                   {getAvailableSlots().length === 0 && (
-                    <div className="text-center py-8 text-gray-500">
-                      <AlertCircle className="h-12 w-12 mx-auto mb-3 text-gray-400" />
+                    <div className="no-slots">
+                      <AlertCircle className="no-slots-icon" />
                       <p>No available slots for your preferred meeting type.</p>
-                      <p className="text-sm">Try selecting "Either Online or Physical" for more options.</p>
+                      <p>Try selecting "Either Online or Physical" for more options.</p>
                     </div>
                   )}
                 </div>
 
                 {/* Submit Button */}
-                <div className="flex justify-center">
+                <div className="submit-container">
                   <button
                     onClick={handleSubmit}
                     disabled={!selectedSlot || loading}
-                    className="px-8 py-4 bg-gradient-to-r from-blue-600 to-blue-700 text-white rounded-xl font-semibold hover:from-blue-700 hover:to-blue-800 disabled:from-gray-400 disabled:to-gray-500 disabled:cursor-not-allowed transition-all flex items-center gap-3 shadow-lg hover:shadow-xl"
+                    className="submit-button"
                   >
                     {loading ? (
                       <>
-                        <div className="animate-spin rounded-full h-5 w-5 border-b-2 border-white"></div>
+                        <div className="loading-spinner"></div>
                         Booking...
                       </>
                     ) : (
                       <>
-                        <Send className="h-5 w-5" />
+                        <Send className="submit-button-icon" />
                         Book Appointment
                       </>
                     )}
@@ -384,69 +381,67 @@ const StudentAppointmentDashboard = () => {
           </div>
 
           {/* My Appointments - Right Side */}
-          <div className="lg:col-span-1">
-            <div className="bg-white rounded-2xl shadow-lg overflow-hidden">
-              {/* Appointments Header */}
-              <div className="bg-gradient-to-r from-blue-600 to-blue-700 text-white p-6">
-                <h3 className="text-xl font-bold flex items-center gap-2">
-                  <Calendar className="h-6 w-6" />
-                  My Appointments
-                </h3>
-              </div>
-
-              <div className="p-6">
-                {myAppointments.length > 0 ? (
-                  <div className="space-y-4">
-                    {myAppointments.map((appointment) => (
-                      <div key={appointment.id} className={`border-2 rounded-lg p-4 ${getStatusColor(appointment.status)}`}>
-                        <div className="flex items-start justify-between mb-3">
-                          <div>
-                            <div className="font-semibold text-sm text-gray-800">
-                              {new Date(appointment.date).toLocaleDateString('en-US', { 
-                                weekday: 'short', 
-                                month: 'short', 
-                                day: 'numeric' 
-                              })} at {appointment.time}
-                            </div>
-                            <div className="text-xs text-gray-600">{appointment.advisorName}</div>
-                          </div>
-                          <div className={`px-2 py-1 rounded-full text-xs font-medium flex items-center gap-1 ${getStatusColor(appointment.status)}`}>
-                            {getStatusIcon(appointment.status)}
-                            {appointment.status.charAt(0).toUpperCase() + appointment.status.slice(1)}
-                          </div>
-                        </div>
-                        
-                        <div className="flex items-center gap-2 text-xs text-gray-600 mb-2">
-                          {appointment.type === 'online' ? (
-                            <Monitor className="h-3 w-3" />
-                          ) : (
-                            <MapPin className="h-3 w-3" />
-                          )}
-                          <span>{appointment.location}</span>
-                        </div>
-                        
-                        <p className="text-xs text-gray-700 line-clamp-2">{appointment.reason}</p>
-                      </div>
-                    ))}
-                  </div>
-                ) : (
-                  <div className="text-center py-8 text-gray-500">
-                    <Calendar className="h-12 w-12 mx-auto mb-3 text-gray-300" />
-                    <p className="text-sm">No appointments yet</p>
-                    <p className="text-xs">Your booked appointments will appear here</p>
-                  </div>
-                )}
-              </div>
+          <div className="appointments-sidebar">
+            {/* Appointments Header */}
+            <div className="appointments-header">
+              <h3 className="appointments-title">
+                <Calendar />
+                My Appointments
+              </h3>
             </div>
 
-            {/* Quick Info Card */}
-            <div className="mt-6 bg-gradient-to-r from-blue-50 to-blue-100 rounded-2xl p-6 border border-blue-200">
-              <h4 className="font-semibold text-blue-800 mb-3">Need Help?</h4>
-              <div className="space-y-2 text-sm text-blue-700">
-                <p>📞 Call: +250 788 123 456</p>
-                <p>📧 Email: advisors@auca.ac.rw</p>
-                <p>🏢 Office: Student Services, Masoro Campus</p>
-              </div>
+            <div className="appointments-content">
+              {myAppointments.length > 0 ? (
+                <div className="appointments-list">
+                  {myAppointments.map((appointment) => (
+                    <div key={appointment.id} className={getStatusColor(appointment.status)}>
+                      <div className="appointment-header">
+                        <div>
+                          <div className="appointment-date">
+                            {new Date(appointment.date).toLocaleDateString('en-US', { 
+                              weekday: 'short', 
+                              month: 'short', 
+                              day: 'numeric' 
+                            })} at {appointment.time}
+                          </div>
+                          <div className="appointment-advisor">{appointment.advisorName}</div>
+                        </div>
+                        <div className="appointment-status">
+                          {getStatusIcon(appointment.status)}
+                          {appointment.status.charAt(0).toUpperCase() + appointment.status.slice(1)}
+                        </div>
+                      </div>
+                      
+                      <div className="appointment-location">
+                        {appointment.type === 'online' ? (
+                          <Monitor className="h-3 w-3" />
+                        ) : (
+                          <MapPin className="h-3 w-3" />
+                        )}
+                        <span>{appointment.location}</span>
+                      </div>
+                      
+                      <p className="appointment-reason">{appointment.reason}</p>
+                    </div>
+                  ))}
+                </div>
+              ) : (
+                <div className="no-appointments">
+                  <Calendar className="no-appointments-icon" />
+                  <p className="no-appointments-title">No appointments yet</p>
+                  <p className="no-appointments-subtitle">Your booked appointments will appear here</p>
+                </div>
+              )}
+            </div>
+          </div>
+
+          {/* Quick Info Card */}
+          <div className="help-card">
+            <h4 className="help-title">Need Help?</h4>
+            <div className="help-content">
+              <p className="help-item">📞 Call: +250 788 123 456</p>
+              <p className="help-item">📧 Email: advisors@auca.ac.rw</p>
+              <p className="help-item">🏢 Office: Student Services, Masoro Campus</p>
             </div>
           </div>
         </div>

@@ -1,5 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Calendar, Clock, MapPin, Monitor, User, Mail, Phone, CheckCircle, XCircle, AlertCircle, Plus, Edit, Trash2, Bell, Settings, MoreHorizontal } from 'lucide-react';
+//import '../components/styles/AdvisorAppointmentDashboard.css'; // Assuming you have a CSS file for styles
+import './styles/AdvisorAppointmentDashboard.css';
 
 const AdvisorAppointmentDashboard = () => {
   const [appointments, setAppointments] = useState([]);
