@@ -5,7 +5,7 @@
   box-sizing: border-box;
 }
 
-.advisor-dashboard {
+.advisor-dashboard2 {
   min-height: 100vh;
   background-color: #f9fafb;
   font-family: 'Segoe UI', system-ui, -apple-system, BlinkMacSystemFont, sans-serif;
@@ -13,7 +13,7 @@
 
 /* Header Styles */
 .advisor-header {
-  background: white;
+  background: white !important;
   box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.1);
   border-bottom: 1px solid #e5e7eb;
 }
@@ -187,7 +187,8 @@
 }
 
 .stat-icon-container.available {
-  background: #e0e7ff;
+  background: white;
+  border: 2px solid #2563eb;
 }
 
 .stat-icon {
@@ -211,7 +212,7 @@
 }
 
 .stat-icon.available {
-  color: #7c3aed;
+  color: #2563eb;
 }
 
 .stat-number {
@@ -237,7 +238,7 @@
 }
 
 .stat-number.available {
-  color: #6b21a8;
+  color: #2563eb;
 }
 
 .stat-label {
@@ -263,7 +264,7 @@
 }
 
 .stat-label.available {
-  color: #7c3aed;
+  color: #2563eb;
 }
 
 /* Main Grid */
@@ -1001,7 +1002,7 @@
 
 /* Print Styles */
 @media print {
-  .advisor-dashboard {
+  .advisor-dashboard2 {
     background: white;
   }
   
