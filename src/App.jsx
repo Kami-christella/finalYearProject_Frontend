@@ -3,6 +3,8 @@ import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import './App.css';
 // import './i18n';
 import AdvisorDashboard from './components/AdvisorDashboard ';
+import AdvisorAppointmentDashboard from './components/AdvisorAppointmentDashboard ';
+import StudentAppointmentDashboard from './components/StudentAppointmentDashboard ';
 import ProfileDashboard from './components/ProfileDashboard';
 import EditProfile from './components/EditProfile';
 import LandingPage from './components/LandingPage';
@@ -31,8 +33,9 @@ function App() {
           <Route path='assessment' element={<Assessment/>} />
           <Route path='advisorDashboard' element={<AdvisorDashboard/>} />
           <Route path='ComprehensiveDashboard' element={<ComprehensiveDashboard/>} />
-          AdvisorDashboard
-          
+          <Route path='StudentAppointmentDashboard' element={<StudentAppointmentDashboard/>} />
+          <Route path='AdvisorAppointmentDashboard' element={<AdvisorAppointmentDashboard/>} />
+
           {/* <Route path='Signup' element={<Signup />} />
           <Route path='Login' element={<Login />} />
           <Route path='About' element={<About />} />
