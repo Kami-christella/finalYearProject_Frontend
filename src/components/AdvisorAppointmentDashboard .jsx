@@ -925,10 +925,10 @@ const AdvisorAppointmentDashboard = () => {
               </div>
               <div className="advisor-profile">
                 <div className="advisor-avatar">
-                  <span>SM</span>
+                  <span>BB</span>
                 </div>
                 <div>
-                  <p className="advisor-name">Dr. Sarah Mukamana</p>
+                  <p className="advisor-name"> Beatrice Bamurange</p>
                   <p className="advisor-role">Academic Advisor</p>
                 </div>
               </div>
@@ -1409,21 +1409,7 @@ const AdvisorAppointmentDashboard = () => {
             </div>
           </div>
 
-          {/* Quick Actions Card */}
-          <div className="quick-actions-card">
-            <h4 className="quick-actions-title">Quick Actions</h4>
-            <div className="quick-actions-list">
-              <button className="quick-action-item">
-                📧 Send email to all pending students
-              </button>
-              <button className="quick-action-item">
-                📊 View appointment analytics
-              </button>
-              <button className="quick-action-item">
-                ⚙️ Update availability preferences
-              </button>
-            </div>
-          </div>
+        
         </div>
       </div>
     </div>

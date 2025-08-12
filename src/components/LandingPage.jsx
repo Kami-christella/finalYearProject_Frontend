@@ -2,18 +2,21 @@
 
 import React, { useState, useEffect, useRef } from 'react';
 import PropTypes from 'prop-types';
-import { useNavigate } from 'react-router-dom';
 import { useLocalization } from '../localization/LocalizationContext'; 
 import LanguageSwitcher from './LanguageSwitcher'; 
 import '../components/styles/LandingPage.css'
+import { useNavigate, Link } from 'react-router-dom';
+
+
+
 
 const LandingPage = () => {
-  const navigate = useNavigate();
   const { t } = useLocalization(); 
   const [isScrolled, setIsScrolled] = useState(false);
   const statsRef = useRef(null);
   const [statsAnimated, setStatsAnimated] = useState(false);
-
+ 
+const navigate = useNavigate();
   // Handle navbar background on scroll
   useEffect(() => {
     const handleScroll = () => {
@@ -127,7 +130,7 @@ const LandingPage = () => {
       <li><button onClick={() => smoothScroll('home')}>{t('nav.home')}</button></li>
       <li><button onClick={() => smoothScroll('features')}>{t('nav.features')}</button></li>
       <li><button onClick={() => smoothScroll('about')}>{t('nav.about')}</button></li>
-      <li><button onClick={() => smoothScroll('contact')}>{t('nav.contact')}</button></li>
+      <li><button onClick={() => navigate('/StudentAppointmentDashboard')}>{t('nav.contact')}</button></li>
     </ul>
   </div>
   
