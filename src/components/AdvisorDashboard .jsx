@@ -1153,7 +1153,7 @@
 
 
 
-// COMPLETE ENHANCED ADVISOR DASHBOARD
+// AdvisorDashboard.jsx
 
 import React, { useState, useEffect } from 'react';
 import { Notify } from 'notiflix';
