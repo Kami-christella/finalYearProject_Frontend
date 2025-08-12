@@ -9,7 +9,6 @@ import { useNavigate, Link } from 'react-router-dom';
 
 
 
-
 const LandingPage = () => {
   const { t } = useLocalization(); 
   const [isScrolled, setIsScrolled] = useState(false);
