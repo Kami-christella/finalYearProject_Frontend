@@ -186,8 +186,9 @@ const StudentAppointmentDashboard = () => {
 
   return (
     <div className="student-dashboard">
+      
       {/* Header */}
-      <header className="student-header">
+      {/* <header className="student-header">
         <div className="student-header-content">
           <div className="student-header-flex">
             <div className="student-logo">
@@ -199,7 +200,7 @@ const StudentAppointmentDashboard = () => {
             </div>
           </div>
         </div>
-      </header>
+      </header> */}
 
       <div className="student-main">
         <div className="student-grid">
