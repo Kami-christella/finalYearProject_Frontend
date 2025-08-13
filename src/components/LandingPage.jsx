@@ -129,7 +129,7 @@ const navigate = useNavigate();
       <li><button onClick={() => smoothScroll('home')}>{t('nav.home')}</button></li>
       <li><button onClick={() => smoothScroll('features')}>{t('nav.features')}</button></li>
       <li><button onClick={() => smoothScroll('about')}>{t('nav.about')}</button></li>
-      <li><button onClick={() => navigate('/StudentAppointmentDashboard')}>{t('nav.contact')}</button></li>
+      {/* <li><button onClick={() => navigate('/StudentAppointmentDashboard')}>{t('nav.contact')}</button></li> */}
     </ul>
   </div>
   
@@ -188,7 +188,7 @@ const navigate = useNavigate();
       {/* Features Section */}
       <section className="features" id="features">
         <div className="container">
-          <h2 className="section-title">{t('features.title')}</h2>
+          <h2 className="section-titles">{t('features.title')}</h2>
           <div className="features-grid">
             <FeatureCard
               icon="🎯"
@@ -244,7 +244,7 @@ const navigate = useNavigate();
       {/* CTA Section */}
       <section className="cta-section" id="signup">
         <div className="container">
-          <h2 className="cta-title">{t('cta.title')}</h2>
+          <h2 className="cta-titles">{t('cta.title')}</h2>
           <p className="cta-description">
             {t('cta.description')}
           </p>
