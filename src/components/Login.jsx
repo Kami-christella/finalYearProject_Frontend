@@ -662,7 +662,7 @@ const Login = () => {
       ...formData,
       [e.target.name]: e.target.value
     });
-  };
+  }; 
 
   const redirectBasedOnRole = async (userData, token) => {
     const userRole = userData.role || userData.userRole;
@@ -891,15 +891,11 @@ const Login = () => {
               )}
             </button>
 
-            {/* Divider */}
-            <div className="auth-divider">
-              <span>or continue with email</span>
-            </div>
-
+            {/* Divider */}            
             <div className="form-group">
-              <label htmlFor="email" className="form-label">
+              {/* <label htmlFor="email" className="form-label">
                 Email Address
-              </label>
+              </label> */}
               <div className="input-wrapper">
                 <span className="input-icon">📧</span>
                 <input
@@ -916,9 +912,9 @@ const Login = () => {
             </div>
 
             <div className="form-group">
-              <label htmlFor="password" className="form-label">
+              {/* <label htmlFor="password" className="form-label">
                 Password
-              </label>
+              </label> */}
               <div className="input-wrapper">
                 <span className="input-icon">🔒</span>
                 <input
@@ -941,7 +937,7 @@ const Login = () => {
               </div>
             </div>
 
-            <div className="form-options">
+            {/* <div className="form-options">
               <label className="checkbox-wrapper">
                 <input type="checkbox" className="checkbox" />
                 <span className="checkmark"></span>
@@ -950,7 +946,7 @@ const Login = () => {
               <button type="button" className="forgot-password">
                 Forgot password?
               </button>
-            </div>
+            </div> */}
 
             <button
               type="button"
@@ -982,13 +978,13 @@ const Login = () => {
           </div>
         </div>
 
-        <button
+        {/* <button
           onClick={handleBackToHome}
           className="back-home-btn"
         >
           <span className="back-icon">←</span>
           Back to Home
-        </button>
+        </button> */}
       </div>
     </div>
   );
