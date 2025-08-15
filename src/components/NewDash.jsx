@@ -9,6 +9,8 @@ import { MdNoteAlt } from "react-icons/md";
 import { LuNotebookTabs } from "react-icons/lu";
 import { FaRegUserCircle } from "react-icons/fa";
 import { FaCalendarAlt } from "react-icons/fa";
+import { IoIosSettings } from "react-icons/io";
+import { IoIosLogOut } from "react-icons/io";
 
 import AUCA from "../assets/images/AUCA.png"
 
@@ -131,13 +133,20 @@ function NewDash() {
           <h5 className="text-dark m-0"> <b>Welcome</b>, {userName} </h5>
           <div className="position-fixed">
             <IoPersonCircle 
-              style={{ color: "#2c5a99", fontSize: "3rem", marginLeft: "65rem" }}
+              style={{ color: "#2c5a99", fontSize: "3rem", marginLeft: "76rem" }}
               onClick={() => setShowDropdown(!showDropdown)}
             />
             {showDropdown && (
               <div className="profile-dropdown position-absolute bg-white shadow p-2 rounded" style={{ right: "0px", top: "40px" }}>
                 <p className="profile-name mb-2"><FaRegUserCircle className="ClassOfUsers"/>{userName} </p>
-                <button className="logout-button btn btn-danger btn-sm w-100" onClick={handleLogoutBtn}>Logout</button>
+                
+                <button className="settings-button btn btn-secondary btn-sm w-100" onClick={() => navigate("/dashboard/Settings")}>
+                <IoIosSettings /> Settings </button>
+                <br />
+                <button className="logout-button btn btn-danger btn-sm w-100" onClick={handleLogoutBtn}><IoIosLogOut /> Logout</button>
+               
+               
+
               </div>
             )}
           </div>

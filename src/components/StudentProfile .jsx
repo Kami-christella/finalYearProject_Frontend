@@ -560,7 +560,6 @@ const StudentProfile = () => {
                 <div className="step-header">
                   {/* <div className="step-header-icon">👤</div> */}
                   <h2 className="step-title">Personal Information</h2>
-                  <p className="step-description">Tell us about yourself</p>
                 </div>
 
                 <div className="form-grid">
@@ -749,9 +748,6 @@ const StudentProfile = () => {
                 <div className="step-header">
                   {/* <div className="step-header-icon">🎓</div> */}
                   <h2 className="step-title">Academic Information</h2>
-                  <p className="step-description">
-                    Tell us about your educational background
-                  </p>
                 </div>
 
                 <div className="form-grid">
@@ -1245,9 +1241,6 @@ const StudentProfile = () => {
                 <div className="step-header">
                  
                   <h2 className="step-title">Skills, Experience & Goals</h2>
-                  <p className="step-description">
-                    Share your skills, experience and aspirations
-                  </p>
                 </div>
 
                 <div className="form-grid single-column">
@@ -1784,9 +1777,6 @@ const StudentProfile = () => {
               <div className="step-card">
                 <div className="step-header">
                   <h2 className="step-title">Documents & Emergency Contact</h2>
-                  <p className="step-description">
-                    Upload documents and provide emergency contact
-                  </p>
                 </div>
 
                 <div className="form-grid single-column">
