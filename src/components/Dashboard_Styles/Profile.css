@@ -1,0 +1,18 @@
+.profileClass{
+    margin-left: 20rem;
+    margin-top: -35rem;
+}
+
+.carrerHeaderReco{
+    background-color: #2c5a99; /* Green background */
+    color: white; /* White text */
+    padding: 15px;
+    font-size: 24px;
+    border-radius: 8px;
+    text-align: center;
+    margin-top: 20px;
+}
+.norecomm{
+    margin-left: 50rem;
+    margin-top: 20rem;
+}

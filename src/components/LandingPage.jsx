@@ -118,7 +118,11 @@ const LandingPage = () => {
       {/* Navigation */}
       <nav className={`navbar ${isScrolled ? "scrolled" : ""}`}>
         <div className="nav-container">
-          <div className="logo-container">
+        <div className="logo">
+          <img src="/AUCALOGO.png" alt="AUCA Logo" className="logo-image" />
+        </div>
+
+          <div className="logo-container"> 
             <div className="logo">CareerPath</div>
           </div>
 

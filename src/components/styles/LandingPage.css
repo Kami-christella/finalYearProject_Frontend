@@ -121,6 +121,12 @@ body {
   flex: 0 0 auto;
 }
 
+.logo-image {
+  height: 60px; 
+  width: auto;
+  object-fit: contain;
+}
+
 .logo::after {
   content: '';
   position: absolute;
@@ -154,7 +160,7 @@ body {
   cursor: pointer;
   transition: all 0.3s ease;
   position: relative;
-  padding: 0.5rem 0.75rem;
+  padding: 0.2rem 0.45rem;
   font-size: 1rem;
   border-radius: 8px;
   letter-spacing: 0.5px;
@@ -492,7 +498,7 @@ body {
   height: 4px;
   background: linear-gradient(135deg, #1B3058, #1B3058);
   border-radius: 2px;
-}
+} 
 
 .features-grid {
   display: grid;

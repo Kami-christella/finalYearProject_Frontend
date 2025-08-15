@@ -1,0 +1,395 @@
+.allClassesb{
+    display: flex;
+     flex-direction: row;
+     margin-top:50px;
+     margin-left: -180px;
+     margin-top: 20px;
+     background-color: #dbe2e8;
+ }
+ /* .navbar{
+     margin-left: 300px;
+ } */
+ .leftClassb{
+     background-color: white;
+     position: fixed;
+     z-index: 1000;
+     height: 100vh;
+ }
+ .cardIcon{
+     margin-top: 40px;
+     margin-left: 18px;
+     color: #4a5bb0;
+     height: 40px;
+     width: 40px;
+ }
+ 
+ .table{
+     margin-top: 40px;
+     margin-left: -60px;
+     display: flex;
+     flex-direction: row;
+     gap: 2rem;
+     font-weight: bolder;
+ }
+ .table2{
+     margin-left: -60px;
+     display: flex;
+     flex-direction: row;
+     gap: 1rem;
+     margin-top:-10px;
+ }
+ .table3{
+     margin-left: -60px;
+     display: flex;
+     flex-direction: row;
+     gap: 1rem;
+     margin-top:10px;
+ }
+ .priceClass{
+     margin-left: 10px;
+ }
+ .cardIcon2{
+     margin-top: 40px;
+     margin-left: 18px;
+     color: #df0eb6;
+     height: 40px;
+     width: 40px;
+ }
+ .cardIcon3{
+     margin-top: 40px;
+     margin-left: 18px;
+     color: greenyellow;
+     height: 40px;
+     width: 40px; 
+ }
+ .card-title{
+     margin-left: 60px;
+     margin-top: -34px;
+     margin-left: 70px;
+ }
+ .card-text{
+     margin-left: 70px;
+ }
+ /* .iconContainer{
+     width: 100px;
+     height: 100px;
+     background-color: #dbe2e8;
+ } */
+ .sidei{
+     margin-left: 3px;
+ }
+ .Dashboardcards{
+     display: flex;
+     gap: 3rem;
+     margin-top: 150px;
+     margin-left: 460px;
+ }
+ /* .notificationIcon{
+     margin-right: 400px;
+ } */
+  .dashboardView{
+     margin-left: 450px;
+     background-color: white;
+     width: 660px;
+     height: 340px;
+  }
+  .allDashboardsView{
+     display: flex;
+  }
+  .dashboardView2{
+    margin-left: 50px;
+    background-color: white;
+  }
+ 
+ .dropbtn1{
+     border: 2px white;
+ }
+ .dropicon1{
+     margin-top: -10px;
+ }
+ 
+ .developerSpan{
+     font-size: 10px;
+     margin-top: 40px;
+     margin-left: -105px;
+ 
+ }
+ 
+ .divClassb{
+     margin-bottom: 20px ;
+     color: black;
+     margin-left: 10px;
+ }
+ .divClassb:hover{
+     color: #4a5bb0;
+ }
+
+ .ActiveNavContainer{
+    color: white;
+    background-color:#4a5bb0;
+   
+   
+ }
+.ActiveNavContainer .divClassb{
+    color: white;
+    
+
+}
+ .divClass4{
+    
+     margin-left: -40px;
+ }
+ .loginIconb{
+     width: 50px;
+     height: 50px;
+ }
+ .loginheaderb{
+     font-size: 15px;
+     color: white;
+     font-weight: bolder;
+     margin-top: 20px;
+ }
+ .headerOfIconsb{
+     display: flex;
+     margin-left: -20px;
+     background-color: #4a5bb0;
+     color: white;
+     width: 250px;
+     height: 70px;
+ }
+ 
+ .subHeadebr{
+    
+     float: right;
+ }
+ .rightClassb{
+     display: flex;
+     flex-direction: column;
+     margin-right: 20px;
+     margin-top: 20px;
+ }
+ 
+ .allTables{
+     margin-top: 30px;
+     background-color: white;
+     height: 250px;
+     width: 600px;
+     border-radius: 20px;
+ }
+ 
+ .leftClassb{
+     margin-right: 100px;
+     margin-left: 200px;
+    /* background-color: #edf4fa; */
+ }
+ 
+ .dropdown{
+     margin-left: 10px;
+     margin-bottom: 10px;
+ }
+ .addTaskBtnb{
+     background-color: #4a5bb0;
+     color: white;
+ }
+ 
+ .platformHeaderb{
+     margin-left: 500px;
+     font-weight: bold;
+     font-family: 'Times New Roman', Times, serif;
+ } 
+ .myName{
+     font-weight: bold;
+ }
+ 
+ .heartIcon{
+     color: red;
+     margin-left: 2px;
+ }
+ .inputsearchBar{
+     border-radius: 10px;
+     margin-left: 100px;
+     width: 250px;
+     height: 35px;
+     text-align: center;
+     border: 5px solid #4a5bb0;
+ }
+ .searchIcon3{
+     margin-left: -260px;
+     width: 60px;
+     color: #4a5bb0;
+ }
+ .notificationClass{
+    margin-left: 350px;
+    color: #4a5bb0;
+    height: 30px;
+    width: 30px;
+  
+ }
+ .dotIcon{
+     color: red;
+     margin-left: -13px;
+     margin-top: -9px;
+ }
+ .MessageIconTop{
+     margin-left: -100px;
+     /* margin-bottom: -70px; */
+     color: #4a5bb0;
+    height: 30px;
+    width: 30px;
+ }
+ .ecommerceHeader{
+     margin-left: 50px;
+     font-weight: bolder;
+     font-size: 20px;
+     box-shadow: 10px 10px 25px rgba(0, 0, 0, 0.5);
+     /* height: 50px;
+     width: 150px;
+     text-align: center;
+     align-items: center; */
+ }
+ .firstRow{
+     display: flex;
+     flex-direction: row;
+     background-color: white;
+     width: 100%;
+    margin-top: -30px;
+    margin-left: 100px;
+     height: 100px;
+     text-align: center;
+     align-items: center;
+     position: fixed;
+    margin-left: 11rem;
+    z-index: 500;
+ 
+   /* position:fixed;
+     margin-left: 11rem;
+     z-index: 1000; */
+ }
+ 
+ .circle-image {
+     width: 50px;  /* Adjust size */
+     height: 50px; /* Same as width to keep it circular */
+     border-radius: 50%; /* Makes the image round */
+     object-fit: cover; /* Ensures the image fills the circle without distortion */
+     border: 2px solid #ccc; /* Optional: Adds a border */
+     margin-left: 15px;
+ }
+ .rectangle-image{
+     width: 50px;  /* Adjust size */
+     height: 30px;
+     object-fit: cover; /* Ensures the image fills the circle without distortion */
+     border: 2px solid #ccc; /* Optional: Adds a border */
+     background-color: white;
+ }
+ .imagebg{
+     background-color: white;
+ }
+ .IDclass{
+     margin-left: 10px;
+ }
+ .customerName{
+     margin-left: 25px;
+ }
+ .dateClass{
+     margin-left: 75px;
+     font-size: 12px;
+ }
+ .priceHeader{
+     margin-left: 20px;
+ }
+ .Orderstatus{
+     margin-left: 20px;
+ }
+ 
+ /* search bar */
+ .search-container {
+     display: flex;
+     align-items: center;
+     width: 100%;
+     max-width: 300px;
+     background: #f1f1f1;
+     border-radius: 25px;
+     padding: 10px;
+     border: 1px solid #ccc;
+     margin-left: 100px;
+     /* margin-bottom: 40px; */
+   }
+   
+   .search-icon {
+     font-size: 18px;
+     color: #555;
+     margin-right: 8px;
+   }
+   
+   .search-input {
+     border: none;
+     outline: none;
+     background: transparent;
+     font-size: 16px;
+     width: 100%;
+
+   }
+   /* table styles */
+ 
+   .orderTable {
+     width: 100%;
+     height: auto;
+     border-collapse: collapse;
+     background-color: white;
+     border-radius: 10px;
+     overflow: hidden;
+     margin-left: -70px;
+ }
+ 
+ 
+ .orderTable th, .orderTable td {
+     padding: 10px;
+     text-align: left;
+     border-bottom: 1px solid #ddd;
+ }
+ 
+ .orderTable th {
+     background-color: #f4f4f4;
+     font-weight: bold;
+ }
+ 
+ .rectangle-image {
+     width: 50px;
+     height: 30px;
+     object-fit: cover;
+     border-radius: 5px;
+ }
+ 
+ .Orderstatus {
+     font-weight: bold;
+     color: green;
+ }
+ 
+ .OrderPending{
+     font-weight: bold;
+     color: yellow;
+ }
+ 
+ .salesTrend{
+     font-weight: bolder;
+     margin-left: 15px;
+     margin-bottom: 80px;
+ }
+ 
+ .secondRow{
+     display: flex;
+     flex-direction: row;
+     gap:2rem;
+     margin-left: 520px;
+ }
+ 
+ /* .pieChartContiner{
+     background-color: white;
+     width: 400px;
+     height: 250px;
+ } */
+ /* .pieChart{
+     margin-right: 400px;
+ } */
+ 
+ 

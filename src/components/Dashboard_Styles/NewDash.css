@@ -1,0 +1,36 @@
+/* .careerTestClass{
+    margin-top: 150px;
+    margin-right: 100px;
+} */
+
+.divClassb {
+    padding: 10px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    /* gap: 10px; */
+  }
+  .sidei{
+    margin-left: 5px;
+  }
+  .settingsClass{
+    margin-top:-10px;
+  }
+  .resultsClass{
+    margin-top:-10px;
+  }
+  
+  .careerIcon{
+    color:#2c5a99;
+  }
+
+  .divClassb.active {
+    background-color:  #2c5a99; 
+    color: white;
+    /* border-radius: 5px;
+    margin-left: -1px; */
+  }
+  .ClassOfUsers{
+    margin-right: 10px;
+    font-size: 30px;
+  }

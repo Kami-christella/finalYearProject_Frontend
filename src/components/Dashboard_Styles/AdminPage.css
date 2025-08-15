@@ -1,0 +1,90 @@
+.adminClass{
+    margin-left: 260px;
+    margin-top: -500px;
+    margin-bottom: 500px;
+}
+
+.card{
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.icon{
+    font-size: 30px;
+    float: right;
+}
+
+.icon1{
+    font-size: 30px;
+    float: right;
+    color: #5140c1;
+    margin-top: 5px;
+    margin-right: 5px;
+}
+
+.sqaure1{
+    height: 40px;
+    width: 40px;
+    background-color: #c3bee5;
+    float: right;
+}
+
+.square12{
+    height: 40px;
+    width: 40px;
+    background-color: greenyellow;
+    float: right; 
+}
+
+.icon12{
+    font-size: 30px;
+    float: right;
+    color: green;
+    /* margin-left: 470px; */
+    margin-right: 5px;
+    margin-top: 5px;
+}
+
+
+.square3{
+    height: 40px;
+    width: 40px;
+    background-color: rosybrown;
+    float: right;
+}
+
+.icon3{
+    font-size: 30px;
+    float: right;
+    color: rgb(255, 0, 119);
+    margin-top: 5px;
+    margin-right: 5px;
+}
+.square4{
+    height: 40px;
+    width: 40px;
+    background-color: #c3c459;
+    float: right;
+}
+
+.icon4{
+    font-size: 30px;
+    float: right;
+    color:#edf008;
+    margin-top: 5px;
+    margin-right: 5px; 
+}
+
+
+
+.admiPa{
+    margin-top: 10px;
+    font-size: 20px;
+}
+
+       
+.adminMess{
+font-weight: bolder;
+font-size: 20px;
+}
+
+

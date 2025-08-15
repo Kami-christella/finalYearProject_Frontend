@@ -147,7 +147,9 @@ const Signup = () => {
           {/* Header */}
           <div className="auth-header">
             <div className="auth-logo">
-              <div className="logo-icon">🚀</div>
+            <div className="logo-icon" onClick={handleLoginRedirect}>
+            <img src="/AUCALOGO.png" alt="AUCA Logo" className="logo-image" />
+            </div>
               <h1 className="auth-title">Join CareerPath</h1>
             </div>
             <p className="auth-subtitle">Create your account to discover your future</p>
@@ -157,15 +159,13 @@ const Signup = () => {
           <form onSubmit={handleSubmit} className="auth-form">
             {error && (
               <div className="error-message">
-                <span className="error-icon">⚠️</span>
+                <span className="error-icon"></span>
                 {error}
               </div>
             )}
 
             <div className="form-group">
-              <label htmlFor="name" className="form-label">
-                Full Name
-              </label>
+              
               <div className="input-wrapper">
                 <span className="input-icon">👤</span>
                 <input
@@ -182,9 +182,9 @@ const Signup = () => {
             </div>
 
             <div className="form-group">
-              <label htmlFor="email" className="form-label">
+              {/* <label htmlFor="email" className="form-label">
                 Email Address
-              </label>
+              </label> */}
               <div className="input-wrapper">
                 <span className="input-icon">📧</span>
                 <input
@@ -201,9 +201,9 @@ const Signup = () => {
             </div>
 
             <div className="form-group">
-              <label htmlFor="password" className="form-label">
+              {/* <label htmlFor="password" className="form-label">
                 Password
-              </label>
+              </label> */}
               <div className="input-wrapper">
                 <span className="input-icon">🔒</span>
                 <input
@@ -243,9 +243,9 @@ const Signup = () => {
             </div>
 
             <div className="form-group">
-              <label htmlFor="confirmPassword" className="form-label">
+              {/* <label htmlFor="confirmPassword" className="form-label">
                 Confirm Password
-              </label>
+              </label> */}
               <div className="input-wrapper">
                 <span className="input-icon">🔐</span>
                 <input
@@ -310,10 +310,8 @@ const Signup = () => {
             </button>
           </form>
 
-          {/* Divider */}
-          <div className="auth-divider">
-            <span>or</span>
-          </div>
+       
+          
 
           {/* Social Login */}
           <div className="social-login">
@@ -347,15 +345,6 @@ const Signup = () => {
             </p>
           </div>
         </div>
-
-        {/* Back to Home */}
-        <button
-          onClick={handleBackToHome}
-          className="back-home-btn"
-        >
-          <span className="back-icon">←</span>
-          Back to Home
-        </button>
       </div>
     </div>
   );

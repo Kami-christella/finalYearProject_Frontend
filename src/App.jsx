@@ -3,6 +3,7 @@ import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import './App.css';
 // import './i18n';
 import AdvisorDashboard from './components/AdvisorDashboard ';
+import DashboardLayout from './components/DashboardLayout';
 import AdvisorAppointmentDashboard from './components/AdvisorAppointmentDashboard ';
 import StudentAppointmentDashboard from './components/StudentAppointmentDashboard ';
 import ProfileDashboard from './components/ProfileDashboard';
@@ -27,7 +28,7 @@ function App() {
           <Route index element={<LandingPage/>} />
           <Route path='Signup' element={<Signup />} />
           <Route path='Login' element={<Login />} />
-          <Route path='StudentProfile' element={<StudentProfile/>} />
+          {/* <Route path='StudentProfile' element={<StudentProfile/>} /> */}
           <Route path='ProfileDashboard' element={<ProfileDashboard/>} />
           <Route path='EditProfile' element={<EditProfile/>} />
           <Route path='assessment' element={<Assessment/>} />
@@ -45,15 +46,15 @@ function App() {
 
         {/* Dashboard Routes (Protected) */}
 
-        {/* <Route path='/dashboard' element={<DashboardLayout />}>
-          <Route index element={<CareerTest />} />
-          <Route path='assessment2' element={<Assessment2 />} />
+        <Route path='/dashboard' element={<DashboardLayout />}>
+          <Route index element={<StudentProfile />} />
+          {/* <Route path='assessment2' element={<Assessment2 />} />
           <Route path='Assessment2/assessment3' element={<Assesment3 />} />
           <Route path='Assessment2/assessment3/Results' element={<Results />} />
           <Route path='Settings' element={<Settings />} />
-          <Route path='Profile' element={<Profile />} />
+          <Route path='Profile' element={<Profile />} /> */}
          
-        </Route> */}
+        </Route>
 
        {/* <Route path='/admindashboard' element={<AdminDashboardLayout/>}>
        <Route index element={<AdminPage />} />
