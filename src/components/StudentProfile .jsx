@@ -528,7 +528,7 @@ const StudentProfile = () => {
               <div className="step-card">
                 <div className="step-header">
                   {/* <div className="step-header-icon">👤</div> */}
-                  <h4 className="step-titles">Personal Information</h4>
+                  <h5 className="step-titles">Personal Information</h5>
                 </div>
 
                 <div className="form-grid">
@@ -716,7 +716,7 @@ const StudentProfile = () => {
               <div className="step-card">
                 <div className="step-header">
                   {/* <div className="step-header-icon">🎓</div> */}
-                  <h4 className="step-titles">Academic Information</h4>
+                  <h5 className="step-titles">Academic Information</h5>
                 </div>
 
                 <div className="form-grid">
@@ -741,7 +741,7 @@ const StudentProfile = () => {
                   {/* Transfer Student Fields */}
                   {formData.transferStudent && (
                     <>
-                      <div className="form-group full-width">
+                      <div className="form-group">
                         <label className="form-label">
                           <span className="label-text">
                             Previous Institution
@@ -961,9 +961,9 @@ const StudentProfile = () => {
                       {/* Previous University Courses */}
                       <div className="form-group full-width">
                         <div className="section-header">
-                          <h3 className="section-title">
+                          <h5 className="step-titles">
                             Courses Studied at Previous University
-                          </h3>
+                          </h5>
                           <button
                             type="button"
                             onClick={addPreviousCourse}
@@ -1060,9 +1060,9 @@ const StudentProfile = () => {
                       {/* Course Equivalence Mapping */}
                       <div className="form-group full-width">
                         <div className="section-header">
-                          <h3 className="section-title">
+                          <h5 className="step-titles">
                             Course Equivalence Mapping
-                          </h3>
+                          </h5>
                           <button
                             type="button"
                             onClick={addEquivalentCourse}
