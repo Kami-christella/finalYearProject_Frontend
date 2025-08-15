@@ -22,7 +22,7 @@
   width: 100%;
   height: 100%;
   z-index: -1;
-  background: linear-gradient(135deg, #ffffff 0%, #f8fafc 25%, #e2e8f0 50%, #dbeafe 75%, #3b82f6 100%);
+  /* background: linear-gradient(135deg, #ffffff 0%, #f8fafc 25%, #e2e8f0 50%, #dbeafe 75%, #3b82f6 100%); */
   overflow: hidden;
 }
 
@@ -32,11 +32,11 @@
   left: 0;
   width: 100%;
   height: 100%;
-  background: 
+  /* background: 
     radial-gradient(circle at 25% 25%, rgba(59, 130, 246, 0.15) 0%, transparent 50%),
     radial-gradient(circle at 75% 75%, rgba(37, 99, 235, 0.2) 0%, transparent 50%),
     radial-gradient(circle at 50% 50%, rgba(147, 197, 253, 0.1) 0%, transparent 50%);
-  animation: modernBackgroundFlow 15s ease-in-out infinite;
+  animation: modernBackgroundFlow 15s ease-in-out infinite; */
 }
 
 @keyframes modernBackgroundFlow {
@@ -447,6 +447,7 @@
   transform: translateX(50px);
   transition: all 0.6s cubic-bezier(0.4, 0, 0.2, 1);
   pointer-events: none;
+  
 }
 
 .form-step.active {
