@@ -1,5 +1,172 @@
 /* AdvisorDashboard.css - Blue & White Modern Theme */
 
+/* start */
+/* ==== Sidebar Layout (NEW) ==== */
+
+
+.dashboard-layout {
+  display: grid;
+  grid-template-columns: 260px 1fr;
+  min-height: 100vh;
+}
+
+/* Collapsible on small screens */
+@media (max-width: 1024px) {
+  .dashboard-layout {
+    grid-template-columns: 0 1fr;
+  }
+}
+
+.sidebar {
+  position: sticky;
+  top: 0;
+  align-self: start;
+  height: 100vh;
+  background: #0b1e3a; /* deep navy to match blue theme */
+  color: #e5edff;
+  padding: 1rem 0.75rem;
+  border-right: 1px solid rgba(255,255,255,0.06);
+  overflow-y: auto;
+  transition: transform 0.25s ease;
+}
+
+.sidebar-header {
+  display: flex;
+  align-items: center;
+  padding: 0.5rem 0.75rem 1rem 0.75rem;
+  border-bottom: 1px solid rgba(255,255,255,0.06);
+  margin-bottom: 0.75rem;
+}
+
+.brand {
+  font-weight: 800;
+  letter-spacing: 0.3px;
+  color: #ffffff;
+}
+
+.sidebar-nav {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+  padding: 0.25rem;
+}
+
+.sidebar-item {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  padding: 0.65rem 0.75rem;
+  border-radius: 8px;
+  background: transparent;
+  border: none;
+  color: #c9d5ff;
+  text-align: left;
+  cursor: pointer;
+  transition: background 0.15s ease, color 0.15s ease, transform 0.05s ease;
+}
+
+.sidebar-item:hover {
+  background: rgba(37, 99, 235, 0.15);
+  color: #ffffff;
+}
+
+.sidebar-item.active {
+  background: linear-gradient(135deg, #2563eb, #1d4ed8);
+  color: #ffffff;
+  box-shadow: 0 4px 12px rgba(37, 99, 235, 0.35);
+}
+
+.sidebar .tab-icon {
+  font-size: 1.05rem;
+}
+
+.sidebar .tab-label {
+  font-size: 0.95rem;
+  font-weight: 600;
+}
+
+.sidebar-footer {
+  margin-top: auto;
+  padding: 0.75rem;
+}
+
+/* Reuse existing button look for logout */
+.sidebar .logout-btn {
+  width: 100%;
+  display: inline-flex;
+  justify-content: center;
+  padding: 0.65rem 1rem;
+  background: linear-gradient(135deg, #2563eb, #1d4ed8);
+  border: none;
+  border-radius: 8px;
+  color: white;
+  font-weight: 700;
+  cursor: pointer;
+  transition: transform 0.15s ease, box-shadow 0.2s ease;
+}
+.sidebar .logout-btn:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 6px 16px rgba(37, 99, 235, 0.35);
+}
+
+/* Main content + top bar */
+.main-content {
+  background: #f8fafc;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+.topbar {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  padding: 0.75rem 1rem;
+  background: #ffffff;
+  border-bottom: 1px solid #e2e8f0;
+  position: sticky;
+  top: 0;
+  z-index: 5;
+}
+
+.sidebar-toggle {
+  display: none;
+  background: #f1f5f9;
+  border: 1px solid #e2e8f0;
+  border-radius: 8px;
+  padding: 0.5rem 0.75rem;
+  cursor: pointer;
+}
+
+.topbar-title {
+  font-size: 1.1rem;
+  font-weight: 800;
+  color: #1e293b;
+}
+
+@media (max-width: 1024px) {
+  .sidebar {
+    position: fixed;
+    left: 0;
+    top: 0;
+    width: 260px;
+    transform: translateX(-100%);
+    z-index: 50;
+  }
+  .sidebar.open {
+    transform: translateX(0%);
+  }
+  .sidebar-toggle {
+    display: inline-flex;
+  }
+  .modal-overlay { z-index: 1000; } /* ensure modals are above sidebar */
+}
+
+/* Optional: remove old top tab spacing */
+.nav-tabs { display: none; }
+
+
+/* end new css */
 .advisor-dashboard {
   min-height: 100vh;
   background: white;
