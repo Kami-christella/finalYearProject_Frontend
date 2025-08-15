@@ -499,38 +499,7 @@ const StudentProfile = () => {
             </div>
           </div>
         
-        {/* <div className="profile-header">
-          <div className="header-content">
-            <div className="header-icon">🌟</div>
-            <h1 className="profile-title">Create Your Student Profile</h1>
-            <p className="profile-subtitle">
-              Complete your profile to access personalized career guidance
-            </p>
-          </div>
-
-          <div className="header-actions">
-            <button onClick={handleLogout} className="logout-btn">
-              <span className="logout-icon"></span>
-              <span className="logout-text">Logout</span>
-            </button>
-          </div>
-
-          <div className="progress-section">
-            <div className="progress-info">
-              <span className="progress-text">Step {step} of 4</span>
-              <span className="progress-percentage">
-                {Math.round((step / 4) * 100)}%
-              </span>
-            </div>
-            <div className="progress-bar">
-              <div
-                className="progress-fill"
-                style={{ width: `${(step / 4) * 100}%` }}
-              ></div>
-            </div>
-          </div>
-        </div> */}
-
+       
         {/* Error/Success Messages */}
         {error && (
           <div className="message-alert error-alert">
@@ -559,7 +528,7 @@ const StudentProfile = () => {
               <div className="step-card">
                 <div className="step-header">
                   {/* <div className="step-header-icon">👤</div> */}
-                  <h2 className="step-title">Personal Information</h2>
+                  <h4 className="step-titles">Personal Information</h4>
                 </div>
 
                 <div className="form-grid">
@@ -747,7 +716,7 @@ const StudentProfile = () => {
               <div className="step-card">
                 <div className="step-header">
                   {/* <div className="step-header-icon">🎓</div> */}
-                  <h2 className="step-title">Academic Information</h2>
+                  <h4 className="step-titles">Academic Information</h4>
                 </div>
 
                 <div className="form-grid">
@@ -926,7 +895,7 @@ const StudentProfile = () => {
                     </div>
                   </div>
 
-                  <div className="form-group full-width">
+                  <div className="form-group">
                     <label className="form-label">
                       <span className="label-text">
                         Courses Studied in Secondary
@@ -1240,7 +1209,7 @@ const StudentProfile = () => {
               <div className="step-card">
                 <div className="step-header">
                  
-                  <h2 className="step-title">Skills, Experience & Goals</h2>
+                  <h5 className="step-titles">Skills, Experience & Goals</h5>
                 </div>
 
                 <div className="form-grid single-column">
@@ -1288,7 +1257,7 @@ const StudentProfile = () => {
                   {/* Skills Section */}
                   <div className="form-group">
                     <div className="section-header">
-                      <h3 className="section-title">Skills</h3>
+                      <span className="section-titles">Skills</span>
                       <button
                         type="button"
                         onClick={addSkill}
@@ -1300,61 +1269,48 @@ const StudentProfile = () => {
 
                     {skills.map((skill, index) => (
                       <div key={index} className="dynamic-item">
-                        <div className="dynamic-item-content">
-                          <div className="form-row">
-                            <div className="form-group">
-                              <input
-                                type="text"
-                                placeholder="Skill name (e.g., Programming)"
-                                value={skill.skillName}
-                                onChange={(e) =>
-                                  updateSkill(
-                                    index,
-                                    "skillName",
-                                    e.target.value
-                                  )
-                                }
-                                className="form-input"
-                                required
-                              />
-                            </div>
-                            <div className="form-group">
-                              <select
-                                value={skill.proficiencyLevel}
-                                onChange={(e) =>
-                                  updateSkill(
-                                    index,
-                                    "proficiencyLevel",
-                                    e.target.value
-                                  )
-                                }
-                                className="form-input"
-                              >
-                                <option value="Beginner">Beginner</option>
-                                <option value="Intermediate">
-                                  Intermediate
-                                </option>
-                                <option value="Advanced">Advanced</option>
-                                <option value="Expert">Expert</option>
-                              </select>
-                            </div>
+                        <div className="form-row">
+                          <div className="form-group">
+                            <input
+                              type="text"
+                              placeholder="Skill name (e.g., Programming)"
+                              value={skill.skillName}
+                              onChange={(e) => updateSkill(index, "skillName", e.target.value)}
+                              className="form-input"
+                              required
+                            />
                           </div>
+
+                          <div className="form-group">
+                            <select
+                              value={skill.proficiencyLevel}
+                              onChange={(e) => updateSkill(index, "proficiencyLevel", e.target.value)}
+                              className="form-input"
+                            >
+                              <option value="Beginner">Beginner</option>
+                              <option value="Intermediate">Intermediate</option>
+                              <option value="Advanced">Advanced</option>
+                              <option value="Expert">Expert</option>
+                            </select>
+                          </div>
+
+                          <button
+                            type="button"
+                            onClick={() => removeSkill(index)}
+                            className="remove-btn"
+                          >
+                            Remove
+                          </button>
                         </div>
-                        <button
-                          type="button"
-                          onClick={() => removeSkill(index)}
-                          className="remove-btn"
-                        >
-                          Remove
-                        </button>
                       </div>
                     ))}
+
                   </div>
 
                   {/* Languages Section */}
                   <div className="form-group">
                     <div className="section-header">
-                      <h3 className="section-title">Languages Spoken</h3>
+                      <h3 className="section-titles">Languages Spoken</h3>
                       <button
                         type="button"
                         onClick={addLanguage}
@@ -1420,7 +1376,7 @@ const StudentProfile = () => {
                   {/* Work Experience Section */}
                   <div className="form-group">
                     <div className="section-header">
-                      <h3 className="section-title">Work Experience</h3>
+                      <h3 className="section-titles">Work Experience</h3>
                       <button
                         type="button"
                         onClick={addWorkExperience}
@@ -1566,7 +1522,7 @@ const StudentProfile = () => {
                   {/* Extracurricular Activities Section */}
                   <div className="form-group">
                     <div className="section-header">
-                      <h3 className="section-title">
+                      <h3 className="section-titles">
                         Extracurricular Activities
                       </h3>
                       <button
@@ -1746,7 +1702,6 @@ const StudentProfile = () => {
                       <span className="label-text">Career Goals</span>
                     </label>
                     <div className="input-wrapper">
-                      <span className="input-icon">🚀</span>
                       <textarea
                         name="careerGoals"
                         value={formData.careerGoals}
@@ -1776,13 +1731,13 @@ const StudentProfile = () => {
             <div className="form-step active">
               <div className="step-card">
                 <div className="step-header">
-                  <h2 className="step-title">Documents & Emergency Contact</h2>
+                  <h5 className="step-titles">Documents & Emergency Contact</h5>
                 </div>
 
                 <div className="form-grid single-column">
                   {/* Profile Image Upload */}
                   <div className="form-group">
-                    <h3 className="section-title">Profile Image</h3>
+                    <h6 className="section-titles">Profile Image</h6>
                     <div
                       className={`upload-area ${
                         profileImage ? "has-file" : ""
@@ -1848,7 +1803,7 @@ const StudentProfile = () => {
 
                   {/* Document Upload */}
                   <div className="form-group">
-                    <h3 className="section-title">Supporting Documents</h3>
+                    <h4 className="section-titles">Supporting Documents</h4>
                     <div className="upload-area">
                       <div className="upload-icon">📄</div>
                       <button
@@ -1911,9 +1866,9 @@ const StudentProfile = () => {
 
                   {/* Emergency Contact */}
                   <div className="form-group">
-                    <h3 className="section-title">
+                    <center><h4 className="step-titles">
                       Emergency Contact Information
-                    </h3>
+                    </h4></center><br/>
                     <div className="form-grid">
                       <div className="form-group">
                         <label className="form-label">
@@ -2000,7 +1955,7 @@ const StudentProfile = () => {
 
                   {/* Additional Information */}
                   <div className="form-group">
-                    <h3 className="section-title">Additional Information</h3>
+                    <center><h4 className="step-titles">Additional Information</h4></center>
                     <div className="form-group">
                       <label className="form-label">
                         <span className="label-text">Disability Status</span>
