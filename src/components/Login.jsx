@@ -241,7 +241,7 @@ const Login = () => {
         Notify.info(`Welcome ${userData.name}! Please complete your profile to continue...`);
         
         setTimeout(() => {
-          window.location.href = '/studentprofile';
+          window.location.href = '/dashboard';
         }, 1500);
         
       } else {
@@ -250,7 +250,7 @@ const Login = () => {
         Notify.warning('Please complete your profile to continue...');
         
         setTimeout(() => {
-          window.location.href = '/studentprofile';
+          window.location.href = '/dashboard';
         }, 1500);
       }
     } catch (error) {
@@ -259,7 +259,7 @@ const Login = () => {
       Notify.warning('Redirecting to profile creation...');
       
       setTimeout(() => {
-        window.location.href = '/studentprofile';
+        window.location.href = '/das';
       }, 1500);
     }
   };
@@ -586,7 +586,7 @@ export const tokenUtils = {
         if (profileCheck?.hasProfile) {
           window.location.href = '/ProfileDashboard';
         } else {
-          window.location.href = '/studentprofile';
+          window.location.href = '/dashboard';
         }
         break;
     }

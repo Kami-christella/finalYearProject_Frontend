@@ -24,7 +24,7 @@ function NewDash() {
 
   useEffect(() => {
     // Get token from localStorage
-    const tokenFromStorage = localStorage.getItem('userToken');
+    const tokenFromStorage = localStorage.getItem('token');
 
     if (tokenFromStorage) {
       try {
@@ -59,7 +59,7 @@ function NewDash() {
   }, []);
 
   const handleLogoutBtn = () => {
-    localStorage.removeItem('userToken');
+    localStorage.removeItem('token');
     navigate('/');
     Notify.success("Logout successful, Thank you for using Our System");
   };
@@ -83,12 +83,12 @@ function NewDash() {
             <span className="sidei"> Create Profile</span>
           </div>
           <div 
-            className={`divClassb ${location.pathname === "/dashboard/Assessment2/assessment3/results" ? "active" : ""}`} 
-            onClick={() => navigate("/dashboard/Assessment2/assessment3/results")}
+            className={`divClassb ${location.pathname === "/ProfileDashboard" ? "active" : ""}`} 
+            onClick={() => navigate("/ProfileDashboard")}
           >
             <div className="resultsClass">
               <LuNotebookPen /> 
-              <span className="sidei">Results</span>
+              <span className="sidei">Student Information</span>
             </div>
           </div>
           {/* profile */}
@@ -132,8 +132,8 @@ function NewDash() {
         >
           <h5 className="text-dark m-0"> <b>Welcome</b>, {userName} </h5>
           <div className="position-fixed">
-            <IoPersonCircle 
-              style={{ color: "#2c5a99", fontSize: "3rem", marginLeft: "76rem" }}
+            <IoPersonCircle
+              style={{ color: "#2c5a99", fontSize: "3rem", marginLeft: "56rem" }}
               onClick={() => setShowDropdown(!showDropdown)}
             />
             {showDropdown && (
