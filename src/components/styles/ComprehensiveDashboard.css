@@ -5,6 +5,8 @@
   min-height: 100vh;
   background-color: white;
   /* background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); */
+  margin-left: 15rem;
+  margin-top: -30rem;
   padding: 20px;
   font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
 }
@@ -147,32 +149,37 @@
 }
 
 .edit-btn {
-  background: #6c757d;
-  color: white;
+  background: white;
+  color: black;
+  border: 2px solid #1B3058;
+  border-radius: 15px;
+  cursor: pointer;            /* Make it look clickable */
+  transition: all 0.3s ease;  /* Smooth hover effect */
 }
 
 .edit-btn:hover:not(:disabled) {
-  background: #5a6268;
+  background: #1B3058;
+  color: white;
   transform: translateY(-2px);
 }
 
 .assessment-btn {
-  background: #17a2b8;
+  background: #1B3058;
   color: white;
 }
 
 .assessment-btn:hover {
-  background: #138496;
+  background: #1B3058;
   transform: translateY(-2px);
 }
 
 .recommend-btn {
-  background: #28a745;
+  background: #1B3058;
   color: white;
 }
 
 .recommend-btn:hover:not(:disabled) {
-  background: #218838;
+  background: #1B3059;
   transform: translateY(-2px);
 }
 
@@ -209,7 +216,8 @@
 .stat-icon {
   width: 50px;
   height: 50px;
-  background: linear-gradient(135deg, #2563eb, #1d4ed8);
+  background: #1B3058;
+  /* background: linear-gradient(135deg, #2563eb, #1d4ed8); */
   border-radius: 12px;
   display: flex;
   align-items: center;
@@ -265,11 +273,11 @@
 
 .nav-btn:hover {
   background: rgba(37, 99, 235, 0.1);
-  color: #2563eb;
+  color: #1B3058;
 }
 
 .nav-btn.active {
-  background: linear-gradient(135deg, #2563eb, #1d4ed8);
+  background: linear-gradient(135deg, #1B3058, #1B3058);
   color: white;
   box-shadow: 0 4px 12px rgba(37, 99, 235, 0.3);
 }
@@ -343,7 +351,7 @@
 }
 
 .status-indicator.complete {
-  background: #2563eb;
+  background: #1B3058;
   color: white;
 }
 
@@ -387,12 +395,12 @@
 
 .quick-action-btn {
   padding: 12px 16px;
-  background: linear-gradient(135deg, #2563eb, #1d4ed8);
+  background: #1B3058;
   color: white;
   border: none;
   border-radius: 8px;
-  font-size: 14px;
-  font-weight: 600;
+  font-size: 7px;
+  font-weight: 100;
   cursor: pointer;
   transition: all 0.3s ease;
   display: flex;

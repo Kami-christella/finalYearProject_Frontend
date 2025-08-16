@@ -389,7 +389,7 @@ const EditProfile = () => {
         Notify.success('Profile updated successfully!');
         
         setTimeout(() => {
-          window.location.href = '/ProfileDashboard';
+          window.location.href = '/dashboard/ProfileDashboard';
         }, 2000);
       } else {
         setError(data.message || 'Failed to update profile');
@@ -406,7 +406,7 @@ const EditProfile = () => {
   // Cancel editing
   const handleCancel = () => {
     if (window.confirm('Are you sure you want to cancel? All unsaved changes will be lost.')) {
-      window.location.href = '/ProfileDashboard';
+      window.location.href = '/dashboard/ProfileDashboard';
     }
   };
 

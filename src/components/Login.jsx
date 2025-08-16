@@ -230,7 +230,7 @@ const Login = () => {
         Notify.success(`Welcome back, ${userData.name}! Redirecting to your dashboard...`);
         
         setTimeout(() => {
-          window.location.href = '/ProfileDashboard';
+          window.location.href = '/dashboard/ProfileDashboard';
         }, 1500);
         
       } else if (response.status === 404) {
@@ -584,7 +584,7 @@ export const tokenUtils = {
       default:
         const profileCheck = await tokenUtils.checkUserProfile();
         if (profileCheck?.hasProfile) {
-          window.location.href = '/ProfileDashboard';
+          window.location.href = '/dashboard/ProfileDashboard';
         } else {
           window.location.href = '/dashboard';
         }

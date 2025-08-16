@@ -46,15 +46,15 @@ const ProfileDashboard = () => {
   };
 
   const goToAssessment = () => {
-    window.location.href = '/assessment';
+    window.location.href = '/dashboard/assessment';
   };
 
   const goToEditProfile = () => {
-    window.location.href = '/EditProfile'; 
+    window.location.href = '/dashboard/EditProfile'; 
   };
 
   const goToCreateProfile = () => {
-    window.location.href = '/StudentProfile';
+    window.location.href = '/dashboard/StudentProfile';
   };
 
  
@@ -132,58 +132,12 @@ const ProfileDashboard = () => {
     <div className="dashboard-container">
       <div className="dashboard-content">
        
-        <div className="profile-header">
-          <div className="header-main">
-
-            <div className="profile-avatar">
-              {profile.images && profile.images.length > 0 ? (
-                <img 
-                  src={`http://localhost:5000${profile.images[0].url}`} 
-                  alt="Profile" 
-                  className="avatar-image"
-                  onError={(e) => {
-                    console.log('❌ Image failed to load:', `http://localhost:5000${profile.images[0].url}`);
-                    console.log('🔍 Original URL from database:', profile.images[0].url);
-                    console.log('📸 Full image object:', profile.images[0]);
-                    e.target.style.display = 'none';
-                    e.target.nextSibling.style.display = 'flex';
-                  }}
-                  onLoad={() => {
-                    console.log('✅ Image loaded successfully:', `http://localhost:5000${profile.images[0].url}`);
-                  }}
-                />
-              ) : null}
-              <div 
-                className="avatar-placeholder"
-                style={{ 
-                  display: profile.images && profile.images.length > 0 ? 'none' : 'flex' 
-                }}
-              >
-                {profile.userId?.name?.charAt(0) || 'U'}
-              </div>
-            </div>
-            {/* end */}
-            <div className="profile-info">
-              <h1 className="profile-name">{profile.userId?.name || 'Student'}</h1>
-              <p className="profile-email">{profile.email}</p>
-              <div className="profile-badges">
-                <span className="badge success">Profile Complete</span>
-                <span className="badge info">{profile.desiredFaculty || 'Faculty: Not selected'}</span>
-              </div>
-            </div>
-          </div>
-          
-          <div className="header-actions">
-            <button onClick={goToEditProfile} className="edit-btn">
+        
+        
+ <button onClick={goToEditProfile} className="edit-btn">
               <span className="btn-icon">✏️</span>
               Edit Profile
-            </button>
-            <button onClick={handleLogout} className="logout-btn">
-              <span className="btn-icon">🚪</span>
-              Logout
-            </button>
-          </div>
-        </div>
+            </button> <br /> <br /> 
 
         {/* Quick Stats */}
         <div className="stats-section">
@@ -221,7 +175,7 @@ const ProfileDashboard = () => {
         <div className="cta-section">
           <div className="cta-content">
             <div className="cta-text">
-              <h2 className="cta-title">🎯 Ready to Discover Your Career Path?</h2>
+              <h2 className="cta-title"> Ready to Discover Your Career Path?</h2>
               <p className="cta-subtitle">
                 Take our comprehensive career assessment to get personalized recommendations 
                 based on your profile, interests, and skills.

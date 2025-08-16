@@ -310,7 +310,7 @@ const completeAssessment = async () => {
   }
 };
   const goToComprehensiveDashboard = () => {
-    window.location.href = '/ComprehensiveDashboard';
+    window.location.href = '/dashboard/ComprehensiveDashboard';
   };
 
   const getSectionProgress = () => {
@@ -424,7 +424,7 @@ const completeAssessment = async () => {
               </button>
 
               <button 
-                onClick={() => window.location.href = '/ComprehensiveDashboard'}
+                onClick={() => window.location.href = '/dashboard/ComprehensiveDashboard'}
                 className="secondary-btn"
               >
                 Return to Dashboard

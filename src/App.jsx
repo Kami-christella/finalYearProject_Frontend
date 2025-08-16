@@ -31,11 +31,10 @@ function App() {
           <Route path='Signup' element={<Signup />} />
           <Route path='Login' element={<Login />} />
           {/* <Route path='StudentProfile' element={<StudentProfile/>} /> */}
-          <Route path='ProfileDashboard' element={<ProfileDashboard/>} />
-          <Route path='EditProfile' element={<EditProfile/>} />
+          {/* <Route path='ProfileDashboard' element={<ProfileDashboard/>} /> */}
+          {/* <Route path='EditProfile' element={<EditProfile/>} />
           <Route path='assessment' element={<Assessment/>} />
-          {/* <Route path='advisorDashboard' element={<AdvisorDashboard/>} /> */}
-          <Route path='ComprehensiveDashboard' element={<ComprehensiveDashboard/>} />
+          <Route path='ComprehensiveDashboard' element={<ComprehensiveDashboard/>} /> */}
           <Route path='StudentAppointmentDashboard' element={<StudentAppointmentDashboard/>} />
           <Route path='AdvisorAppointmentDashboard' element={<AdvisorAppointmentDashboard/>} />
 
@@ -45,6 +44,10 @@ function App() {
 
         <Route path='/dashboard' element={<DashboardLayout />}>
           <Route index element={<StudentProfile />} />
+           <Route path='ProfileDashboard' element={<ProfileDashboard/>} />
+            <Route path='EditProfile' element={<EditProfile/>} />
+          <Route path='assessment' element={<Assessment/>} />
+          <Route path='ComprehensiveDashboard' element={<ComprehensiveDashboard/>} />
           {/* <Route path='assessment2' element={<Assessment2 />} />
           <Route path='Assessment2/assessment3' element={<Assesment3 />} />
           <Route path='Assessment2/assessment3/Results' element={<Results />} />

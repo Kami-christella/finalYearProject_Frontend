@@ -1,16 +1,16 @@
+// NewDash.jsx
 import { useState, useEffect } from "react";
 import { IoPersonCircle, IoHomeOutline, IoSettings } from "react-icons/io5";
-import { PiStudentBold } from "react-icons/pi";
-import { GrTest } from "react-icons/gr";
+
 import { LuNotebookPen } from "react-icons/lu";
 import { useNavigate, useLocation } from "react-router-dom";
 import { Notify } from "notiflix";
-import { MdNoteAlt } from "react-icons/md";
 import { LuNotebookTabs } from "react-icons/lu";
 import { FaRegUserCircle } from "react-icons/fa";
 import { FaCalendarAlt } from "react-icons/fa";
 import { IoIosSettings } from "react-icons/io";
 import { IoIosLogOut } from "react-icons/io";
+import { MdQuiz } from "react-icons/md";
 
 import AUCA from "../assets/images/AUCA.png"
 
@@ -82,9 +82,19 @@ function NewDash() {
             <IoHomeOutline />
             <span className="sidei"> Create Profile</span>
           </div>
+           <div 
+            className={`divClassb ${location.pathname === "/dashboard/assessment" ? "active" : ""}`} 
+            onClick={() => navigate("/dashboard/assessment")}
+          >
+            <div className="resultsClass">
+             <MdQuiz />
+
+              <span className="sidei">Assessment</span>
+            </div>
+          </div>
           <div 
-            className={`divClassb ${location.pathname === "/ProfileDashboard" ? "active" : ""}`} 
-            onClick={() => navigate("/ProfileDashboard")}
+            className={`divClassb ${location.pathname === "/dashboard/ProfileDashboard" ? "active" : ""}`} 
+            onClick={() => navigate("/dashboard/ProfileDashboard")}
           >
             <div className="resultsClass">
               <LuNotebookPen /> 
@@ -93,12 +103,12 @@ function NewDash() {
           </div>
           {/* profile */}
           <div 
-            className={`divClassb ${location.pathname === "/dashboard/Profile" ? "active" : ""}`} 
-            onClick={() => navigate("/dashboard/Profile")}
+            className={`divClassb ${location.pathname === "/dashboard/ComprehensiveDashboard" ? "active" : ""}`} 
+            onClick={() => navigate("/dashboard/ComprehensiveDashboard")}
           >
             <div className="resultsClass">
               <LuNotebookTabs />
-              <span className="sidei">Recommended</span>
+              <span className="sidei"> Recommendations</span>
             </div>
           </div>
 

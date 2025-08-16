@@ -1,4 +1,4 @@
-/* Modern Blue & White Profile Dashboard Design */
+/* profileDasboard.css */
 
 * {
   margin: 0;
@@ -7,11 +7,16 @@
 }
 
 .dashboard-container {
-  min-height: 100vh;
+  min-height: 50vh;
+  max-width: fit-content;
   background: linear-gradient(135deg, #ffffff 0%, #f8fafc 25%, #e2e8f0 50%, #dbeafe 75%, #f1f5f9 100%);
-  padding: 2rem;
-  position: relative;
+  padding: 1rem;
+  margin-left: 15rem;
+  margin-top: -30rem;
   overflow-x: hidden;
+  /* position: relative;
+  overflow-x: hidden; */
+
 }
 
 /* Animated Background Elements */
@@ -344,8 +349,9 @@
 
 /* Stats Section */
 .stats-section {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  display: flex;
+  flex-direction: row;
+  /* grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); */
   gap: 1.5rem;
   margin-bottom: 2rem;
   animation: statsSlideIn 1s ease-out 0.4s both;
@@ -475,7 +481,7 @@
 }
 
 .cta-title {
-  font-size: 2.2rem;
+  font-size: 1.5rem;
   font-weight: 800;
   margin-bottom: 1rem;
   background: linear-gradient(135deg, #1e40af, #3b82f6);
@@ -485,7 +491,7 @@
 }
 
 .cta-subtitle {
-  font-size: 1.2rem;
+  font-size: 1rem;
   color: #64748b;
   margin-bottom: 2rem;
   max-width: 600px;

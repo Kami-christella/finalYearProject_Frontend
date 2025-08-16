@@ -403,18 +403,18 @@ const ComprehensiveDashboard = () => {
                   }}
                 />
               ) : null}
-              <div 
+              {/* <div 
                 className="avatar-placeholder"
                 style={{ 
                   display: profile?.images && profile.images.length > 0 ? 'none' : 'flex' 
                 }}
               >
                 {profile?.userId?.name?.charAt(0) || 'U'}
-              </div>
+              </div> */}
             </div>
             <div className="profile-info">
-              <h1 className="profile-name">{profile?.userId?.name || 'Student'}</h1>
-              <p className="profile-email">{profile?.email || 'No email'}</p>
+              {/* <h1 className="profile-name">{profile?.userId?.name || 'Student'}</h1>
+              <p className="profile-email">{profile?.email || 'No email'}</p> */}
               <div className="status-badge" style={{ background: completionStatus.color }}>
                 {completionStatus.message}
               </div>
@@ -429,10 +429,6 @@ const ComprehensiveDashboard = () => {
             >
               <span className="btn-icon">✏️</span>
               Edit Profile
-            </button>
-            <button onClick={handleLogout} className="logout-btn">
-              <span className="btn-icon">🚪</span>
-              Logout
             </button>
             <button 
               onClick={generateNewRecommendations}
