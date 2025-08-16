@@ -54,7 +54,7 @@ const ProfileDashboard = () => {
   };
 
   const goToCreateProfile = () => {
-    window.location.href = '/dashboard/StudentProfile';
+    window.location.href = '/dashboard';
   };
 
  

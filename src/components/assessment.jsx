@@ -345,7 +345,7 @@ const completeAssessment = async () => {
           <h2>Profile Required</h2>
           <p>You need to complete your profile before taking the assessment.</p>
           <button 
-            onClick={() => window.location.href = '/StudentProfile'} 
+            onClick={() => window.location.href = '/dashboard'} 
             className="create-profile-btn"
           >
             <span className="btn-icon">✨</span>

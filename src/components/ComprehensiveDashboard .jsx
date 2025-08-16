@@ -556,7 +556,7 @@ const ComprehensiveDashboard = () => {
                   <div className="quick-actions">
                     {!hasProfile && (
                       <button 
-                        onClick={() => window.location.href = '/StudentProfile'}
+                        onClick={() => window.location.href = '/dashboard'}
                         className="quick-action-btn"
                       >
                         <span className="btn-icon">📝</span>
@@ -738,7 +738,7 @@ const ComprehensiveDashboard = () => {
                   <h3>No Profile Found</h3>
                   <p>You haven't created your profile yet. Create one to get started!</p>
                   <button 
-                    onClick={() => window.location.href = '/StudentProfile'}
+                    onClick={() => window.location.href = '/dashboard'}
                     className="create-btn"
                   >
                     Create Profile
@@ -914,7 +914,7 @@ const ComprehensiveDashboard = () => {
                   <div className="recommendation-actions">
                     {!hasProfile && (
                       <button 
-                        onClick={() => window.location.href = '/StudentProfile'}
+                        onClick={() => window.location.href = '/dashboard'}
                         className="create-btn"
                       >
                         Create Profile

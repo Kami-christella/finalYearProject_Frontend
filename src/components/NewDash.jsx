@@ -1,7 +1,8 @@
 // NewDash.jsx
 import { useState, useEffect } from "react";
 import { IoPersonCircle, IoHomeOutline, IoSettings } from "react-icons/io5";
-
+import { BsPersonFillAdd } from "react-icons/bs";
+import { MdOutlinePersonAddAlt } from "react-icons/md";
 import { LuNotebookPen } from "react-icons/lu";
 import { useNavigate, useLocation } from "react-router-dom";
 import { Notify } from "notiflix";
@@ -79,8 +80,13 @@ function NewDash() {
             className={`divClassb ${location.pathname === "/dashboard" ||location.pathname === "/dashboard/Assessment2"||location.pathname === "/dashboard/Assessment2/assessment3" ? "active" : ""}`} 
             onClick={() => navigate("/dashboard")}
           >
-            <IoHomeOutline />
-            <span className="sidei"> Create Profile</span>
+              <div className="resultsClass">
+            {/* <BsPersonFillAdd /> */}
+<MdOutlinePersonAddAlt />
+
+               <span className="sidei"> Create Profile</span>
+            </div>
+           
           </div>
            <div 
             className={`divClassb ${location.pathname === "/dashboard/assessment" ? "active" : ""}`} 
