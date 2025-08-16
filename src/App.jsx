@@ -4,6 +4,7 @@ import './App.css';
 // import './i18n';
 import AdvisorDashboard from './components/AdvisorDashboard ';
 import DashboardLayout from './components/DashboardLayout';
+import AdminDashboardLayout from './components/AdminDashboardLayout'
 import AdvisorAppointmentDashboard from './components/AdvisorAppointmentDashboard ';
 import StudentAppointmentDashboard from './components/StudentAppointmentDashboard ';
 import ProfileDashboard from './components/ProfileDashboard';
@@ -16,6 +17,7 @@ import StudentProfile from './components/StudentProfile ';
 import Assessment from './components/assessment';
 import ComprehensiveDashboard from './components/ComprehensiveDashboard '
 import AdvisorDashboardLayout from './components/AdvisorDashboardLayout ';
+import AdminDashboard from './components/AdminDashboard';
 
 
 
@@ -59,7 +61,10 @@ function App() {
           <Route index element={<AdvisorDashboard />} />
          
         </Route>
-
+       <Route path='/admindashboard' element={<AdminDashboardLayout />}>
+          <Route index element={<AdminDashboard />} />
+         
+        </Route>
        {/* <Route path='/admindashboard' element={<AdminDashboardLayout/>}>
        <Route index element={<AdminPage />} />
        <Route path='adminSettings' element={<AdminSettings />} />

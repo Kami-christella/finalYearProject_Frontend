@@ -2647,6 +2647,8 @@
 
 // export default AdvisorDashboard;
 
+//advisorDahboard.jsx
+
 import React, { useState, useEffect } from 'react';
 import { Notify } from 'notiflix';
 import { PieChart, Pie, Cell, BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer } from "recharts";
