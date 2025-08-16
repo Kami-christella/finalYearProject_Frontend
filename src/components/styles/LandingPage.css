@@ -138,7 +138,7 @@ body {
   transform: scaleX(0);
   transform-origin: left;
   transition: transform 0.3s ease;
-}
+} 
 
 .logo:hover::after {
   transform: scaleX(1);
