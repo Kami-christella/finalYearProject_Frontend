@@ -14,10 +14,10 @@
 }
 
 .sidebar {
-  position: sticky;
-  margin-left: -27px;
+  position: fixed; /* Changed from sticky for better control */
+  left: 0; /* Remove negative margin, position properly */
   top: 0;
-  align-self: start;
+  width: 280px; /* Set explicit width */
   height: 100vh;
   background: #1B3058; 
   color: #e5edff;
@@ -25,6 +25,8 @@
   border-right: 1px solid rgba(255,255,255,0.06);
   overflow-y: auto;
   transition: transform 0.25s ease;
+  z-index: 1000; /* Ensure sidebar stays on top */
+  box-shadow: 2px 0 10px rgba(0, 0, 0, 0.1); /* Add subtle shadow */
 }
 
 .sidebar-header {
@@ -109,10 +111,43 @@
 
 /* Main content + top bar */
 .main-content {
-  background: #f8fafc;
+  margin-left: 280px; /* Same as sidebar width */
+  width: calc(100% - 280px);
   min-height: 100vh;
-  display: flex;
-  flex-direction: column;
+  background: #f8fafc;
+  padding: 0;
+  transition: margin-left 0.25s ease;
+}
+
+/* Alternative approach using padding instead of margin */
+.main-content-alt {
+  padding-left: 280px;
+  width: 100%;
+  min-height: 100vh;
+  background: #f8fafc;
+  transition: padding-left 0.25s ease;
+}
+
+/* Mobile responsive - full width when sidebar is hidden */
+@media (max-width: 768px) {
+  .main-content {
+    margin-left: 0;
+    width: 100%;
+  }
+  
+  /* Alternative */
+  .main-content-alt {
+    padding-left: 0;
+  }
+}
+
+/* Ensure the dashboard layout doesn't use flex if using margin approach */
+.dashboard-layout {
+  display: block; /* Change from flex to block */
+  width: 100%;
+  max-width: 100vw;
+  min-height: 100vh;
+  overflow-x: hidden;
 }
 
 .topbar {
@@ -166,11 +201,18 @@
 
 /* end new css */
 .advisor-dashboard {
+  width: 100%;
+  max-width: 100vw; /* Prevent horizontal overflow */
+  overflow-x: hidden; /* Hide horizontal scrollbar */
+}
+
+/* Dashboard Layout (Sidebar + Main Content) */
+.dashboard-layout {
+  display: flex;
+  width: 100%;
+  max-width: 100vw;
   min-height: 100vh;
-  background: white;
-  /* background: linear-gradient(135deg, #2563eb 0%, #1d4ed8 100%); */
-  padding: 0;
-  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', sans-serif;
+  overflow-x: hidden;
 }
 
 /* Modern Header */
@@ -338,19 +380,56 @@
 .stat-content {
   flex: 1;
 }
-
-.stat-value {
-  font-size: 1.875rem;
-  font-weight: 700;
-  color: #1e293b;
-  margin-bottom: 0.25rem;
-  line-height: 1;
+.stat-card {
+  background: white;
+  border-radius: 12px;
+  padding: 24px;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+  border: 1px solid #e2e8f0;
+  transition: all 0.2s ease;
+  position: relative;
+  overflow: hidden;
+  min-height: 200px;
 }
 
-.stat-label {
-  color: #64748b;
-  font-size: 0.875rem;
+.stat-card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+}
+
+.stat-value {   
+  font-size: 2rem !important;
+  font-weight: 700 !important;   
+  color: #1e293b !important;   
+  margin-bottom: 8px;   
+  line-height: 1.1; 
+}
+
+.stat-label {   
+  color: #64748b;   
+  font-size: 1rem;   
   font-weight: 500;
+  margin-bottom: 24px;
+}
+
+/* Simple line chart background */
+.stat-card::after {
+  content: '';
+  position: absolute;
+  bottom: 24px;
+  left: 24px;
+  right: 24px;
+  height: 60px;
+  background: linear-gradient(135deg, #f1f5f9 0%, #e2e8f0 50%, #cbd5e1 100%);
+  clip-path: polygon(
+    0% 70%, 6% 65%, 12% 75%, 18% 60%, 24% 80%, 
+    30% 55%, 36% 70%, 42% 45%, 48% 65%, 54% 40%, 
+    60% 60%, 66% 35%, 72% 55%, 78% 30%, 84% 50%, 
+    90% 25%, 96% 45%, 100% 20%, 
+    100% 100%, 0% 100%
+  );
+  opacity: 0.4;
+  pointer-events: none;
 }
 
 /* Overview Charts */
@@ -408,22 +487,23 @@
 
 /* Modern Filters Section */
 .filters-section {
-  background: white;
-  padding: 1.5rem;
-  border-radius: 12px;
-  margin-bottom: 1.5rem;
-  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
-  border: 1px solid #e2e8f0;
+  background: transparent; /* remove white background */
+  padding: 0.5rem;         /* smaller padding */
+  border-radius: 0;        /* no rounded corners */
+  margin-bottom: 0.5rem;   /* less spacing below */
+  box-shadow: none;        /* remove shadow */
+  border: none;            /* remove border */
   display: flex;
-  gap: 1rem;
+  gap: 0.5rem;             /* tighter gap */
   flex-wrap: wrap;
   align-items: center;
 }
 
+
 .search-box {
   position: relative;
   flex: 1;
-  min-width: 300px;
+  min-width: 200px;
 }
 
 .search-icon {
@@ -492,9 +572,15 @@
 }
 
 .select-all-btn {
-  background: #f1f5f9;
-  color: #475569;
-  border: 1px solid #e2e8f0;
+  padding: 0.35rem 0.75rem;   /* smaller padding */
+  border-radius: 6px;         
+  font-size: 0.8rem;          
+  font-weight: 400;           
+  background: transparent;    
+  color: #2563eb;             
+  border: 1px solid #2563eb;  
+  cursor: pointer;
+  transition: all 0.2s ease;
 }
 
 .select-all-btn:hover {
@@ -1037,6 +1123,7 @@
   box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
 }
 
+
 .large-modal {
   max-width: 95vw;
   width: 1200px;
@@ -1055,6 +1142,9 @@
   margin: 0;
   font-size: 1.5rem;
   font-weight: 600;
+  text-align: center;
+  flex: 1; /* Added: Take up available space */
+  padding: 0 2rem; /* Added: Prevent overlap with close button */
 }
 
 .modal-close {
@@ -1117,6 +1207,7 @@
   font-weight: 500;
   color: #64748b;
   font-size: 0.875rem;
+  text-align: center;
 }
 
 .info-value {
@@ -1626,14 +1717,9 @@
     grid-template-columns: 1fr;
   }
 
-  .filters-section {
-    flex-direction: column;
-    gap: 1rem;
-  }
+ 
 
-  .search-box {
-    min-width: auto;
-  }
+
 
   .bulk-actions {
     flex-direction: column;
@@ -1739,9 +1825,6 @@
     font-size: 1.25rem;
   }
 
-  .stat-value {
-    font-size: 1.5rem;
-  }
 
   .analytics-section,
   .activity-log {
@@ -1870,8 +1953,8 @@
 
 .calendar-toggle-btn.active {
   background: #e3f2fd;
-  color: #1976d2;
-  border-color: #1976d2;
+  color: #1B3058;
+  border-color: #1B3058;
 }
 
 /* Appointment Filters */
@@ -1907,7 +1990,7 @@
 
 .filter-apply-btn {
   padding: 0.5rem 1rem;
-  background: #007bff;
+  background: #1B3058;
   color: white;
   border: none;
   border-radius: 4px;
@@ -1917,7 +2000,7 @@
 }
 
 .filter-apply-btn:hover {
-  background: #0056b3;
+  background: #1B3058;
 }
 
 /* Calendar View */
@@ -2082,7 +2165,7 @@
 }
 
 .appointment-card.booked {
-  border-left-color: #007bff;
+  border-left-color: #1B3058;
 }
 
 .appointment-card.completed {
@@ -2133,12 +2216,12 @@
 
 .appointment-status-badge.booked {
   background: #cce5ff;
-  color: #004085;
+  color: #1B3058;
 }
 
 .appointment-status-badge.completed {
   background: #d1ecf1;
-  color: #0c5460;
+  color: #1B3058;
 }
 
 .appointment-status-badge.cancelled {
@@ -2539,3 +2622,384 @@
     display: none;
   }
 }
+
+/* COMPLETE TABLE WITH HORIZONTAL SCROLL - All Columns Visible */
+/* Table Container */
+.students-table-container {
+  width: 100%;
+  overflow: hidden; /* Remove horizontal scroll */
+  margin: 0;
+  padding: 0;
+  background: white;
+  border-radius: 5px;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+}
+
+.table-wrapper {
+  width: 100%;
+  overflow: hidden; /* Remove horizontal scroll */
+  border-radius: 0px;
+}
+
+/* Main Table - NO GAPS, NO SCROLL */
+.students-table {
+  width: 100%;
+  table-layout: fixed;
+  border-collapse: collapse;
+  border-spacing: 0;
+  background: white;
+  margin: 0;
+  padding: 0;
+}
+
+/* Remove ALL borders and spacing */
+.students-table th,
+.students-table td {
+  margin: 0;
+  padding: 12px 8px;
+  border: none;
+  border-bottom: 1px solid #e2e8f0;
+  text-align: left;
+  vertical-align: middle;
+  font-size: 14px;
+  line-height: 1.4;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+/* Header Styling */
+.students-table thead {
+  background: #1B3058;
+  position: sticky;
+  top: 0;
+  z-index: 10;
+}
+
+.students-table thead th {
+  background: #1B3058;
+  color: white;
+  font-weight: 600;
+  font-size: 14px;
+  padding: 16px 8px;
+  border-bottom: 2px solid #0f172a;
+}
+
+/* Body Rows */
+.students-table tbody tr {
+  background: white;
+  transition: background-color 0.2s ease;
+}
+
+.students-table tbody tr:hover {
+  background: #f8fafc;
+}
+
+.students-table tbody tr:nth-child(even) {
+  background: #fafbfc;
+}
+
+.students-table tbody tr:nth-child(even):hover {
+  background: #f1f5f9;
+}
+
+/* RESPONSIVE COLUMN WIDTHS FOR 4 COLUMNS - NO SCROLL */
+.students-table th:nth-child(1),
+.students-table td:nth-child(1) {
+  width: 60px;
+  min-width: 60px;
+  max-width: 60px;
+  text-align: center;
+  padding: 12px 4px;
+}
+
+.students-table th:nth-child(2),
+.students-table td:nth-child(2) {
+  width: 35%;
+  padding-left: 12px;
+  padding-right: 8px;
+  white-space: nowrap;
+}
+
+.students-table th:nth-child(3),
+.students-table td:nth-child(3) {
+  width: 40%;
+  padding-left: 12px;
+  padding-right: 8px;
+  white-space: nowrap;
+}
+
+.students-table th:nth-child(4),
+.students-table td:nth-child(4) {
+  width: 25%;
+  text-align: center;
+  padding: 12px 8px;
+  white-space: nowrap;
+}
+
+/* Column Classes */
+.checkbox-column {
+  width: 60px !important;
+  text-align: center !important;
+}
+
+.table-checkbox {
+  width: 18px;
+  height: 18px;
+  accent-color: #1B3058;
+  cursor: pointer;
+  margin: 0;
+}
+
+/* Name Column */
+.name-column {
+  width: 35% !important;
+}
+
+.name-cell {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  width: 100%;
+  overflow: hidden;
+}
+
+.student-avatar-small {
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  flex-shrink: 0;
+  overflow: hidden;
+  border: 2px solid #e2e8f0;
+  background: #f8fafc;
+}
+
+.avatar-image-small {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.avatar-placeholder-small {
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(135deg, #1B3058, #2563eb);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: white;
+  font-weight: 600;
+  font-size: 14px;
+}
+
+.student-name-text {
+  font-weight: 600;
+  color: #1e293b;
+  font-size: 14px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  flex: 1;
+}
+
+/* Email Column */
+.email-column {
+  width: 40% !important;
+}
+
+.student-email-text {
+  color: #64748b;
+  font-size: 13px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  display: block;
+  width: 100%;
+}
+
+/* Actions Column */
+.actions-column {
+  width: 25% !important;
+  text-align: center !important;
+}
+
+.table-actions {
+  display: flex;
+  gap: 6px;
+  align-items: center;
+  justify-content: center;
+  flex-wrap: nowrap;
+  width: 100%;
+}
+
+/* Action Buttons */
+.table-btn {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  padding: 6px 10px;
+  border: none;
+  border-radius: 6px;
+  font-size: 11px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  white-space: nowrap;
+  flex-shrink: 0;
+  min-width: fit-content;
+}
+
+.table-btn .btn-icon {
+  font-size: 12px;
+  margin-right: 2px;
+}
+
+.table-btn.view-btn {
+  background: linear-gradient(135deg, #f1f5f9, #e2e8f0);
+  color: #475569;
+  border: 1px solid #cbd5e1;
+}
+
+.table-btn.view-btn:hover {
+  background: linear-gradient(135deg, #e2e8f0, #cbd5e1);
+  transform: translateY(-1px);
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.table-btn.review-btn {
+  background: linear-gradient(135deg, #1B3058, #2563eb);
+  color: white;
+  border: 1px solid #1B3058;
+}
+
+.table-btn.review-btn:hover {
+  background: linear-gradient(135deg, #0f172a, #1B3058);
+  transform: translateY(-1px);
+  box-shadow: 0 3px 8px rgba(27, 48, 88, 0.25);
+}
+
+.table-btn.doc-btn {
+  background: linear-gradient(135deg, #f59e0b, #d97706);
+  color: white;
+  border: 1px solid #f59e0b;
+  position: relative;
+}
+
+.table-btn.doc-btn:hover {
+  background: linear-gradient(135deg, #d97706, #b45309);
+  transform: translateY(-1px);
+  box-shadow: 0 3px 8px rgba(245, 158, 11, 0.25);
+}
+
+.doc-count {
+  font-size: 10px;
+  font-weight: 600;
+  margin-left: 2px;
+}
+
+/* Document Dropdown - Fixed positioning to avoid clipping */
+.document-dropdown {
+  position: relative;
+  display: inline-block;
+  z-index: 999999 !important;
+}
+
+.document-dropdown-content {
+  display: none;
+  position: fixed !important; /* Changed to fixed */
+  min-width: 250px;
+  background: white;
+  border: 1px solid #e2e8f0;
+  border-radius: 8px;
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.25);
+  z-index: 999999 !important;
+  max-height: 300px;
+  overflow-y: auto;
+  margin-top: 4px;
+}
+
+.document-dropdown:hover .document-dropdown-content {
+  display: block;
+}
+
+.document-item-small {
+  padding: 10px 12px;
+  border-bottom: 1px solid #f1f5f9;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  transition: background-color 0.2s ease;
+}
+
+.activity-table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 1rem;
+  font-size: 0.9rem;
+  border: none; /* removes outer border */
+}
+
+.activity-table th,
+.activity-table td {
+  border: 1px solid #e2e8f0; /* keeps inside borders */
+  padding: 0.75rem;
+  text-align: left;
+}
+
+.activity-table th {
+  background: #f9fafb;
+  font-weight: 600;
+}
+
+.activity-table tr:nth-child(even) {
+  background: #f8fafc;
+}
+
+/* remove border from the whole table wrapper */
+.activity-table th:first-child,
+.activity-table td:first-child {
+  border-left: none;
+}
+
+.activity-table th:last-child,
+.activity-table td:last-child {
+  border-right: none;
+}
+
+.activity-table tr:first-child th {
+  border-top: none;
+}
+
+.activity-table tr:last-child td {
+  border-bottom: none;
+}
+
+/* Appointment  */
+
+.appointments-header {
+  display: flex !important;
+  flex-direction: row !important;
+  justify-content: space-between;
+  align-items: center;
+  width: 100%;
+  padding: 0.25rem 0.5rem;   /* reduce header padding */
+}
+
+.appointments-header h3 {
+  font-size: 1rem;           /* smaller heading */
+  margin: 0;                 /* remove default h3 spacing */
+  line-height: 1.2;
+}
+
+.appointment-actions {
+  display: flex !important;
+  flex-direction: row !important;
+  gap: 0.5rem;               /* smaller gap between buttons */
+  align-items: center;
+}
+
+.appointment-actions button {
+  padding: 0.35rem 0.6rem;   /* smaller buttons */
+  font-size: 0.8rem;         /* smaller text */
+  border-radius: 6px;        /* keep compact rounded look */
+}
+

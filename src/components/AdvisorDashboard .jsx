@@ -1,3 +1,4 @@
+//AdvisorDashboard.jsx
 import React, { useState, useEffect } from 'react';
 import { Notify } from 'notiflix';
 import './styles/AdvisorDashboard.css';
@@ -913,36 +914,43 @@ const AdvisorDashboard = () => {
             <div className="tab-content">
               <div className="stats-grid">
                 <div className="stat-card">
-                  <div className="stat-icon">👥</div>
+                  {/* <div className="stat-icon">👥</div> */}
                   <div className="stat-content">
                     <div className="stat-value">{statistics.total || 0}</div>
                     <div className="stat-label">Total Profiles</div>
                   </div>
                 </div>
                 <div className="stat-card">
-                  <div className="stat-icon">⏳</div>
+                  {/* <div className="stat-icon">⏳</div> */}
                   <div className="stat-content">
                     <div className="stat-value">{statistics.pending || 0}</div>
                     <div className="stat-label">Pending Review</div>
                   </div>
                 </div>
                 <div className="stat-card">
-                  <div className="stat-icon">✅</div>
+                  {/* <div className="stat-icon">✅</div> */}
                   <div className="stat-content">
                     <div className="stat-value">{statistics.approved || 0}</div>
                     <div className="stat-label">Approved</div>
                   </div>
                 </div>
                 <div className="stat-card">
-                  <div className="stat-icon">📈</div>
+                  {/* <div className="stat-icon">📈</div> */}
                   <div className="stat-content">
                     <div className="stat-value">{statistics.recent || 0}</div>
                     <div className="stat-label">Recent (7 days)</div>
                   </div>
                 </div>
+                <div className="stat-card">
+                  {/* <div className="stat-icon">📈</div> */}
+                  <div className="stat-content">
+                    <div className="stat-value">{statistics.approvalRate || 0}%</div>
+                    <div className="stat-label">Approval Rate</div>
+                  </div>
+                </div>
               </div>
 
-              <div className="overview-charts">
+              {/* <div className="overview-charts">
                 <div className="chart-card">
                   <h3>Approval Rate</h3>
                   <div className="progress-circle">
@@ -956,282 +964,256 @@ const AdvisorDashboard = () => {
                     <div className="activity-number">{statistics.recent || 0}</div>
                   </div>
                 </div>
-              </div>
+              </div> */}
             </div>
           )}
 
           {/* Students Tab (All, Pending, Approved, Transfer) */}
           {(activeTab === 'students' || activeTab === 'pending' || activeTab === 'approved' || activeTab === 'transfer') && (
-            <div className="tab-content">
-              {/* Debug Information */}
-              {process.env.NODE_ENV === 'development' && (
-                <div style={{ 
-                  padding: '10px', 
-                  background: '#f0f0f0', 
-                  marginBottom: '10px', 
-                  fontSize: '12px',
-                  borderRadius: '4px'
-                }}>
-                  <strong>Debug Info:</strong> 
-                  Students Array Length: {students.length} | 
-                  Filtered: {filteredStudents.length} | 
-                  Loading: {loading.toString()} | 
-                  Active Tab: {activeTab}
-                </div>
-              )}
+  <div className="tab-content">
 
-              {/* Filters and Actions */}
-              <div className="filters-section">
-                <div className="search-box">
-                  <span className="search-icon">🔍</span>
-                  <input
-                    type="text"
-                    placeholder="Search students by name, email, nationality..."
-                    value={searchTerm}
-                    onChange={(e) => setSearchTerm(e.target.value)}
-                    onKeyPress={(e) => e.key === 'Enter' && handleSearch()}
-                    className="search-input"
-                  />
-                </div>
+    {/* Filters and Actions */}
+    <div className="filters-section">
+      <div className="search-box">
+        <span className="search-icon">🔍</span>
+        <input
+          type="text"
+          placeholder="Search students by name, email, nationality..."
+          value={searchTerm}
+          onChange={(e) => setSearchTerm(e.target.value)}
+          onKeyPress={(e) => e.key === 'Enter' && handleSearch()}
+          className="search-input"
+        />
+      </div>
 
-                {filteredStudents.length > 0 && (
-                  <div className="bulk-actions">
-                    <button onClick={handleSelectAllStudents} className="select-all-btn">
-                      {selectedStudents.length === filteredStudents.length ? 'Deselect All' : 'Select All'}
-                    </button>
-                    {selectedStudents.length > 0 && (
-                      <button onClick={handleBulkReview} className="bulk-review-btn">
-                        Bulk Review ({selectedStudents.length})
-                      </button>
-                    )}
-                  </div>
-                )}
-              </div>
+      {filteredStudents.length > 0 && (
+        <div className="bulk-actions">
+          <button onClick={handleSelectAllStudents} className="select-all-btn">
+            {selectedStudents.length === filteredStudents.length ? 'Deselect All' : 'Select All'}
+          </button>
+          {selectedStudents.length > 0 && (
+            <button onClick={handleBulkReview} className="bulk-review-btn">
+              Bulk Review ({selectedStudents.length})
+            </button>
+          )}
+        </div>
+      )}
+    </div>
 
-              {/* Loading State */}
-              {loading && (
-                <div className="loading-students">
-                  <div className="loading-spinner"></div>
-                  <p>Loading students...</p>
-                </div>
-              )}
+    {/* Loading State */}
+    {loading && (
+      <div className="loading-students">
+        <div className="loading-spinner"></div>
+        <p>Loading students...</p>
+      </div>
+    )}
 
-              {/* Students List */}
-              {!loading && (
-                <div className="students-grid">
-                  {filteredStudents.length > 0 ? (
-                    filteredStudents.map((student) => (
-                      <div key={student._id} className="student-card">
-                        <div className="student-header">
-                          <input
-                            type="checkbox"
-                            checked={selectedStudents.includes(student._id)}
-                            onChange={() => handleSelectStudent(student._id)}
-                            className="student-checkbox"
-                          />
-                          <div className="student-avatar">
-                            {student.images && student.images.length > 0 ? (
-                              <img
-                                src={`http://localhost:5000${student.images[0].url}`}
-                                alt="Profile"
-                                className="avatar-image"
-                              />
-                            ) : (
-                              <div className="avatar-placeholder">
-                                {student.userId?.name?.charAt(0) || student.name?.charAt(0) || 'S'}
-                              </div>
-                            )}
-                          </div>
-                          <div className="student-info">
-                            <h3 className="student-name">{student.userId?.name || student.name || 'N/A'}</h3>
-                            <p className="student-email">{student.email || 'N/A'}</p>
-                            {getStatusBadge(student)}
-                          </div>
-                        </div>
-
-                        <div className="student-details">
-                          <div className="detail-row">
-                            <span className="detail-label">Nationality:</span>
-                            <span className="detail-value">{student.nationality || 'N/A'}</span>
-                          </div>
-                          <div className="detail-row">
-                            <span className="detail-label">Academic Level:</span>
-                            <span className="detail-value">{student.currentAcademicLevel || 'N/A'}</span>
-                          </div>
-                          <div className="detail-row">
-                            <span className="detail-label">Program:</span>
-                            <span className="detail-value program-badge">
-                              {student.studentProgram || 'Not specified'}
-                            </span>
-                          </div>
-                          <div className="detail-row">
-                            <span className="detail-label">Desired Faculty:</span>
-                            <span className="detail-value">{student.desiredFaculty || 'Not specified'}</span>
-                          </div>
-                          <div className="detail-row">
-                            <span className="detail-label">High School Grades:</span>
-                            <span className="detail-value">{student.highSchoolGrades || 'N/A'}%</span>
-                          </div>
-
-                          {student.transferStudent && (
-                            <>
-                              <div className="detail-row">
-                                <span className="detail-label">Transfer Student:</span>
-                                <span className="detail-value transfer-badge">Yes</span>
-                              </div>
-                              <div className="detail-row">
-                                <span className="detail-label">Previous Institution:</span>
-                                <span className="detail-value">{student.previousInstitution || 'N/A'}</span>
-                              </div>
-                              <div className="detail-row">
-                                <span className="detail-label">Previous Grade:</span>
-                                <span className="detail-value">{student.overallGradePreviousUniversity || 'N/A'}</span>
-                              </div>
-                            </>
-                          )}
-
-                          {(student.recommendedFaculty || student.aiRecommendations?.recommendedFaculty) && (
-                            <div className="detail-row">
-                              <span className="detail-label">AI Recommended Faculty:</span>
-                              <span className="detail-value ai-recommendation">
-                                {student.recommendedFaculty || student.aiRecommendations?.recommendedFaculty}
-                              </span>
+    {/* Students Table */}
+    {!loading && (
+      <div className="students-table-container">
+        {filteredStudents.length > 0 ? (
+          <div className="table-wrapper">
+            <table className="students-table">
+              <thead>
+                <tr>
+                  <th className="checkbox-column">
+                    <input
+                      type="checkbox"
+                      checked={selectedStudents.length === filteredStudents.length && filteredStudents.length > 0}
+                      onChange={handleSelectAllStudents}
+                      className="table-checkbox"
+                    />
+                  </th>
+                  <th>Name</th>
+                  <th>Email</th>
+                  <th>Actions</th>
+                </tr>
+              </thead>
+              <tbody>
+                {filteredStudents.map((student) => (
+                  <tr key={student._id} className="student-row">
+                    <td className="checkbox-column">
+                      <input
+                        type="checkbox"
+                        checked={selectedStudents.includes(student._id)}
+                        onChange={() => handleSelectStudent(student._id)}
+                        className="table-checkbox"
+                      />
+                    </td>
+                    <td className="name-column">
+                      <div className="name-cell">
+                        <div className="student-avatar-small">
+                          {student.images && student.images.length > 0 ? (
+                            <img
+                              src={`http://localhost:5000${student.images[0].url}`}
+                              alt="Profile"
+                              className="avatar-image-small"
+                            />
+                          ) : (
+                            <div className="avatar-placeholder-small">
+                              {student.userId?.name?.charAt(0) || student.name?.charAt(0) || 'S'}
                             </div>
                           )}
-
-                          <div className="detail-row">
-                            <span className="detail-label">Submitted:</span>
-                            <span className="detail-value">{formatDate(student.createdAt)}</span>
-                          </div>
                         </div>
-
-                        <div className="student-actions">
-                          <button
-                            onClick={() => handleReviewStudent(student)}
-                            className="action-btn review-btn"
-                          >
-                            <span className="btn-icon">📝</span>
-                            Review
-                          </button>
-
-                          {student.documents && student.documents.length > 0 && (
-                            <div className="document-actions">
-                              {student.documents.slice(0, 2).map((doc, index) => (
-                                <div key={index} className="document-buttons">
-                                  <button
-                                    onClick={() => viewDocument(student._id, 'document', doc.filename, doc.originalName)}
-                                    className="action-btn view-btn"
-                                    title={`View ${doc.originalName}`}
-                                  >
-                                    👁️
-                                  </button>
-                                  <button
-                                    onClick={() => downloadDocument(student._id, 'document', doc.filename)}
-                                    className="action-btn download-btn"
-                                    title={`Download ${doc.originalName}`}
-                                  >
-                                    📄
-                                  </button>
+                        <span className="student-name-text">
+                          {student.userId?.name || student.name || 'N/A'}
+                        </span>
+                      </div>
+                    </td>
+                    <td className="email-column">
+                      <span className="student-email-text">{student.email || 'N/A'}</span>
+                    </td>
+                  
+                    <td className="actions-column">
+                      <div className="table-actions">
+                        {/* <button
+                          onClick={() => handleReviewStudent(student)}
+                          className="table-btn view-btn"
+                          title="View Full Details"
+                        >
+                          <span className="btn-icon">👁️</span>
+                          View
+                        </button> */}
+                        <button
+                          onClick={() => handleReviewStudent(student)}
+                          className="table-btn review-btn"
+                          title="Review Student"
+                        >
+                          <span className="btn-icon">📝</span>
+                          Review
+                        </button>
+                        {student.documents && student.documents.length > 0 && (
+                          <div className="document-dropdown">
+                            <button className="table-btn doc-btn" title="Documents">
+                              <span className="btn-icon">📄</span>
+                              <span className="doc-count">({student.documents.length})</span>
+                            </button>
+                            <div className="document-dropdown-content">
+                              {student.documents.map((doc, index) => (
+                                <div key={index} className="document-item-small">
+                                  <span className="doc-name">{doc.originalName}</span>
+                                  <div className="doc-actions-small">
+                                    <button
+                                      onClick={() => viewDocument(student._id, 'document', doc.filename, doc.originalName)}
+                                      className="doc-action-btn view-doc-btn"
+                                      title="View Document"
+                                    >
+                                      👁️
+                                    </button>
+                                    <button
+                                      onClick={() => downloadDocument(student._id, 'document', doc.filename)}
+                                      className="doc-action-btn download-doc-btn"
+                                      title="Download Document"
+                                    >
+                                      ⬇️
+                                    </button>
+                                  </div>
                                 </div>
                               ))}
-                              {student.documents.length > 2 && (
-                                <span className="more-docs">+{student.documents.length - 2} more</span>
-                              )}
                             </div>
-                          )}
-                        </div>
+                          </div>
+                        )}
                       </div>
-                    ))
-                  ) : (
-                    <div className="no-students">
-                      <div className="no-students-icon">👥</div>
-                      <h3>No students found</h3>
-                      <p>
-                        {activeTab === 'transfer'
-                          ? 'No transfer students found in the system'
-                          : searchTerm 
-                            ? 'No students match your search criteria'
-                            : 'No students found in this category'
-                        }
-                      </p>
-                      {searchTerm && (
-                        <button 
-                          onClick={() => setSearchTerm('')} 
-                          className="clear-search-btn"
-                        >
-                          Clear Search
-                        </button>
-                      )}
-                    </div>
-                  )}
-                </div>
-              )}
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+        ) : (
+          <div className="no-students">
+            <div className="no-students-icon">👥</div>
+            <h3>No students found</h3>
+            <p>
+              {activeTab === 'transfer'
+                ? 'No transfer students found in the system'
+                : searchTerm 
+                  ? 'No students match your search criteria'
+                  : 'No students found in this category'
+              }
+            </p>
+            {searchTerm && (
+              <button 
+                onClick={() => setSearchTerm('')} 
+                className="clear-search-btn"
+              >
+                Clear Search
+              </button>
+            )}
+          </div>
+        )}
+      </div>
+    )}
 
-              {/* Pagination */}
-              {pagination.totalPages > 1 && (
-                <div className="pagination">
-                  <button
-                    onClick={() => {
-                      const prevPage = pagination.currentPage - 1;
-                      if (activeTab === 'transfer') {
-                        fetchTransferStudents(prevPage);
-                      } else {
-                        fetchStudents(prevPage);
-                      }
-                    }}
-                    disabled={pagination.currentPage <= 1}
-                    className="pagination-btn"
-                  >
-                    Previous
-                  </button>
-                  <span className="pagination-info">
-                    Page {pagination.currentPage} of {pagination.totalPages}
-                    {pagination.totalItems && ` (${pagination.totalItems} total)`}
-                  </span>
-                  <button
-                    onClick={() => {
-                      const nextPage = pagination.currentPage + 1;
-                      if (activeTab === 'transfer') {
-                        fetchTransferStudents(nextPage);
-                      } else {
-                        fetchStudents(nextPage);
-                      }
-                    }}
-                    disabled={pagination.currentPage >= pagination.totalPages}
-                    className="pagination-btn"
-                  >
-                    Next
-                  </button>
-                </div>
-              )}
-            </div>
-          )}
+    {/* Pagination */}
+    {pagination.totalPages > 1 && (
+      <div className="pagination">
+        <button
+          onClick={() => {
+            const prevPage = pagination.currentPage - 1;
+            if (activeTab === 'transfer') {
+              fetchTransferStudents(prevPage);
+            } else {
+              fetchStudents(prevPage);
+            }
+          }}
+          disabled={pagination.currentPage <= 1}
+          className="pagination-btn"
+        >
+          Previous
+        </button>
+        <span className="pagination-info">
+          Page {pagination.currentPage} of {pagination.totalPages}
+          {pagination.totalItems && ` (${pagination.totalItems} total)`}
+        </span>
+        <button
+          onClick={() => {
+            const nextPage = pagination.currentPage + 1;
+            if (activeTab === 'transfer') {
+              fetchTransferStudents(nextPage);
+            } else {
+              fetchStudents(nextPage);
+            }
+          }}
+          disabled={pagination.currentPage >= pagination.totalPages}
+          className="pagination-btn"
+        >
+          Next
+        </button>
+      </div>
+    )}
+  </div>
+    )}
 
           {/* Activity Log Tab */}
+         {/* Activity Log Tab */}
           {activeTab === 'activity' && (
             <div className="tab-content">
               <div className="activity-log">
                 <h3>Recent Advisor Activity</h3>
                 {activityLog.length > 0 ? (
-                  <div className="activity-list">
-                    {activityLog.map((activity, index) => (
-                      <div key={index} className="activity-item">
-                        <div className="activity-info">
-                          <span className="activity-student">{activity.student?.name || 'Unknown'}</span>
-                          <span className="activity-action">
-                            {activity.action} by {activity.reviewedBy}
-                          </span>
-                          <span className="activity-date">{formatDate(activity.reviewDate)}</span>
-                        </div>
-                        <div className="activity-details">
-                          <span className="activity-faculty">{activity.nationality} • {activity.desiredFaculty}</span>
-                        </div>
-                        {activity.advisorNotes && (
-                          <div className="activity-notes">{activity.advisorNotes}</div>
-                        )}
-                      </div>
-                    ))}
-                  </div>
+                  <table className="activity-table">
+                    <thead>
+                      <tr>
+                        <th>Student</th>
+                        <th>Action</th>
+                        <th>Date</th>
+                        <th>Nationality / Faculty</th>
+                        <th>Advisor Notes</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      {activityLog.map((activity, index) => (
+                        <tr key={index}>
+                          <td>{activity.student?.name || 'Unknown'}</td>
+                          <td>{activity.action} by {activity.reviewedBy}</td>
+                          <td>{formatDate(activity.reviewDate)}</td>
+                          <td>{activity.nationality} • {activity.desiredFaculty}</td>
+                          <td>{activity.advisorNotes || '-'}</td>
+                        </tr>
+                      ))}
+                    </tbody>
+                  </table>
                 ) : (
                   <div className="no-activity">
                     <div className="no-activity-icon">📋</div>
@@ -1242,6 +1224,7 @@ const AdvisorDashboard = () => {
               </div>
             </div>
           )}
+
 
           {/* Appointments Tab */}
           {activeTab === 'appointments' && (
@@ -1522,7 +1505,7 @@ const AdvisorDashboard = () => {
             <div className="modal-overlay">
               <div className="modal-content large-modal">
                 <div className="modal-header">
-                  <h2>Review Student: {selectedStudent.userId?.name || selectedStudent.name}</h2>
+                  <h2 className="reviewstudenttitle">Review Student: {selectedStudent.userId?.name || selectedStudent.name}</h2>
                   <button onClick={() => setShowReviewModal(false)} className="modal-close">✕</button>
                 </div>
 
