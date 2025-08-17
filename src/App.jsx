@@ -18,7 +18,7 @@ import Assessment from './components/assessment';
 import ComprehensiveDashboard from './components/ComprehensiveDashboard '
 import AdvisorDashboardLayout from './components/AdvisorDashboardLayout ';
 import AdminDashboard from './components/AdminDashboard';
-
+import Bookappointment from './components/Bookappointment';
 
 
 
@@ -50,6 +50,7 @@ function App() {
             <Route path='EditProfile' element={<EditProfile/>} />
           <Route path='assessment' element={<Assessment/>} />
           <Route path='ComprehensiveDashboard' element={<ComprehensiveDashboard/>} />
+          <Route path='appointment' element={<Bookappointment/>} />
           {/* <Route path='assessment2' element={<Assessment2 />} />
           <Route path='Assessment2/assessment3' element={<Assesment3 />} />
           <Route path='Assessment2/assessment3/Results' element={<Results />} />
