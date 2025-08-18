@@ -961,11 +961,11 @@ const BookAppointment = () => {
                 <form onSubmit={handleSubmit} className="book-appointment-form">
                   <div className="book-appointment-form-group">
                     <label className="book-appointment-form-label">
-                      <FaUser className="book-appointment-label-icon" />
-                      Full Name
+                      {/* <FaUser className="book-appointment-label-icon" /> */}
+                      {/* Full Name */}
                     </label>
                     <input
-                      type="text"
+                      type="hidden"
                       name="studentName"
                       value={formData.studentName}
                       onChange={handleInputChange}
@@ -976,12 +976,12 @@ const BookAppointment = () => {
                   </div>
 
                   <div className="book-appointment-form-group">
-                    <label className="book-appointment-form-label">
+                    {/* <label className="book-appointment-form-label">
                       <FaEnvelope className="book-appointment-label-icon" />
                       Email Address
-                    </label>
+                    </label> */}
                     <input
-                      type="email"
+                      type="hidden"
                       name="studentEmail"
                       value={formData.studentEmail}
                       onChange={handleInputChange}

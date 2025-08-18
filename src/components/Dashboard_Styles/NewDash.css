@@ -1,33 +1,215 @@
-/* NewDash.ccs */
+/* Enhanced Sidebar Design - NewDash.css */
 
+/* Sidebar Container */
+aside {
+  background: white !important;
+  box-shadow: 4px 0 20px rgba(0, 0, 0, 0.08) !important;
+  border-right: 1px solid #e2e8f0 !important;
+  transition: all 0.3s ease;
+}
+
+/* Logo Section */
+aside img {
+  padding: 1rem 0;
+  border-bottom: 1px solid #f1f5f9;
+  margin-bottom: 1rem;
+}
+
+/* Active Navigation Container */
+.ActiveNavContainer {
+  padding: 0 !important;
+  margin-top: 0.5rem !important;
+}
+
+/* Navigation Items */
 .divClassb {
-    padding: 10px;
-    cursor: pointer;
-    display: flex;
-    align-items: center;
-    /* gap: 10px; */
-  }
-  .sidei{
-    margin-left: 5px;
-  }
-  .settingsClass{
-    margin-top:-10px;
-  }
-  .resultsClass{
-    margin-top:-10px;
+  padding: 0 !important;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  margin-bottom: 0.25rem;
+  border-radius: 12px;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  position: relative;
+  overflow: hidden;
+  margin: 0 0.75rem 0.5rem 0.75rem;
+}
+
+/* Navigation Item Content */
+.resultsClass {
+  display: flex;
+  align-items: center;
+  padding: 1rem 1.25rem;
+  width: 100%;
+  transition: all 0.3s ease;
+  position: relative;
+  z-index: 2;
+}
+
+/* Icons */
+.resultsClass svg {
+  font-size: 1.25rem;
+  color: #64748b;
+  transition: all 0.3s ease;
+  min-width: 20px;
+}
+
+/* Labels */
+.sidei {
+  margin-left: 0.875rem !important;
+  font-size: 0.95rem;
+  font-weight: 500;
+  color: #374151;
+  transition: all 0.3s ease;
+  white-space: nowrap;
+}
+
+/* Hover Effects */
+.divClassb:hover {
+  background: rgba(27, 48, 88, 0.05);
+  transform: translateX(4px);
+  box-shadow: 0 2px 8px rgba(27, 48, 88, 0.1);
+}
+
+.divClassb:hover .resultsClass svg {
+  color: #1B3058;
+  transform: scale(1.1);
+}
+
+.divClassb:hover .sidei {
+  color: #1B3058;
+  font-weight: 600;
+}
+
+/* Active State */
+.divClassb.active {
+  background: linear-gradient(135deg, #1B3058 0%, #2c5a99 100%) !important;
+  color: white !important;
+  box-shadow: 0 4px 16px rgba(27, 48, 88, 0.3);
+  transform: translateX(2px);
+}
+
+.divClassb.active::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 0;
+  bottom: 0;
+  width: 4px;
+  background: white;
+  border-radius: 0 4px 4px 0;
+  z-index: 3;
+}
+
+.divClassb.active .resultsClass svg {
+  color: white !important;
+  transform: scale(1.05);
+}
+
+.divClassb.active .sidei {
+  color: white !important;
+  font-weight: 600;
+}
+
+/* Active Item Glow Effect */
+.divClassb.active::after {
+  content: '';
+  position: absolute;
+  top: -2px;
+  left: -2px;
+  right: -2px;
+  bottom: -2px;
+  background: linear-gradient(135deg, #1B3058, #2c5a99);
+  border-radius: 14px;
+  z-index: -1;
+  opacity: 0.3;
+  filter: blur(4px);
+}
+
+/* Smooth Focus States */
+.divClassb:focus {
+  outline: 2px solid #1B3058;
+  outline-offset: 2px;
+}
+
+/* Animation for icon rotation on hover */
+.divClassb:hover .resultsClass svg {
+  animation: iconBounce 0.3s ease;
+}
+
+@keyframes iconBounce {
+  0% { transform: scale(1); }
+  50% { transform: scale(1.15); }
+  100% { transform: scale(1.1); }
+}
+
+/* Ripple effect on click */
+.divClassb::before {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 0;
+  height: 0;
+  border-radius: 50%;
+  background: rgba(27, 48, 88, 0.3);
+  transform: translate(-50%, -50%);
+  transition: width 0.6s, height 0.6s;
+  z-index: 1;
+}
+
+.divClassb:active::before {
+  width: 300px;
+  height: 300px;
+}
+
+/* Improve spacing and layout */
+.settingsClass,
+.resultsClass {
+  margin-top: 0 !important;
+}
+
+/* Navigation container padding adjustment */
+.ActiveNavContainer {
+  padding: 0.5rem 0;
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+  .divClassb {
+    margin: 0 0.5rem 0.5rem 0.5rem;
   }
   
-  .careerIcon{
-    color:#2c5a99;
+  .resultsClass {
+    padding: 0.875rem 1rem;
   }
+  
+  .resultsClass svg {
+    font-size: 1.1rem;
+  }
+  
+  .sidei {
+    font-size: 0.9rem;
+    margin-left: 0.75rem !important;
+  }
+}
 
-  .divClassb.active {
-    background-color:  #2c5a99; 
-    color: white;
-    /* border-radius: 5px;
-    margin-left: -1px; */
-  }
-  .ClassOfUsers{
-    margin-right: 10px;
-    font-size: 30px;
-  }
+/* Additional hover states for better UX */
+.divClassb:not(.active):hover {
+  background: linear-gradient(135deg, rgba(27, 48, 88, 0.05) 0%, rgba(44, 90, 153, 0.05) 100%);
+}
+
+/* Smooth transition for all interactive elements */
+.divClassb,
+.resultsClass,
+.resultsClass svg,
+.sidei {
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* Focus visible for accessibility */
+.divClassb:focus-visible {
+  outline: 2px solid #1B3058;
+  outline-offset: 2px;
+  border-radius: 12px;
+}
