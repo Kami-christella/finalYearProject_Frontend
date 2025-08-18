@@ -435,7 +435,7 @@ body {
 
 /* Features Section */
 .features {
-  padding: 8rem 2rem;
+  padding: 4rem 2rem;
   background: linear-gradient(135deg, #f8fafc 0%, #ffffff 50%, #f1f5f9 100%);
   position: relative;
 }
@@ -475,7 +475,7 @@ body {
 
 .section-titles {
   text-align: center;
-  font-size: 2rem;
+  font-size: 3rem;
   font-weight: 800;
   margin-bottom: 3rem;
   background-color: #1B3058;
@@ -575,7 +575,7 @@ body {
 
 /* About Section */
 .about {
-  padding: 8rem 2rem;
+  padding: 1rem 4rem;
   background: linear-gradient(135deg, #ffffff 0%, #f8fafc 100%);
   position: relative;
 }

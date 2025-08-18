@@ -288,7 +288,7 @@ const LandingPage = () => {
         <div className="container">
           <div className="about-content">
             <div className="about-text">
-              <h2 className="section-title">About CareerPath</h2>
+              <h2 className="section-titles">About CareerPath</h2>
               <div className="about-description">
                 <p>
                   CareerPath is an innovative career guidance platform developed specifically for AUCA students. 
@@ -367,7 +367,7 @@ const LandingPage = () => {
       {/* Contact Section */}
       <section className="contact" id="contact">
         <div className="container">
-          <h2 className="section-title">Get In Touch</h2>
+          <h2 className="section-titles">Get In Touch</h2>
           <div className="contact-content">
             <div className="contact-info">
               <h3>Contact Information</h3>
@@ -376,7 +376,7 @@ const LandingPage = () => {
                   <div className="contact-icon">📍</div>
                   <div className="contact-details">
                     <h4>Address</h4>
-                    <p>Adventist University of Central Africa<br />Nyanza, Southern Province<br />Rwanda</p>
+                    <p>Adventist University of Central Africa<br />Kigali, Rwanda</p>
                   </div>
                 </div>
                 
@@ -384,7 +384,7 @@ const LandingPage = () => {
                   <div className="contact-icon">📞</div>
                   <div className="contact-details">
                     <h4>Phone</h4>
-                    <p>+250 788 123 456</p>
+                    <p> +250 724796998</p>
                   </div>
                 </div>
                 
@@ -392,7 +392,7 @@ const LandingPage = () => {
                   <div className="contact-icon">✉️</div>
                   <div className="contact-details">
                     <h4>Email</h4>
-                    <p>careerpath@auca.ac.rw</p>
+                    <p>www.auca.ac.rw</p>
                   </div>
                 </div>
                 
@@ -400,7 +400,7 @@ const LandingPage = () => {
                   <div className="contact-icon">🕒</div>
                   <div className="contact-details">
                     <h4>Office Hours</h4>
-                    <p>Monday - Friday: 8:00 AM - 5:00 PM<br />Saturday: 9:00 AM - 2:00 PM</p>
+                    <p>Monday - Friday: 9:00 AM - 5:00 PM</p>
                   </div>
                 </div>
               </div>
