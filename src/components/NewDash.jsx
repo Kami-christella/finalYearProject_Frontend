@@ -173,7 +173,7 @@ function NewDash() {
             />
             {showDropdown && (
               <div className="profile-dropdown position-absolute bg-white shadow p-2 rounded" style={{ right: "0px", top: "40px" }}>
-                <p className="profile-name mb-2"><FaRegUserCircle className="ClassOfUsers"/>{userName} </p>
+                <p className="">{userName} </p>
               
                 <button className="logout-button btn btn-danger btn-sm w-100" onClick={handleLogoutBtn}><IoIosLogOut /> Logout</button>
               </div>

@@ -960,6 +960,18 @@ const BookAppointment = () => {
 
                 <form onSubmit={handleSubmit} className="book-appointment-form">
                   <div className="book-appointment-form-group">
+                      <div className="book-appointment-form-group">
+                  
+                    <input
+                      type="tel"
+                      name="phone"
+                      value={formData.phone}
+                      onChange={handleInputChange}
+                      required
+                      className="book-appointment-form-input"
+                      placeholder="Phone Number"
+                    />
+                  </div>
                     <label className="book-appointment-form-label">
                       {/* <FaUser className="book-appointment-label-icon" /> */}
                       {/* Full Name */}
@@ -991,21 +1003,7 @@ const BookAppointment = () => {
                     />
                   </div>
 
-                  <div className="book-appointment-form-group">
-                    <label className="book-appointment-form-label">
-                      <FaPhone className="book-appointment-label-icon" />
-                      Phone Number
-                    </label>
-                    <input
-                      type="tel"
-                      name="phone"
-                      value={formData.phone}
-                      onChange={handleInputChange}
-                      required
-                      className="book-appointment-form-input"
-                      placeholder="+250 788 123 456"
-                    />
-                  </div>
+                
 
                   <div className="book-appointment-form-group">
                     <label className="book-appointment-form-label">
