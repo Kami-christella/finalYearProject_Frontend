@@ -1,7 +1,7 @@
 /* Enhanced Sidebar Design - NewDash.css */
 
 /* Sidebar Container */
-aside {
+asided {
   background: white !important;
   box-shadow: 4px 0 20px rgba(0, 0, 0, 0.08) !important;
   border-right: 1px solid #e2e8f0 !important;
@@ -9,7 +9,7 @@ aside {
 }
 
 /* Logo Section */
-aside img {
+asided img {
   padding: 1rem 0;
   border-bottom: 1px solid #f1f5f9;
   margin-bottom: 1rem;

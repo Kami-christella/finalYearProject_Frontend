@@ -3003,3 +3003,132 @@
   border-radius: 6px;        /* keep compact rounded look */
 }
 
+.table_header{
+  font-weight:bolder;
+  text-align:center;
+  margin-left:250px;
+}
+
+/* Status Filter Buttons Styles */
+.status-filters {
+  margin: 20px 0;
+  padding: 0 20px;
+}
+
+.filter-buttons {
+  display: flex;
+  gap: 12px;
+  flex-wrap: wrap;
+  align-items: center;
+}
+
+.filter-btn {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 12px 20px;
+  border: 2px solid #e1e5e9;
+  background: #ffffff;
+  border-radius: 8px;
+  font-size: 14px;
+  font-weight: 500;
+  color: #4a5568;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  white-space: nowrap;
+  min-height: 44px;
+}
+
+.filter-btn:hover {
+  border-color: #3182ce;
+  background: #f7fafc;
+  color: #2d3748;
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(49, 130, 206, 0.15);
+}
+
+.filter-btn.active {
+  border-color: #3182ce;
+  background: linear-gradient(135deg, #3182ce 0%, #2c5aa0 100%);
+  color: #ffffff;
+  box-shadow: 0 4px 12px rgba(49, 130, 206, 0.25);
+}
+
+.filter-btn.active:hover {
+  background: linear-gradient(135deg, #2c5aa0 0%, #2a4d8d 100%);
+  transform: translateY(-1px);
+}
+
+.filter-icon {
+  font-size: 16px;
+  display: flex;
+  align-items: center;
+}
+
+/* Responsive design for filter buttons */
+@media (max-width: 768px) {
+  .filter-buttons {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 8px;
+  }
+  
+  .filter-btn {
+    justify-content: center;
+    padding: 14px 16px;
+  }
+}
+
+@media (max-width: 480px) {
+  .status-filters {
+    padding: 0 10px;
+  }
+  
+  .filter-btn {
+    font-size: 13px;
+    padding: 12px 14px;
+  }
+  
+  .filter-icon {
+    font-size: 14px;
+  }
+}
+
+/* Animation for smooth transitions */
+.filter-btn {
+  position: relative;
+  overflow: hidden;
+}
+
+.filter-btn::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent);
+  transition: left 0.5s;
+}
+
+.filter-btn:hover::before {
+  left: 100%;
+}
+
+/* Focus states for accessibility */
+.filter-btn:focus {
+  outline: none;
+  box-shadow: 0 0 0 3px rgba(49, 130, 206, 0.3);
+}
+
+.filter-btn:active {
+  transform: translateY(0);
+}
+
+.appointments-header {
+  background: #1B3058 !important; /* test */
+  border-radius:10px;
+}
+
+
+

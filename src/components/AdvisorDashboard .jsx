@@ -8,8 +8,8 @@ import AUCALOGO from "../assets/images/AUCALOGO.png"
 const SIDEBAR_ITEMS = [
   { id: 'overview', label: 'Overview', icon: '📊' },
   { id: 'students', label: 'All Students', icon: '👥' },
-  { id: 'pending', label: 'Pending Reviews', icon: '⏳' },
-  { id: 'approved', label: 'Approved', icon: '✅' },
+  // { id: 'pending', label: 'Pending Reviews', icon: '⏳' },
+  // { id: 'approved', label: 'Approved', icon: '✅' },
   { id: 'transfer', label: 'Transfer Students', icon: '🔄' },
   { id: 'appointments', label: 'Appointments', icon: '📅' },
   { id: 'activity', label: 'Activity Log', icon: '📋' }
@@ -968,8 +968,9 @@ const AdvisorDashboard = () => {
             </div>
           )}
 
-          {/* Students Tab (All, Pending, Approved, Transfer) */}
-          {(activeTab === 'students' || activeTab === 'pending' || activeTab === 'approved' || activeTab === 'transfer') && (
+
+{/* Students Tab (All, Pending, Approved, Transfer) */}
+{(activeTab === 'students' || activeTab === 'pending' || activeTab === 'approved' || activeTab === 'transfer') && (
   <div className="tab-content">
 
     {/* Filters and Actions */}
@@ -984,8 +985,8 @@ const AdvisorDashboard = () => {
           onKeyPress={(e) => e.key === 'Enter' && handleSearch()}
           className="search-input"
         />
-      </div>
-
+      </div> 
+      
       {filteredStudents.length > 0 && (
         <div className="bulk-actions">
           <button onClick={handleSelectAllStudents} className="select-all-btn">
@@ -1000,13 +1001,51 @@ const AdvisorDashboard = () => {
       )}
     </div>
 
-    {/* Loading State */}
-    {loading && (
-      <div className="loading-students">
-        <div className="loading-spinner"></div>
-        <p>Loading students...</p>
+    {/* Status Filter Buttons - NEW ADDITION */}
+    {activeTab !== 'transfer' && (
+      <div className="status-filters">
+        <div className="filter-buttons">
+          <button
+            onClick={() => {
+              setActiveTab('students');
+              setFilterStatus('all');
+              fetchStudents(1);
+            }}
+            className={`filter-btn ${activeTab === 'students' ? 'active' : ''}`}
+          >
+            <span className="filter-icon"></span>
+            All Students
+          </button>
+          <button
+            onClick={() => {
+              setActiveTab('pending');
+              setFilterStatus('pending');
+              fetchStudents(1);
+            }}
+            className={`filter-btn ${activeTab === 'pending' ? 'active' : ''}`}
+          >
+            <span className="filter-icon"></span>
+            Pending 
+          </button>
+          <button
+            onClick={() => {
+              setActiveTab('approved');
+              setFilterStatus('approved');
+              fetchStudents(1);
+            }}
+            className={`filter-btn ${activeTab === 'approved' ? 'active' : ''}`}
+          >
+            <span className="filter-icon"></span>
+            Approved
+          </button>
+        </div>
       </div>
     )}
+
+    <div className="table_header"><th style={{textAlign:'center'}}>STUDENTS WHO CREATED PROFILE</th> <br/></div> 
+
+    {/* Rest of your existing code continues here... */}
+
 
     {/* Students Table */}
     {!loading && (
