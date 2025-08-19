@@ -76,18 +76,32 @@ const AdvisorDashboard = () => {
   });
 
   // Appointment form state
-  const [appointmentForm, setAppointmentForm] = useState({
-    date: '',
-    startTime: '',
-    endTime: '',
-    duration: 30,
-    isRecurring: false,
-    recurringPattern: 'weekly',
-    recurringEndDate: '',
-    notes: '',
-    meetingType: 'physical',
-    meetingLink: ''
-  });
+  // const [appointmentForm, setAppointmentForm] = useState({
+  //   date: '',
+  //   startTime: '',
+  //   endTime: '',
+  //   duration: 30,
+  //   isRecurring: false,
+  //   recurringPattern: 'weekly',
+  //   recurringEndDate: '',
+  //   notes: '',
+  //   meetingType: 'physical',
+  //   meetingLink: ''
+  // });
+
+  // Appointment form state
+const [appointmentForm, setAppointmentForm] = useState({
+  date: '',
+  startTime: '',
+  endTime: '',
+  duration: 30,
+  isRecurring: false,
+  recurringPattern: 'weekly',
+  recurringEndDate: '',
+  notes: '',
+  meetingType: 'physical',
+  meetingLink: ''
+});
 
   useEffect(() => {
     if (activeTab === 'overview') {
@@ -368,7 +382,11 @@ const AdvisorDashboard = () => {
         type: appointmentForm.meetingType,
         location: appointmentForm.meetingType === 'online' ? appointmentForm.meetingLink : undefined,
         duration: appointmentForm.duration,
-        notes: appointmentForm.notes
+        notes: appointmentForm.notes,
+         // NEW: Add recurring fields
+      isRecurring: appointmentForm.isRecurring,
+      recurringPattern: appointmentForm.recurringPattern,
+      recurringEndDate: appointmentForm.recurringEndDate
       };
 
       const response = await fetch('http://localhost:5000/api/appointments/slots/create', {
@@ -1989,7 +2007,54 @@ const AdvisorDashboard = () => {
                       maxLength="500"
                     />
                   </div>
-
+                    {/* NEW: Add this recurring section */}
+<div className="recurring-section">
+  <div className="recurring-checkbox">
+    <input
+      type="checkbox"
+      id="isRecurring"
+      checked={appointmentForm.isRecurring}
+      onChange={(e) => setAppointmentForm({ ...appointmentForm, isRecurring: e.target.checked })}
+    />
+    <label htmlFor="isRecurring">Make this a recurring appointment</label>
+  </div>
+  
+  {appointmentForm.isRecurring && (
+    <div className="recurring-options">
+      <div className="form-row">
+        <div className="form-group">
+          <label className="form-label">Repeat Pattern</label>
+          <select
+            value={appointmentForm.recurringPattern}
+            onChange={(e) => setAppointmentForm({ ...appointmentForm, recurringPattern: e.target.value })}
+            className="form-select"
+          >
+            <option value="weekly">Weekly (same day and time)</option>
+            <option value="biweekly">Bi-weekly (every 2 weeks)</option>
+            <option value="monthly">Monthly (same date)</option>
+          </select>
+        </div>
+        <div className="form-group">
+          <label className="form-label">End Date</label>
+          <input
+            type="date"
+            value={appointmentForm.recurringEndDate}
+            onChange={(e) => setAppointmentForm({ ...appointmentForm, recurringEndDate: e.target.value })}
+            className="form-input"
+            min={appointmentForm.date}
+            required={appointmentForm.isRecurring}
+          />
+        </div>
+      </div>
+      <div className="recurring-info">
+        <p>This will create multiple appointment slots based on your pattern until the end date.</p>
+        {appointmentForm.date && appointmentForm.recurringEndDate && (
+          <p><strong>Preview:</strong> Slots will be created every {appointmentForm.recurringPattern === 'weekly' ? 'week' : appointmentForm.recurringPattern === 'biweekly' ? '2 weeks' : 'month'} from {new Date(appointmentForm.date).toLocaleDateString()} to {new Date(appointmentForm.recurringEndDate).toLocaleDateString()}</p>
+        )}
+      </div>
+    </div>
+  )}
+</div>
                   <div className="modal-actions">
                     <button type="button" onClick={() => setShowCreateAppointmentModal(false)} className="btn-cancel">
                       Cancel
