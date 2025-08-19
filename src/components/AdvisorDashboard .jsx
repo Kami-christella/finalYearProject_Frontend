@@ -1359,7 +1359,7 @@ const AdvisorDashboard = () => {
                           onClick={() => handleCalendarDayClick(day.date)}
                         >
                           <span className="day-number">{day.date.getDate()}</span>
-                          <div className="day-appointments">
+                          {/* <div className="day-appointments">
                             {getAppointmentsForDate(day.date).slice(0, 3).map((apt, i) => (
                               <div key={i} className={`mini-appointment ${apt.status}`}>
                                 {apt.time} - {apt.status === 'booked' ? apt.studentName : 'Available'}
@@ -1368,7 +1368,24 @@ const AdvisorDashboard = () => {
                             {getAppointmentsForDate(day.date).length > 3 && (
                               <div className="more-appointments">+{getAppointmentsForDate(day.date).length - 3} more</div>
                             )}
-                          </div>
+                          </div> */}
+                          <div className="day-appointments">
+  {getAppointmentsForDate(day.date).slice(0, 3).map((apt, i) => (
+    <div key={i} className={`mini-appointment ${apt.status}`}>
+      {apt.status === 'booked' ? (
+        <span className="booked-title">Booked</span>
+      ) : apt.status === 'available' ? (
+        <span className="available-title">Available</span>
+      ) : (
+        <span className="other-status">{apt.status}</span>
+      )}
+    </div>
+  ))}
+  {getAppointmentsForDate(day.date).length > 3 && (
+    <div className="more-appointments">+{getAppointmentsForDate(day.date).length - 3} more</div>
+  )}
+</div>
+                          {/* end */}
                         </div>
                       ))}
                     </div>
