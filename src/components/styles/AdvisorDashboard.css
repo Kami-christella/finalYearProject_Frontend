@@ -3265,3 +3265,193 @@
   color: #0d47a1;
 }
 
+.confirm-btn {
+  background: linear-gradient(135deg, #10b981, #059669);
+  color: white;
+}
+
+.confirm-btn:hover:not(:disabled) {
+  background: linear-gradient(135deg, #059669, #047857);
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(16, 185, 129, 0.3);
+}
+
+/* Add these styles to your CSS file */
+
+.analytics-section {
+  background: white;
+  padding: 2rem;
+  border-radius: 12px;
+  margin-bottom: 2rem;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+  border: 1px solid #e2e8f0;
+}
+
+.analytics-section h3 {
+  margin-bottom: 1.5rem;
+  color: #1e293b;
+  font-size: 1.25rem;
+  font-weight: 600;
+}
+
+.chart-container {
+  width: 100%;
+  min-height: 400px;
+}
+
+.pie-chart-container {
+  display: flex;
+  align-items: center;
+  gap: 2rem;
+  flex-wrap: wrap;
+}
+
+.pie-chart-wrapper {
+  flex-shrink: 0;
+}
+
+.pie-chart-legend {
+  flex: 1;
+  min-width: 250px;
+}
+
+.legend-item {
+  display: flex;
+  align-items: center;
+  margin-bottom: 0.8rem;
+  padding: 0.5rem;
+  background-color: #f8f9fa;
+  border-radius: 6px;
+  border: 1px solid #e9ecef;
+}
+
+.legend-color {
+  width: 16px;
+  height: 16px;
+  border-radius: 4px;
+  margin-right: 12px;
+  flex-shrink: 0;
+}
+
+.legend-text {
+  font-size: 14px;
+  font-weight: 500;
+  color: #495057;
+}
+
+.triangle-bar-chart-container,
+.bar-chart-container {
+  width: 100%;
+  overflow-x: auto;
+}
+
+.no-data {
+  text-align: center;
+  padding: 3rem;
+  color: #64748b;
+  font-style: italic;
+}
+
+@media (max-width: 768px) {
+  .pie-chart-container {
+    flex-direction: column;
+    align-items: center;
+  }
+  
+  .analytics-section {
+    padding: 1rem;
+  }
+}
+
+/* Analytics Styles */
+.analytics-section {
+  background: white;
+  padding: 2rem;
+  border-radius: 12px;
+  margin-bottom: 2rem;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+  border: 1px solid #e2e8f0;
+}
+
+.analytics-section h3 {
+  margin-bottom: 1.5rem;
+  color: #1e293b;
+  font-size: 1.25rem;
+  font-weight: 600;
+}
+
+.chart-container {
+  width: 100%;
+  min-height: 400px;
+}
+
+.pie-chart-container {
+  display: flex;
+  align-items: center;
+  gap: 2rem;
+  flex-wrap: wrap;
+}
+
+.pie-chart-wrapper {
+  flex-shrink: 0;
+}
+
+.pie-chart-legend {
+  flex: 1;
+  min-width: 250px;
+}
+
+.legend-item {
+  display: flex;
+  align-items: center;
+  margin-bottom: 0.8rem;
+  padding: 0.5rem;
+  background-color: #f8f9fa;
+  border-radius: 6px;
+  border: 1px solid #e9ecef;
+}
+
+.legend-color {
+  width: 16px;
+  height: 16px;
+  border-radius: 4px;
+  margin-right: 12px;
+  flex-shrink: 0;
+}
+
+.legend-text {
+  font-size: 14px;
+  font-weight: 500;
+  color: #495057;
+}
+
+.triangle-bar-chart-container,
+.bar-chart-container {
+  width: 100%;
+  overflow-x: auto;
+}
+
+.no-data {
+  text-align: center;
+  padding: 3rem;
+  color: #64748b;
+  font-style: italic;
+  background: #f8fafc;
+  border-radius: 8px;
+  border: 2px dashed #cbd5e1;
+}
+
+@media (max-width: 768px) {
+  .pie-chart-container {
+    flex-direction: column;
+    align-items: center;
+  }
+  
+  .analytics-section {
+    padding: 1rem;
+  }
+  
+  .chart-container {
+    min-height: 300px;
+  }
+}

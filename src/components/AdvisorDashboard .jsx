@@ -2,8 +2,12 @@
 import React, { useState, useEffect } from 'react';
 import { Notify } from 'notiflix';
 import './styles/AdvisorDashboard.css';
+import { IoPersonCircle, IoHomeOutline, IoSettings } from "react-icons/io5";
 import AUCA from "../assets/images/AUCA.png"
 import AUCALOGO from "../assets/images/AUCALOGO.png"
+import { IoMdPerson } from "react-icons/io";
+import { IoIosLogOut } from "react-icons/io";
+import { useNavigate, useLocation } from "react-router-dom";
 
 const SIDEBAR_ITEMS = [
   { id: 'overview', label: 'Overview', icon: '📊' },
@@ -17,12 +21,14 @@ const SIDEBAR_ITEMS = [
 
 const AdvisorDashboard = () => {
   const [activeTab, setActiveTab] = useState('overview');
+  const [showDropdown, setShowDropdown] = useState(false);
   const [sidebarOpen, setSidebarOpen] = useState(false);
-
+const [showUserDropdown, setShowUserDropdown] = useState(false); 
   const [students, setStudents] = useState([]);
   const [filteredStudents, setFilteredStudents] = useState([]);
   const [selectedStudent, setSelectedStudent] = useState(null);
   const [loading, setLoading] = useState(false);
+  const [userName, setUserName] = useState("User");
   const [searchTerm, setSearchTerm] = useState('');
   const [filterStatus, setFilterStatus] = useState('all');
   const [statistics, setStatistics] = useState({});
@@ -32,6 +38,7 @@ const AdvisorDashboard = () => {
   const [selectedStudents, setSelectedStudents] = useState([]);
   const [activityLog, setActivityLog] = useState([]);
   const [currentDocument, setCurrentDocument] = useState(null);
+  const navigate = useNavigate();
   const [pagination, setPagination] = useState({
     currentPage: 1,
     totalPages: 1,
@@ -43,6 +50,7 @@ const AdvisorDashboard = () => {
   const [appointments, setAppointments] = useState([]);
   const [filteredAppointments, setFilteredAppointments] = useState([]);
   const [appointmentFilter, setAppointmentFilter] = useState('all');
+  
   const [dateFilter, setDateFilter] = useState({
     start: new Date().toISOString().split('T')[0],
     end: new Date(Date.now() + 30 * 24 * 60 * 60 * 1000).toISOString().split('T')[0]
@@ -59,6 +67,8 @@ const AdvisorDashboard = () => {
     itemsPerPage: 10
   });
 
+
+  
   // Review form state
   const [reviewForm, setReviewForm] = useState({
     advisorNotes: '',
@@ -125,6 +135,43 @@ const [appointmentForm, setAppointmentForm] = useState({
     filterAppointments();
   }, [appointments, appointmentFilter, dateFilter]);
 
+  // Add useEffect to get user name from localStorage or API
+  useEffect(() => {
+    const user = JSON.parse(localStorage.getItem('user'));
+    if (user && user.name) {
+      setUserName(user.name);
+    } else {
+      // Fallback: try to get from token or make API call
+      const token = localStorage.getItem('token');
+      if (token) {
+        // You can make an API call here to get user details if needed
+        fetchUserDetails();
+      }
+    }
+  }, []);
+
+  // ADD THIS: Get user name from localStorage
+useEffect(() => {
+  const user = JSON.parse(localStorage.getItem('user'));
+  if (user && user.name) {
+    setUserName(user.name);
+  }
+}, []);
+
+// ADD THIS: Close dropdown when clicking outside
+useEffect(() => {
+  const handleClickOutside = (event) => {
+    if (!event.target.closest('.user-profile-dropdown')) {
+      setShowUserDropdown(false);
+    }
+  };
+
+  document.addEventListener('mousedown', handleClickOutside);
+  return () => {
+    document.removeEventListener('mousedown', handleClickOutside);
+  };
+}, []);
+
   const fetchDashboardData = async () => {
     try {
       setLoading(true);
@@ -147,6 +194,52 @@ const [appointmentForm, setAppointmentForm] = useState({
     }
   };
 
+    // Add function to fetch user details (optional)
+  const fetchUserDetails = async () => {
+    try {
+      const token = localStorage.getItem('token');
+      const response = await fetch('http://localhost:5000/api/user/profile', {
+        headers: { 'Authorization': `Bearer ${token}` }
+      });
+      if (response.ok) {
+        const data = await response.json();
+        setUserName(data.user?.name || 'Advisor');
+        // Optionally store in localStorage
+        localStorage.setItem('user', JSON.stringify(data.user));
+      }
+    } catch (error) {
+      console.error('Error fetching user details:', error);
+    }
+  };
+
+  // Add function to close dropdown when clicking outside
+  useEffect(() => {
+    const handleClickOutside = (event) => {
+      if (!event.target.closest('.user-profile-dropdown')) {
+        setShowUserDropdown(false);
+      }
+    };
+
+    document.addEventListener('mousedown', handleClickOutside);
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutside);
+    };
+  }, []);
+
+    // Add function to close dropdown when clicking outside
+  // useEffect(() => {
+  //   const handleClickOutside = (event) => {
+  //     if (!event.target.closest('.user-profile-dropdown')) {
+  //       setShowUserDropdown(false);
+  //     }
+  //   };
+
+  //   document.addEventListener('mousedown', handleClickOutside);
+  //   return () => {
+  //     document.removeEventListener('mousedown', handleClickOutside);
+  //   };
+  // }, []);
+  
   const fetchStudents = async (page = 1) => {
     try {
       setLoading(true);
@@ -369,6 +462,7 @@ const [appointmentForm, setAppointmentForm] = useState({
     
     setFilteredAppointments(filtered);
   };
+    
 
   const handleCreateAppointment = async (e) => {
     e.preventDefault();
@@ -586,6 +680,37 @@ const [appointmentForm, setAppointmentForm] = useState({
     return timeDiff <= 15 * 60 * 1000 && timeDiff >= -appointment.duration * 60 * 1000;
   };
 
+  const handleConfirmAppointment = async (appointmentId) => {
+  if (!window.confirm('Are you sure you want to confirm this appointment?')) {
+    return;
+  }
+  
+  try {
+    const token = localStorage.getItem('token');
+    const response = await fetch(`http://localhost:5000/api/appointments/confirm`, {
+      method: 'PUT',
+      headers: { 
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${token}` 
+      },
+      body: JSON.stringify({ 
+        appointmentId: appointmentId,
+        confirmed: true
+      })
+    });
+    
+    if (response.ok) {
+      Notify.success('Appointment confirmed successfully');
+      fetchAppointments(); // Refresh the appointments list
+    } else {
+      const error = await response.json();
+      throw new Error(error.message || 'Failed to confirm appointment');
+    }
+  } catch (error) {
+    Notify.failure('Failed to confirm appointment: ' + error.message);
+  }
+};
+
   // Review handlers
   const handleReviewStudent = async (student) => {
     try {
@@ -793,7 +918,11 @@ const [appointmentForm, setAppointmentForm] = useState({
       setTimeout(() => { window.location.href = '/'; }, 1000);
     }
   };
-
+const handleLogoutBtn = () => {
+    localStorage.removeItem('token');
+    navigate('/');
+    Notify.success("Logout successful, Thank you for using Our System");
+  };
   const getStatusBadge = (student) => {
     if (student.isStudentApproved) {
       return <span className="status-badge approved">Approved</span>;
@@ -873,6 +1002,7 @@ const [appointmentForm, setAppointmentForm] = useState({
               >
                 ☰
               </button>
+              
               <h1 className="topbar-title">Advisor Dashboard</h1>
             </div>
 
@@ -908,9 +1038,7 @@ const [appointmentForm, setAppointmentForm] = useState({
               </button>
             ))}
           </nav>
-          <div className="sidebar-footer">
-            <button className="logout-btn" onClick={handleLogout}>Logout</button>
-          </div>
+         
         </aside>
 
         {/* Main content */}
@@ -925,12 +1053,26 @@ const [appointmentForm, setAppointmentForm] = useState({
               ☰
             </button>
             <h1 className="topbar-title">Advisor Dashboard</h1>
+            <div className="ms-auto">
+            <IoPersonCircle
+              style={{ color: "#2c5a99", fontSize: "3rem"}}
+              onClick={() => setShowDropdown(!showDropdown)}
+            />
+            {showDropdown && (
+              <div className="profile-dropdown position-absolute bg-white shadow p-2 rounded" style={{ right: "0px", top: "40px" }}>
+                <p className=""></p>
+              
+                <button className="logout-button btn btn-danger btn-sm w-100" onClick={handleLogoutBtn}><IoIosLogOut /> Logout</button>
+              </div>
+            )}
+          </div>
           </div>
 
           {/* Overview Tab */}
           {activeTab === 'overview' && (
             <div className="tab-content">
               <div className="stats-grid">
+                
                 <div className="stat-card">
                   {/* <div className="stat-icon">👥</div> */}
                   <div className="stat-content">
@@ -938,8 +1080,9 @@ const [appointmentForm, setAppointmentForm] = useState({
                     <div className="stat-label">Total Profiles</div>
                   </div>
                 </div>
+                {/* end of stat-card */}
                 <div className="stat-card">
-                  {/* <div className="stat-icon">⏳</div> */}
+               
                   <div className="stat-content">
                     <div className="stat-value">{statistics.pending || 0}</div>
                     <div className="stat-label">Pending Review</div>
@@ -1484,8 +1627,8 @@ const [appointmentForm, setAppointmentForm] = useState({
                               </div>
                             ) : null}
                           </div>
-
-                          <div className="appointment-actions">
+                             {/* start */}
+                          {/* <div className="appointment-actions">
                             {appointment.status === 'available' && (
                               <>
                                 <button 
@@ -1519,8 +1662,54 @@ const [appointmentForm, setAppointmentForm] = useState({
                                   ❌ Cancel
                                 </button>
                               </>
-                            )}
+                            )} */}
 
+                            <div className="appointment-actions">
+  {appointment.status === 'available' && (
+    <>
+      <button 
+        onClick={() => handleEditAppointment(appointment)}
+        className="action-btn edit-btn"
+      >
+        ✏️ Edit
+      </button>
+      <button 
+        onClick={() => handleDeleteAppointment(appointment._id)}
+        className="action-btn delete-btn"
+      >
+        🗑️ Delete
+      </button>
+    </>
+  )}
+  
+  {appointment.status === 'booked' && (
+    <>
+      {/* NEW: Add confirm button for pending appointments */}
+      {!appointment.confirmed && (
+        <button 
+          onClick={() => handleConfirmAppointment(appointment._id)}
+          className="action-btn confirm-btn"
+        >
+          ✅ Confirm
+        </button>
+      )}
+      
+      <button 
+        onClick={() => handleStartAppointment(appointment)}
+        className="action-btn start-btn"
+        disabled={!isAppointmentTime(appointment)}
+      >
+        🎯 Start
+      </button>
+      <button 
+        onClick={() => handleCancelAppointment(appointment._id)}
+        className="action-btn cancel-btn"
+      >
+        ❌ Cancel
+      </button>
+    </>
+  )}
+{/* end */}
                             {appointment.status === 'completed' && (
                               <button 
                                 onClick={() => console.log('View details for:', appointment)}
