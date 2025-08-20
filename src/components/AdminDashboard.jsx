@@ -19,6 +19,8 @@ const PROGRAM_COLORS = ['#0088FE', '#00C49F', '#FFBB28', '#FF8042', 'red', 'pink
 const SIDEBAR_ITEMS = [
   { id: 'overview', label: 'Overview', icon: '📊' },
   { id: 'students', label: 'All Students', icon: '👥' },
+  { id: 'users', label: 'User Management', icon: '👤' }, 
+  // { id: 'roles', label: 'Role Management', icon: '🔧' }, 
   { id: 'transfer', label: 'Transfer Students', icon: '🔄' },
   { id: 'analytics', label: 'Analytics', icon: '📈' },
   { id: 'activity', label: 'Activity Log', icon: '📋' }
@@ -56,6 +58,8 @@ const transformProgramDataForBarChart = (programPreferences) => {
     students: program.count
   }));
 };
+
+
 
 // Triangle Bar Shape Component
 const getPath = (x, y, width, height) => {
@@ -100,11 +104,15 @@ const [showUserDropdown, setShowUserDropdown] = useState(false);
   const [filterStatus, setFilterStatus] = useState('all');
   const [statistics, setStatistics] = useState({});
   const [showReviewModal, setShowReviewModal] = useState(false);
-  const [showBulkModal, setShowBulkModal] = useState(false);
   const [showDocumentModal, setShowDocumentModal] = useState(false);
   const [selectedStudents, setSelectedStudents] = useState([]);
   const [activityLog, setActivityLog] = useState([]);
   const [currentDocument, setCurrentDocument] = useState(null);
+    const [users, setUsers] = useState([]);
+  const [selectedUsers, setSelectedUsers] = useState([]);
+  const [filterRole, setFilterRole] = useState('all');
+
+  
   const navigate = useNavigate();
   const [pagination, setPagination] = useState({
     currentPage: 1,
@@ -127,6 +135,36 @@ const [showUserDropdown, setShowUserDropdown] = useState(false);
   const [showCalendarView, setShowCalendarView] = useState(false);
   const [currentCalendarDate, setCurrentCalendarDate] = useState(new Date());
   const [selectedAppointment, setSelectedAppointment] = useState(null);
+  const [showCreateUserModal, setShowCreateUserModal] = useState(false);
+  const [showEditUserModal, setShowEditUserModal] = useState(false);
+  const [showUserDetailsModal, setShowUserDetailsModal] = useState(false);
+  const [showBulkModal, setShowBulkModal] = useState(false);
+  const [selectedUser, setSelectedUser] = useState(null);
+  
+  // Form States
+  const [createUserForm, setCreateUserForm] = useState({
+    name: '',
+    email: '',
+    password: '',
+    role: 'student',
+    phone: '',
+    department: ''
+  });
+
+  const [editUserForm, setEditUserForm] = useState({
+    name: '',
+    email: '',
+    role: '',
+    phone: '',
+    department: '',
+    isActive: true
+  });
+
+  const [bulkOperationForm, setBulkOperationForm] = useState({
+    action: 'activate',
+    role: 'student',
+    department: ''
+  });
   const [appointmentPagination, setAppointmentPagination] = useState({
     currentPage: 1,
     totalPages: 1,
@@ -190,8 +228,10 @@ const [appointmentForm, setAppointmentForm] = useState({
     } else if (activeTab === 'activity') {
       fetchActivityLog();
     } else if (activeTab === 'analytics') {
-      fetchAnalytics(); 
-    }else if (activeTab === 'appointments') {
+      fetchAnalytics();  
+    }else if (activeTab === 'users' || activeTab === 'roles') {
+      fetchUsers(); 
+    } else if (activeTab === 'appointments') {
       fetchAppointments();
     }
   }, [activeTab, pagination.currentPage]);
@@ -278,6 +318,275 @@ useEffect(() => {
       }
     } catch (error) {
       console.error('Error fetching user details:', error);
+    }
+  };
+
+  // User Management Functions - Add these after your existing fetch functions
+
+  const fetchUsers = async (page = 1) => {
+    try {
+      setLoading(true);
+      const token = localStorage.getItem('token');
+      const params = new URLSearchParams({
+        page: page.toString(),
+        limit: pagination.itemsPerPage.toString(),
+        role: filterRole,
+        searchTerm,
+        isActive: filterStatus
+      });
+
+      const response = await fetch(`http://localhost:5000/api/admin/users?${params}`, {
+        headers: { 'Authorization': `Bearer ${token}` }
+      });
+
+      if (response.ok) {
+        const data = await response.json();
+        setUsers(data.data.users);
+        setPagination(data.data.pagination);
+      } else {
+        Notify.failure('Failed to fetch users');
+      }
+    } catch (error) {
+      Notify.failure('Error loading users');
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const handleCreateUser = async (e) => {
+    e.preventDefault();
+    try {
+      const token = localStorage.getItem('token');
+      const response = await fetch('http://localhost:5000/api/admin/users/create', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${token}`
+        },
+        body: JSON.stringify(createUserForm)
+      });
+
+      if (response.ok) {
+        Notify.success('User created successfully!');
+        setShowCreateUserModal(false);
+        setCreateUserForm({
+          name: '',
+          email: '',
+          password: '',
+          role: 'student',
+          phone: '',
+          department: ''
+        });
+        fetchUsers();
+        fetchDashboardData();
+      } else {
+        const error = await response.json();
+        Notify.failure(error.message || 'Failed to create user');
+      }
+    } catch (error) {
+      Notify.failure('Error creating user');
+    }
+  };
+
+  // Add these missing functions after your existing user management functions
+
+  const handleDeleteUser = async (userId) => {
+    if (!window.confirm('Are you sure you want to delete this user? This action cannot be undone.')) {
+      return;
+    }
+
+    try {
+      const token = localStorage.getItem('token');
+      const response = await fetch(`http://localhost:5000/api/admin/users/${userId}/delete`, {
+        method: 'DELETE',
+        headers: { 'Authorization': `Bearer ${token}` }
+      });
+
+      if (response.ok) {
+        Notify.success('User deleted successfully!');
+        fetchUsers();
+        fetchDashboardData();
+      } else {
+        const error = await response.json();
+        Notify.failure(error.message || 'Failed to delete user');
+      }
+    } catch (error) {
+      Notify.failure('Error deleting user');
+    }
+  };
+
+  const handleAssignAdvisor = async (userId) => {
+    try {
+      const token = localStorage.getItem('token');
+      const response = await fetch(`http://localhost:5000/api/admin/users/${userId}/assign-advisor`, {
+        method: 'PUT',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${token}`
+        },
+        body: JSON.stringify({ department: 'General' })
+      });
+
+      if (response.ok) {
+        Notify.success('Advisor role assigned successfully!');
+        fetchUsers();
+        fetchDashboardData();
+      } else {
+        const error = await response.json();
+        Notify.failure(error.message || 'Failed to assign advisor role');
+      }
+    } catch (error) {
+      Notify.failure('Error assigning advisor role');
+    }
+  };
+
+  const handleBulkOperation = async (e) => {
+    e.preventDefault();
+    if (selectedUsers.length === 0) {
+      Notify.warning('Please select users for bulk operation');
+      return;
+    }
+
+    try {
+      const token = localStorage.getItem('token');
+      const response = await fetch('http://localhost:5000/api/admin/users/bulk-update', {
+        method: 'PUT',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${token}`
+        },
+        body: JSON.stringify({
+          userIds: selectedUsers,
+          action: bulkOperationForm.action,
+          data: bulkOperationForm.action === 'assignRole' ? {
+            role: bulkOperationForm.role,
+            department: bulkOperationForm.department
+          } : undefined
+        })
+      });
+
+      if (response.ok) {
+        const result = await response.json();
+        Notify.success(`Bulk operation completed! ${result.data.usersAffected} users affected.`);
+        setShowBulkModal(false);
+        setSelectedUsers([]);
+        fetchUsers();
+        fetchDashboardData();
+      } else {
+        const error = await response.json();
+        Notify.failure(error.message || 'Bulk operation failed');
+      }
+    } catch (error) {
+      Notify.failure('Error performing bulk operation');
+    }
+  };
+
+  const openUserDetails = async (user) => {
+    try {
+      const token = localStorage.getItem('token');
+      const response = await fetch(`http://localhost:5000/api/admin/users/${user._id}/details`, {
+        headers: { 'Authorization': `Bearer ${token}` }
+      });
+
+      if (response.ok) {
+        const data = await response.json();
+        setSelectedUser({
+          ...data.data.user,
+          profile: data.data.profile,
+          assessment: data.data.assessment
+        });
+        setShowUserDetailsModal(true);
+      } else {
+        Notify.failure('Failed to fetch user details');
+      }
+    } catch (error) {
+      Notify.failure('Error loading user details');
+    }
+  };
+
+  const openEditUser = (user) => {
+    setSelectedUser(user);
+    setEditUserForm({
+      name: user.name,
+      email: user.email,
+      role: user.role,
+      phone: user.phone || '',
+      department: user.department || '',
+      isActive: user.isActive
+    });
+    setShowEditUserModal(true);
+  };
+
+  const handleSelectUser = (userId) => {
+    setSelectedUsers(prev =>
+      prev.includes(userId) ? prev.filter(id => id !== userId) : [...prev, userId]
+    );
+  };
+
+  const handleSelectAllUsers = () => {
+    if (selectedUsers.length === users.length) {
+      setSelectedUsers([]);
+    } else {
+      setSelectedUsers(users.map(user => user._id));
+    }
+  };
+
+  const getRoleBadge = (role) => {
+    const badges = {
+      admin: <span className="role-badge admin">Admin</span>,
+      advisor: <span className="role-badge advisor">Advisor</span>,
+      student: <span className="role-badge student">Student</span>
+    };
+    return badges[role] || <span className="role-badge">{role}</span>;
+  };
+
+  const getUserStatusBadge = (isActive) => {
+    return isActive 
+      ? <span className="status-badge active">Active</span>
+      : <span className="status-badge inactive">Inactive</span>;
+  };
+
+  // Filter users based on active tab
+  const getFilteredUsers = () => {
+    let filtered = users;
+    
+    switch (activeTab) {
+      case 'users':
+        // Show all users
+        break;
+      case 'roles':
+        // Show users with role management focus
+        filtered = users.filter(user => user.role === 'advisor' || user.role === 'admin');
+        break;
+      default:
+        break;
+    }
+    
+    return filtered;
+  };
+  const handleEditUser = async (e) => {
+    e.preventDefault();
+    try {
+      const token = localStorage.getItem('token');
+      const response = await fetch(`http://localhost:5000/api/admin/users/${selectedUser._id}/update`, {
+        method: 'PUT',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${token}`
+        },
+        body: JSON.stringify(editUserForm)
+      });
+
+      if (response.ok) {
+        Notify.success('User updated successfully!');
+        setShowEditUserModal(false);
+        fetchUsers();
+      } else {
+        const error = await response.json();
+        Notify.failure(error.message || 'Failed to update user');
+      }
+    } catch (error) {
+      Notify.failure('Error updating user');
     }
   };
 
@@ -1254,7 +1563,237 @@ const handleLogoutBtn = () => {
             </div>
           )}
 
+{/* Users Management Tab */}
+          {(activeTab === 'users' || activeTab === 'roles') && (
+            <div className="tab-content">
+              {/* Enhanced Filters Section */}
+              <div className="filters-section" style={{ marginBottom: '1.5rem' }}>
+                <div style={{ display: 'flex', gap: '1rem', alignItems: 'center', flexWrap: 'wrap' }}>
+                  <div className="search-box" style={{ minWidth: '300px' }}>
+                    <span className="search-icon">🔍</span>
+                    <input
+                      type="text"
+                      placeholder="Search by name or email..."
+                      value={searchTerm}
+                      onChange={(e) => setSearchTerm(e.target.value)}
+                      className="search-input"
+                    />
+                  </div>
 
+                  <div className="filter-dropdown">
+                    <select
+                      value={filterRole}
+                      onChange={(e) => setFilterRole(e.target.value)}
+                      className="filter-select"
+                    >
+                      <option value="all">All Roles</option>
+                      <option value="student">Students</option>
+                      <option value="advisor">Advisors</option>
+                      <option value="admin">Admins</option>
+                    </select>
+                  </div>
+
+                  <div className="filter-dropdown">
+                    <select
+                      value={filterStatus}
+                      onChange={(e) => setFilterStatus(e.target.value)}
+                      className="filter-select"
+                    >
+                      <option value="all">All Status</option>
+                      <option value="true">Active</option>
+                      <option value="false">Inactive</option>
+                    </select>
+                  </div>
+
+                  <button
+                    onClick={() => setShowCreateUserModal(true)}
+                    style={{
+                      padding: '0.75rem 1rem',
+                      background: 'linear-gradient(135deg, #059669, #065f46)',
+                      color: 'white',
+                      border: 'none',
+                      borderRadius: '6px',
+                      cursor: 'pointer',
+                      fontWeight: '500'
+                    }}
+                  >
+                    ➕ Create User
+                  </button>
+                </div>
+
+                {/* Bulk Actions */}
+                {getFilteredUsers().length > 0 && (
+                  <div className="bulk-actions" style={{ marginTop: '1rem' }}>
+                    <button 
+                      onClick={handleSelectAllUsers} 
+                      className="select-all-btn"
+                    >
+                      {selectedUsers.length === getFilteredUsers().length ? 'Deselect All' : 'Select All'}
+                    </button>
+                    {selectedUsers.length > 0 && (
+                      <button 
+                        onClick={() => setShowBulkModal(true)} 
+                        className="bulk-review-btn"
+                      >
+                        Bulk Operations ({selectedUsers.length})
+                      </button>
+                    )}
+                  </div>
+                )}
+              </div>
+
+              {/* Users Table */}
+              <div className="users-table-container" style={{
+                background: 'white',
+                borderRadius: '12px',
+                overflow: 'hidden',
+                border: '1px solid #e2e8f0'
+              }}>
+                <table style={{ width: '100%', borderCollapse: 'collapse' }}>
+                  <thead style={{ background: '#f8fafc', borderBottom: '1px solid #e2e8f0' }}>
+                    <tr>
+                      <th style={{ padding: '1rem', textAlign: 'left', fontWeight: '600' }}>
+                        <input
+                          type="checkbox"
+                          checked={selectedUsers.length === getFilteredUsers().length && getFilteredUsers().length > 0}
+                          onChange={handleSelectAllUsers}
+                        />
+                      </th>
+                      <th style={{ padding: '1rem', textAlign: 'left', fontWeight: '600' }}>User</th>
+                      <th style={{ padding: '1rem', textAlign: 'left', fontWeight: '600' }}>Role</th>
+                      <th style={{ padding: '1rem', textAlign: 'left', fontWeight: '600' }}>Status</th>
+                      <th style={{ padding: '1rem', textAlign: 'left', fontWeight: '600' }}>Created</th>
+                      <th style={{ padding: '1rem', textAlign: 'left', fontWeight: '600' }}>Actions</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {getFilteredUsers().map((user, index) => (
+                      <tr key={user._id} style={{ borderBottom: '1px solid #f1f5f9' }}>
+                        <td style={{ padding: '1rem' }}>
+                          <input
+                            type="checkbox"
+                            checked={selectedUsers.includes(user._id)}
+                            onChange={() => handleSelectUser(user._id)}
+                          />
+                        </td>
+                        <td style={{ padding: '1rem' }}>
+                          <div>
+                            <div style={{ fontWeight: '500', color: '#1e293b' }}>{user.name}</div>
+                            <div style={{ fontSize: '0.875rem', color: '#64748b' }}>{user.email}</div>
+                            {user.department && (
+                              <div style={{ fontSize: '0.75rem', color: '#64748b' }}>{user.department}</div>
+                            )}
+                          </div>
+                        </td>
+                        <td style={{ padding: '1rem' }}>
+                          {getRoleBadge(user.role)}
+                        </td>
+                        <td style={{ padding: '1rem' }}>
+                          {getUserStatusBadge(user.isActive)}
+                        </td>
+                        <td style={{ padding: '1rem', fontSize: '0.875rem', color: '#64748b' }}>
+                          {formatDate(user.createdAt)}
+                        </td>
+                        <td style={{ padding: '1rem' }}>
+                          <div style={{ display: 'flex', gap: '0.5rem' }}>
+                            <button
+                              onClick={() => openUserDetails(user)}
+                              style={{
+                                padding: '0.25rem 0.5rem',
+                                background: '#dbeafe',
+                                color: '#1d4ed8',
+                                border: 'none',
+                                borderRadius: '4px',
+                                cursor: 'pointer',
+                                fontSize: '0.75rem'
+                              }}
+                            >
+                              👁️ View
+                            </button>
+                            <button
+                              onClick={() => openEditUser(user)}
+                              style={{
+                                padding: '0.25rem 0.5rem',
+                                background: '#fbbf24',
+                                color: 'white',
+                                border: 'none',
+                                borderRadius: '4px',
+                                cursor: 'pointer',
+                                fontSize: '0.75rem'
+                              }}
+                            >
+                              ✏️ Edit
+                            </button>
+                            {user.role === 'student' && (
+                              <button
+                                onClick={() => handleAssignAdvisor(user._id)}
+                                style={{
+                                  padding: '0.25rem 0.5rem',
+                                  background: '#059669',
+                                  color: 'white',
+                                  border: 'none',
+                                  borderRadius: '4px',
+                                  cursor: 'pointer',
+                                  fontSize: '0.75rem'
+                                }}
+                              >
+                                👨‍🏫 Advisor
+                              </button>
+                            )}
+                            <button
+                              onClick={() => handleDeleteUser(user._id)}
+                              style={{
+                                padding: '0.25rem 0.5rem',
+                                background: '#dc2626',
+                                color: 'white',
+                                border: 'none',
+                                borderRadius: '4px',
+                                cursor: 'pointer',
+                                fontSize: '0.75rem'
+                              }}
+                            >
+                              🗑️ Delete
+                            </button>
+                          </div>
+                        </td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+
+                {getFilteredUsers().length === 0 && (
+                  <div style={{ padding: '3rem', textAlign: 'center', color: '#64748b' }}>
+                    <div style={{ fontSize: '3rem', marginBottom: '1rem' }}>👥</div>
+                    <h3>No users found</h3>
+                    <p>Try adjusting your search or filter criteria</p>
+                  </div>
+                )}
+              </div>
+
+              {/* Pagination */}
+              {pagination.totalPages > 1 && (
+                <div className="pagination">
+                  <button
+                    onClick={() => fetchUsers(pagination.currentPage - 1)}
+                    disabled={pagination.currentPage <= 1}
+                    className="pagination-btn"
+                  >
+                    Previous
+                  </button>
+                  <span className="pagination-info">
+                    Page {pagination.currentPage} of {pagination.totalPages}
+                  </span>
+                  <button
+                    onClick={() => fetchUsers(pagination.currentPage + 1)}
+                    disabled={pagination.currentPage >= pagination.totalPages}
+                    className="pagination-btn"
+                  >
+                    Next
+                  </button>
+                </div>
+              )}
+            </div>
+          )}
 {/* Students Tab (All, Pending, Approved, Transfer) */}
 {(activeTab === 'students' || activeTab === 'pending' || activeTab === 'approved' || activeTab === 'transfer') && (
   <div className="tab-content">
@@ -2541,6 +3080,7 @@ const handleLogoutBtn = () => {
               </div>
             </div>
           )}
+          
         </main>
       </div>
     </div>
