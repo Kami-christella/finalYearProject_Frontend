@@ -10,6 +10,8 @@ import AUCALOGO from "../assets/images/AUCALOGO.png"
 import { IoMdPerson } from "react-icons/io";
 import { IoIosLogOut } from "react-icons/io";
 import { useNavigate, useLocation } from "react-router-dom";
+import { FaFilePdf, FaFileExcel, FaDownload, FaChartBar } from "react-icons/fa";
+
 
 // Add these constants after your imports
 const COLORS = ["#0088FE", "#00C49F", "#FFBB28", "#FF8042", "#8884D8", "#82CA9D", "#FFC658", "#FF6B6B", "#4ECDC4", "#45B7D1"];
@@ -18,7 +20,7 @@ const PROGRAM_COLORS = ['#0088FE', '#00C49F', '#FFBB28', '#FF8042', 'red', 'pink
 
 const SIDEBAR_ITEMS = [
   { id: 'overview', label: 'Overview', icon: '📊' },
-  { id: 'students', label: 'All Students', icon: '👥' },
+  // { id: 'students', label: 'All Students', icon: '👥' },
   { id: 'users', label: 'User Management', icon: '👤' }, 
   // { id: 'roles', label: 'Role Management', icon: '🔧' }, 
   { id: 'transfer', label: 'Transfer Students', icon: '🔄' },
@@ -108,9 +110,20 @@ const [showUserDropdown, setShowUserDropdown] = useState(false);
   const [selectedStudents, setSelectedStudents] = useState([]);
   const [activityLog, setActivityLog] = useState([]);
   const [currentDocument, setCurrentDocument] = useState(null);
-    const [users, setUsers] = useState([]);
+  const [users, setUsers] = useState([]);
   const [selectedUsers, setSelectedUsers] = useState([]);
   const [filterRole, setFilterRole] = useState('all');
+  const [showReportModal, setShowReportModal] = useState(false);
+const [reportLoading, setReportLoading] = useState(false);
+const [reportForm, setReportForm] = useState({
+  reportType: 'system',
+  format: 'excel',
+  dateRange: 'month',
+  startDate: '',
+  endDate: '',
+  includeCharts: true,
+  filters: {}
+});
 
   
   const navigate = useNavigate();
@@ -280,28 +293,70 @@ useEffect(() => {
     document.removeEventListener('mousedown', handleClickOutside);
   };
 }, []);
-
-  const fetchDashboardData = async () => {
-    try {
-      setLoading(true);
-      const token = localStorage.getItem('token');
-      const response = await fetch('http://localhost:5000/api/student/profiles/statistics', {
+const fetchDashboardData = async () => {
+  try {
+    setLoading(true);
+    const token = localStorage.getItem('token');
+    
+    // Fetch from both endpoints simultaneously
+    const [adminResponse, studentResponse] = await Promise.all([
+      fetch('http://localhost:5000/api/admin/dashboard', {
         headers: { 'Authorization': `Bearer ${token}` }
-      });
-      if (response.ok) {
-        const data = await response.json();
-        setStatistics(data.statistics || {});
-      } else {
-        console.error('Failed to fetch dashboard data:', response.status);
-        Notify.failure('Failed to fetch dashboard data');
-      }
-    } catch (error) {
-      console.error('Error loading dashboard:', error);
-      Notify.failure('Error loading dashboard');
-    } finally {
-      setLoading(false);
+      }).catch(() => ({ ok: false })),
+      
+      fetch('http://localhost:5000/api/student/profiles/statistics', {
+        headers: { 'Authorization': `Bearer ${token}` }
+      }).catch(() => ({ ok: false }))
+    ]);
+
+    let combinedData = {};
+
+    // Process admin dashboard data
+    if (adminResponse.ok) {
+      const adminData = await adminResponse.json();
+      console.log('Admin data:', adminData); // Debug log
+      combinedData.timeTracking = adminData.data?.timeTracking || {};
+      combinedData.userManagement = adminData.data?.userManagement || {};
     }
-  };
+
+    // Process student statistics data
+    if (studentResponse.ok) {
+      const studentData = await studentResponse.json();
+      console.log('Student data:', studentData); // Debug log
+      combinedData = { ...combinedData, ...studentData.statistics };
+    }
+
+    console.log('Final combined data:', combinedData); // Debug log
+    setStatistics(combinedData);
+
+  } catch (error) {
+    console.error('Error loading dashboard:', error);
+    Notify.failure('Error loading dashboard');
+  } finally {
+    setLoading(false);
+  }
+};
+  // const fetchDashboardData = async () => {
+  //   try {
+  //     setLoading(true);
+  //     const token = localStorage.getItem('token');
+  //     const response = await fetch('http://localhost:5000/api/student/profiles/statistics', {
+  //       headers: { 'Authorization': `Bearer ${token}` }
+  //     });
+  //     if (response.ok) {
+  //       const data = await response.json();
+  //       setStatistics(data.statistics || {});
+  //     } else {
+  //       console.error('Failed to fetch dashboard data:', response.status);
+  //       Notify.failure('Failed to fetch dashboard data');
+  //     }
+  //   } catch (error) {
+  //     console.error('Error loading dashboard:', error);
+  //     Notify.failure('Error loading dashboard');
+  //   } finally {
+  //     setLoading(false);
+  //   }
+  // };
 
     // Add function to fetch user details (optional)
   const fetchUserDetails = async () => {
@@ -480,6 +535,171 @@ useEffect(() => {
       Notify.failure('Error performing bulk operation');
     }
   };
+
+// Generate System Report (PDF/Excel)
+const handleGenerateSystemReport = async (format = 'excel') => {
+  try {
+    setReportLoading(true);
+    const token = localStorage.getItem('token');
+    
+    const params = new URLSearchParams({
+      reportType: reportForm.reportType,
+      startDate: reportForm.startDate,
+      endDate: reportForm.endDate,
+      includeCharts: reportForm.includeCharts
+    });
+
+    const response = await fetch(`http://localhost:5000/api/admin/reports/system/${format}?${params}`, {
+      headers: { 'Authorization': `Bearer ${token}` }
+    });
+
+    if (response.ok) {
+      const blob = await response.blob();
+      const url = window.URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = `system-report-${new Date().toISOString().split('T')[0]}.${format === 'pdf' ? 'pdf' : 'xlsx'}`;
+      document.body.appendChild(a);
+      a.click();
+      window.URL.revokeObjectURL(url);
+      document.body.removeChild(a);
+      
+      Notify.success(`${format.toUpperCase()} report downloaded successfully!`);
+    } else {
+      throw new Error('Failed to generate report');
+    }
+  } catch (error) {
+    Notify.failure('Error generating report: ' + error.message);
+  } finally {
+    setReportLoading(false);
+  }
+};
+
+// Generate Analytics Report
+const handleGenerateAnalyticsReport = async (format = 'excel') => {
+  try {
+    setReportLoading(true);
+    const token = localStorage.getItem('token');
+    
+    const params = new URLSearchParams({
+      format: format,
+      period: reportForm.dateRange
+    });
+
+    const response = await fetch(`http://localhost:5000/api/admin/reports/analytics?${params}`, {
+      headers: { 'Authorization': `Bearer ${token}` }
+    });
+
+    if (response.ok) {
+      const blob = await response.blob();
+      const url = window.URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = `analytics-report-${reportForm.dateRange}-${new Date().toISOString().split('T')[0]}.${format === 'pdf' ? 'pdf' : 'xlsx'}`;
+      document.body.appendChild(a);
+      a.click();
+      window.URL.revokeObjectURL(url);
+      document.body.removeChild(a);
+      
+      Notify.success(`Analytics ${format.toUpperCase()} report downloaded successfully!`);
+    } else {
+      throw new Error('Failed to generate analytics report');
+    }
+  } catch (error) {
+    Notify.failure('Error generating analytics report: ' + error.message);
+  } finally {
+    setReportLoading(false);
+  }
+};
+
+// Generate Custom Report
+const handleGenerateCustomReport = async () => {
+  try {
+    setReportLoading(true);
+    const token = localStorage.getItem('token');
+    
+    const params = new URLSearchParams({
+      format: reportForm.format,
+      reportType: reportForm.reportType,
+      dateRange: reportForm.dateRange,
+      startDate: reportForm.startDate,
+      endDate: reportForm.endDate,
+      filters: JSON.stringify(reportForm.filters)
+    });
+
+    const response = await fetch(`http://localhost:5000/api/admin/reports/custom?${params}`, {
+      headers: { 'Authorization': `Bearer ${token}` }
+    });
+
+    if (response.ok) {
+      const blob = await response.blob();
+      const url = window.URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = `custom-${reportForm.reportType}-report-${new Date().toISOString().split('T')[0]}.${reportForm.format === 'pdf' ? 'pdf' : 'xlsx'}`;
+      document.body.appendChild(a);
+      a.click();
+      window.URL.revokeObjectURL(url);
+      document.body.removeChild(a);
+      
+      Notify.success(`Custom ${reportForm.format.toUpperCase()} report downloaded successfully!`);
+      setShowReportModal(false);
+    } else {
+      throw new Error('Failed to generate custom report');
+    }
+  } catch (error) {
+    Notify.failure('Error generating custom report: ' + error.message);
+  } finally {
+    setReportLoading(false);
+  }
+};
+
+// Generate User Report for selected users
+const handleGenerateUserReport = async (format = 'excel') => {
+  try {
+    if (selectedUsers.length === 0) {
+      Notify.warning('Please select users to include in the report');
+      return;
+    }
+
+    setReportLoading(true);
+    const token = localStorage.getItem('token');
+    
+    const response = await fetch('http://localhost:5000/api/admin/reports/users', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${token}`
+      },
+      body: JSON.stringify({
+        userIds: selectedUsers,
+        format: format,
+        includeProfiles: true,
+        includeAssessments: true
+      })
+    });
+
+    if (response.ok) {
+      const blob = await response.blob();
+      const url = window.URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = `users-report-${selectedUsers.length}-users-${new Date().toISOString().split('T')[0]}.${format === 'pdf' ? 'pdf' : 'xlsx'}`;
+      document.body.appendChild(a);
+      a.click();
+      window.URL.revokeObjectURL(url);
+      document.body.removeChild(a);
+      
+      Notify.success(`User ${format.toUpperCase()} report for ${selectedUsers.length} users downloaded successfully!`);
+    } else {
+      throw new Error('Failed to generate user report');
+    }
+  } catch (error) {
+    Notify.failure('Error generating user report: ' + error.message);
+  } finally {
+    setReportLoading(false);
+  }
+};
 
   const openUserDetails = async (user) => {
     try {
@@ -1392,6 +1612,7 @@ const handleLogoutBtn = () => {
               ))}
             </nav>
             <div className="sidebar-footer">
+              {/* {userName}  */}
               <button className="logout-btn" onClick={handleLogout}>Logout</button>
             </div>
           </aside>
@@ -1464,109 +1685,274 @@ const handleLogoutBtn = () => {
             {showDropdown && (
               <div className="profile-dropdown position-absolute bg-white shadow p-2 rounded" style={{ right: "0px", top: "40px" }}>
                 <p className=""></p>
-              
+                   {userName} 
                 <button className="logout-button btn btn-danger btn-sm w-100" onClick={handleLogoutBtn}><IoIosLogOut /> Logout</button>
               </div>
             )}
           </div>
           </div>
 
-          {/* Overview Tab */}
-          {activeTab === 'overview' && (
-            <div className="tab-content">
-              <div className="stats-grid">
+{activeTab === 'overview' && (
+  <div className="tab-content">
+    {/* Existing Stats Grid */}
+    <div className="stats-grid">
+      {/* Your existing stat cards */}
+      <div className="stat-card">
+        <div className="stat-content">
+          <div className="stat-value">{statistics.timeTracking?.registrations?.thisWeek || 0}</div>
+          <div className="stat-label">New Registrations (This Week)</div>
+          <div style={{ fontSize: '0.75rem', color: '#64748b', marginTop: '0.25rem' }}>
+            This Month: {statistics.timeTracking?.registrations?.thisMonth || 0}
+          </div>
+        </div>
+      </div>
 
-                 <div className="stat-card">
-                   
-                    <div className="stat-content">
-                      <div className="stat-value">{statistics.timeTracking?.registrations?.thisWeek || 0}</div>
-                      <div className="stat-label">New Registrations (This Week)</div>
-                      <div style={{ fontSize: '0.75rem', color: '#64748b', marginTop: '0.25rem' }}>
-                        This Month: {statistics.timeTracking?.registrations?.thisMonth || 0}
-                      </div>
-                    </div>
-                  </div>
+      <div className="stat-card">
+        <div className="stat-content">
+          <div className="stat-value">{statistics.timeTracking?.profiles?.thisWeek || 0}</div>
+          <div className="stat-label">Profiles Created (This Week)</div>
+          <div style={{ fontSize: '0.75rem', color: '#64748b', marginTop: '0.25rem' }}>
+            This Month: {statistics.timeTracking?.profiles?.thisMonth || 0}
+          </div>
+        </div>
+      </div>
 
-                    <div className="stat-card">
-                    <div className="stat-content">
-                      <div className="stat-value">{statistics.timeTracking?.profiles?.thisWeek || 0}</div>
-                      <div className="stat-label">Profiles Created (This Week)</div>
-                      <div style={{ fontSize: '0.75rem', color: '#64748b', marginTop: '0.25rem' }}>
-                        This Month: {statistics.timeTracking?.profiles?.thisMonth || 0}
-                      </div>
-                    </div>
-                  </div>
+      <div className="stat-card">
+        <div className="stat-content">
+          <div className="stat-value">{statistics.userManagement?.totalUsers || 0}</div>
+          <div className="stat-label">Total Users</div>
+          <div style={{ fontSize: '0.75rem', color: '#64748b', marginTop: '0.25rem' }}>
+            Active System Users
+          </div>
+        </div>
+      </div>
 
-                   <div className="stat-card">
-                    <div className="stat-content">
-                      <div className="stat-value">{statistics.userManagement?.totalUsers || 0}</div>
-                      <div className="stat-label">Total Users</div>
-                      <div style={{ fontSize: '0.75rem', color: '#64748b', marginTop: '0.25rem' }}>
-                        Active System Users
-                      </div>
-                    </div>
-                  </div>
- {/* <h3 style={{ marginBottom: '1rem', color: '#1e293b' }}>📈 System Overview</h3><br/><br/> */}
-                <div className="stat-card">
-                  {/* <div className="stat-icon">👥</div> */}
-                  <div className="stat-content">
-                    <div className="stat-value">{statistics.total || 0}</div>
-                    <div className="stat-label">Total Profiles</div>
-                  </div>
-                </div>
-                {/* end of stat-card */}
-                <div className="stat-card">
-                  {/* <div className="stat-icon">⏳</div> */}
-                  <div className="stat-content">
-                    <div className="stat-value">{statistics.pending || 0}</div>
-                    <div className="stat-label">Pending Review</div>
-                  </div>
-                </div>
-                <div className="stat-card">
-                  {/* <div className="stat-icon">✅</div> */}
-                  <div className="stat-content">
-                    <div className="stat-value">{statistics.approved || 0}</div>
-                    <div className="stat-label">Approved</div>
-                  </div>
-                </div>
-                <div className="stat-card">
-                  {/* <div className="stat-icon">📈</div> */}
-                  <div className="stat-content">
-                    <div className="stat-value">{statistics.recent || 0}</div>
-                    <div className="stat-label">Recent (7 days)</div>
-                  </div>
-                </div>
-                <div className="stat-card">
-                  {/* <div className="stat-icon">📈</div> */}
-                  <div className="stat-content">
-                    <div className="stat-value">{statistics.approvalRate || 0}%</div>
-                    <div className="stat-label">Approval Rate</div>
-                  </div>
-                </div>
-              </div>
+      <div className="stat-card">
+        <div className="stat-content">
+          <div className="stat-value">{statistics.total || 0}</div>
+          <div className="stat-label">Total Profiles</div>
+        </div>
+      </div>
 
-              {/* <div className="overview-charts">
-                <div className="chart-card">
-                  <h3>Approval Rate</h3>
-                  <div className="progress-circle">
-                    <div className="progress-text">{statistics.approvalRate || 0}%</div>
-                  </div>
-                </div>
-                <div className="chart-card">
-                  <h3>Recent Activity</h3>
-                  <div className="activity-summary">
-                    <p>Reviews processed this week</p>
-                    <div className="activity-number">{statistics.recent || 0}</div>
-                  </div>
-                </div>
-              </div> */}
-            </div>
-          )}
+      <div className="stat-card">
+        <div className="stat-content">
+          <div className="stat-value">{statistics.pending || 0}</div>
+          <div className="stat-label">Pending Review</div>
+        </div>
+      </div>
+
+      <div className="stat-card">
+        <div className="stat-content">
+          <div className="stat-value">{statistics.approved || 0}</div>
+          <div className="stat-label">Approved</div>
+        </div>
+      </div>
+
+      <div className="stat-card">
+        <div className="stat-content">
+          <div className="stat-value">{statistics.recent || 0}</div>
+          <div className="stat-label">Recent (7 days)</div>
+        </div>
+      </div>
+
+      <div className="stat-card">
+        <div className="stat-content">
+          <div className="stat-value">{statistics.approvalRate || 0}%</div>
+          <div className="stat-label">Approval Rate</div>
+        </div>
+      </div>
+      
+    </div>
+
+    {/* NEW: Add Report Generation Section */}
+    <div className="reports-section" style={{ 
+      marginTop: '2rem', 
+      padding: '1.5rem', 
+      background: 'white', 
+      borderRadius: '12px', 
+      border: '1px solid #e2e8f0' 
+    }}>
+      <h3 style={{ marginBottom: '1rem', color: '#1e293b', display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
+        <FaChartBar /> Generate Reports
+      </h3>
+      
+      <div className="report-buttons-grid" style={{ 
+        display: 'grid', 
+        gridTemplateColumns: 'repeat(auto-fit, minmax(250px, 1fr))', 
+        gap: '1rem' 
+      }}>
+        {/* System Reports */}
+        <div className="report-card" style={{ 
+          padding: '1rem', 
+          border: '1px solid #e2e8f0', 
+          borderRadius: '8px', 
+          background: '#f8fafc' 
+        }}>
+          <h4 style={{ marginBottom: '0.5rem', color: '#374151' }}>📊 System Reports</h4>
+          <p style={{ fontSize: '0.875rem', color: '#6b7280', marginBottom: '1rem' }}>
+            Comprehensive system overview with statistics and analytics
+          </p>
+          <div style={{ display: 'flex', gap: '0.5rem' }}>
+            <button
+              onClick={() => handleGenerateSystemReport('excel')}
+              disabled={reportLoading}
+              style={{
+                padding: '0.5rem 1rem',
+                background: '#059669',
+                color: 'white',
+                border: 'none',
+                borderRadius: '6px',
+                cursor: reportLoading ? 'not-allowed' : 'pointer',
+                display: 'flex',
+                alignItems: 'center',
+                gap: '0.5rem',
+                fontSize: '0.875rem'
+              }}
+            >
+              <FaFileExcel /> Excel
+            </button>
+            <button
+              onClick={() => handleGenerateSystemReport('pdf')}
+              disabled={reportLoading}
+              style={{
+                padding: '0.5rem 1rem',
+                background: '#dc2626',
+                color: 'white',
+                border: 'none',
+                borderRadius: '6px',
+                cursor: reportLoading ? 'not-allowed' : 'pointer',
+                display: 'flex',
+                alignItems: 'center',
+                gap: '0.5rem',
+                fontSize: '0.875rem'
+              }}
+            >
+              <FaFilePdf /> PDF
+            </button>
+          </div>
+        </div>
+
+        {/* Analytics Reports */}
+        <div className="report-card" style={{ 
+          padding: '1rem', 
+          border: '1px solid #e2e8f0', 
+          borderRadius: '8px', 
+          background: '#f8fafc' 
+        }}>
+          <h4 style={{ marginBottom: '0.5rem', color: '#374151' }}>📈 Analytics Reports</h4>
+          <p style={{ fontSize: '0.875rem', color: '#6b7280', marginBottom: '1rem' }}>
+            Detailed analytics with charts and trend analysis
+          </p>
+          <div style={{ display: 'flex', gap: '0.5rem' }}>
+            <button
+              onClick={() => handleGenerateAnalyticsReport('excel')}
+              disabled={reportLoading}
+              style={{
+                padding: '0.5rem 1rem',
+                background: '#059669',
+                color: 'white',
+                border: 'none',
+                borderRadius: '6px',
+                cursor: reportLoading ? 'not-allowed' : 'pointer',
+                display: 'flex',
+                alignItems: 'center',
+                gap: '0.5rem',
+                fontSize: '0.875rem'
+              }}
+            >
+              <FaFileExcel /> Excel
+            </button>
+            <button
+              onClick={() => handleGenerateAnalyticsReport('pdf')}
+              disabled={reportLoading}
+              style={{
+                padding: '0.5rem 1rem',
+                background: '#dc2626',
+                color: 'white',
+                border: 'none',
+                borderRadius: '6px',
+                cursor: reportLoading ? 'not-allowed' : 'pointer',
+                display: 'flex',
+                alignItems: 'center',
+                gap: '0.5rem',
+                fontSize: '0.875rem'
+              }}
+            >
+              <FaFilePdf /> PDF
+            </button>
+          </div>
+        </div>
+
+        {/* Custom Reports */}
+        <div className="report-card" style={{ 
+          padding: '1rem', 
+          border: '1px solid #e2e8f0', 
+          borderRadius: '8px', 
+          background: '#f8fafc' 
+        }}>
+          <h4 style={{ marginBottom: '0.5rem', color: '#374151' }}>⚙️ Custom Reports</h4>
+          <p style={{ fontSize: '0.875rem', color: '#6b7280', marginBottom: '1rem' }}>
+            Customizable reports with filters and date ranges
+          </p>
+          <button
+            onClick={() => setShowReportModal(true)}
+            disabled={reportLoading}
+            style={{
+              padding: '0.5rem 1rem',
+              background: '#1d4ed8',
+              color: 'white',
+              border: 'none',
+              borderRadius: '6px',
+              cursor: reportLoading ? 'not-allowed' : 'pointer',
+              display: 'flex',
+              alignItems: 'center',
+              gap: '0.5rem',
+              fontSize: '0.875rem'
+            }}
+          >
+            <FaDownload /> Configure Report
+          </button>
+        </div>
+      </div>
+
+      {reportLoading && (
+        <div style={{ 
+          marginTop: '1rem', 
+          padding: '1rem', 
+          background: '#fef3c7', 
+          border: '1px solid #f59e0b', 
+          borderRadius: '6px',
+          display: 'flex',
+          alignItems: 'center',
+          gap: '0.5rem'
+        }}>
+          <div style={{ 
+            width: '20px', 
+            height: '20px', 
+            border: '2px solid #f59e0b', 
+            borderTop: '2px solid transparent', 
+            borderRadius: '50%', 
+            animation: 'spin 1s linear infinite' 
+          }}></div>
+          <span style={{ color: '#92400e' }}>Generating report... Please wait.</span>
+        </div>
+      )}
+    </div>
+  </div>
+)}
+
+
+          
 
 {/* Users Management Tab */}
           {(activeTab === 'users' || activeTab === 'roles') && (
             <div className="tab-content">
               {/* Enhanced Filters Section */}
+              <h2 style={{textAlign:'center'}}>Table Of All System Users</h2>
+               <p style={{ margin: 0, color: '#64748b' }}>
+                Manage users, permissions, and access controls
+              </p>
+              
               <div className="filters-section" style={{ marginBottom: '1.5rem' }}>
                 <div style={{ display: 'flex', gap: '1rem', alignItems: 'center', flexWrap: 'wrap' }}>
                   <div className="search-box" style={{ minWidth: '300px' }}>
@@ -1579,7 +1965,59 @@ const handleLogoutBtn = () => {
                       className="search-input"
                     />
                   </div>
-
+              {selectedUsers.length > 0 && (
+      <div className="selected-users-reports" style={{ 
+        marginBottom: '1rem', 
+        padding: '1rem', 
+        background: '#eff6ff', 
+        border: '1px solid #3b82f6', 
+        borderRadius: '8px' 
+      }}>
+        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+          <span style={{ color: '#1e40af', fontWeight: '500' }}>
+            {selectedUsers.length} users selected
+          </span>
+          <div style={{ display: 'flex', gap: '0.5rem' }}>
+            <button
+              onClick={() => handleGenerateUserReport('excel')}
+              disabled={reportLoading}
+              style={{
+                padding: '0.5rem 1rem',
+                background: '#059669',
+                color: 'white',
+                border: 'none',
+                borderRadius: '6px',
+                cursor: reportLoading ? 'not-allowed' : 'pointer',
+                display: 'flex',
+                alignItems: 'center',
+                gap: '0.5rem',
+                fontSize: '0.875rem'
+              }}
+            >
+              <FaFileExcel /> Export Excel
+            </button>
+            <button
+              onClick={() => handleGenerateUserReport('pdf')}
+              disabled={reportLoading}
+              style={{
+                padding: '0.5rem 1rem',
+                background: '#dc2626',
+                color: 'white',
+                border: 'none',
+                borderRadius: '6px',
+                cursor: reportLoading ? 'not-allowed' : 'pointer',
+                display: 'flex',
+                alignItems: 'center',
+                gap: '0.5rem',
+                fontSize: '0.875rem'
+              }}
+            >
+              <FaFilePdf /> Export PDF
+            </button>
+          </div>
+        </div>
+      </div>
+    )}
                   <div className="filter-dropdown">
                     <select
                       value={filterRole}
@@ -1593,7 +2031,7 @@ const handleLogoutBtn = () => {
                     </select>
                   </div>
 
-                  <div className="filter-dropdown">
+                  {/* <div className="filter-dropdown">
                     <select
                       value={filterStatus}
                       onChange={(e) => setFilterStatus(e.target.value)}
@@ -1603,22 +2041,24 @@ const handleLogoutBtn = () => {
                       <option value="true">Active</option>
                       <option value="false">Inactive</option>
                     </select>
-                  </div>
+                  </div> */}
+                  
 
-                  <button
-                    onClick={() => setShowCreateUserModal(true)}
-                    style={{
-                      padding: '0.75rem 1rem',
-                      background: 'linear-gradient(135deg, #059669, #065f46)',
-                      color: 'white',
-                      border: 'none',
-                      borderRadius: '6px',
-                      cursor: 'pointer',
-                      fontWeight: '500'
-                    }}
-                  >
-                    ➕ Create User
-                  </button>
+                 <button
+  onClick={() => navigate('/login')} // Redirect to login page
+  style={{
+    padding: '0.75rem 1rem',
+    background: 'linear-gradient(135deg, #1e293b, #1e293b)',
+    color: 'white',
+    border: 'none',
+    borderRadius: '6px',
+    cursor: 'pointer',
+    fontWeight: '500'
+  }}
+>
+  ➕ Create User
+</button>
+
                 </div>
 
                 {/* Bulk Actions */}
@@ -1649,6 +2089,7 @@ const handleLogoutBtn = () => {
                 overflow: 'hidden',
                 border: '1px solid #e2e8f0'
               }}>
+                
                 <table style={{ width: '100%', borderCollapse: 'collapse' }}>
                   <thead style={{ background: '#f8fafc', borderBottom: '1px solid #e2e8f0' }}>
                     <tr>
@@ -1658,6 +2099,7 @@ const handleLogoutBtn = () => {
                           checked={selectedUsers.length === getFilteredUsers().length && getFilteredUsers().length > 0}
                           onChange={handleSelectAllUsers}
                         />
+
                       </th>
                       <th style={{ padding: '1rem', textAlign: 'left', fontWeight: '600' }}>User</th>
                       <th style={{ padding: '1rem', textAlign: 'left', fontWeight: '600' }}>Role</th>
@@ -1667,6 +2109,7 @@ const handleLogoutBtn = () => {
                     </tr>
                   </thead>
                   <tbody>
+                    
                     {getFilteredUsers().map((user, index) => (
                       <tr key={user._id} style={{ borderBottom: '1px solid #f1f5f9' }}>
                         <td style={{ padding: '1rem' }}>
@@ -1760,7 +2203,60 @@ const handleLogoutBtn = () => {
                     ))}
                   </tbody>
                 </table>
-
+{/* ADD THIS IN YOUR USERS TAB AFTER FILTERS */}
+{selectedUsers.length > 0 && (
+  <div className="selected-users-reports" style={{ 
+    marginBottom: '1rem', 
+    padding: '1rem', 
+    background: '#eff6ff', 
+    border: '1px solid #3b82f6', 
+    borderRadius: '8px' 
+  }}>
+    <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+      <span style={{ color: '#1e40af', fontWeight: '500' }}>
+        {selectedUsers.length} users selected for reports
+      </span>
+      <div style={{ display: 'flex', gap: '0.5rem' }}>
+        <button
+          onClick={() => handleGenerateUserReport('excel')}
+          disabled={reportLoading}
+          style={{
+            padding: '0.5rem 1rem',
+            background: '#059669',
+            color: 'white',
+            border: 'none',
+            borderRadius: '6px',
+            cursor: reportLoading ? 'not-allowed' : 'pointer',
+            display: 'flex',
+            alignItems: 'center',
+            gap: '0.5rem',
+            fontSize: '0.875rem'
+          }}
+        >
+          <FaFileExcel /> Export Excel
+        </button>
+        <button
+          onClick={() => handleGenerateUserReport('pdf')}
+          disabled={reportLoading}
+          style={{
+            padding: '0.5rem 1rem',
+            background: '#dc2626',
+            color: 'white',
+            border: 'none',
+            borderRadius: '6px',
+            cursor: reportLoading ? 'not-allowed' : 'pointer',
+            display: 'flex',
+            alignItems: 'center',
+            gap: '0.5rem',
+            fontSize: '0.875rem'
+          }}
+        >
+          <FaFilePdf /> Export PDF
+        </button>
+      </div>
+    </div>
+  </div>
+)}
                 {getFilteredUsers().length === 0 && (
                   <div style={{ padding: '3rem', textAlign: 'center', color: '#64748b' }}>
                     <div style={{ fontSize: '3rem', marginBottom: '1rem' }}>👥</div>
@@ -1792,8 +2288,12 @@ const handleLogoutBtn = () => {
                   </button>
                 </div>
               )}
+              
             </div>
+            
           )}
+
+          
 {/* Students Tab (All, Pending, Approved, Transfer) */}
 {(activeTab === 'students' || activeTab === 'pending' || activeTab === 'approved' || activeTab === 'transfer') && (
   <div className="tab-content">
@@ -2050,7 +2550,63 @@ const handleLogoutBtn = () => {
     )}
 
     {/* Analytics Tab - Add this section */}
+    {/* ADD THIS AT THE TOP OF YOUR ANALYTICS TAB */}
+<div style={{
+  display: 'flex',
+  gap: '1rem',
+  marginBottom: '2rem',
+  padding: '1rem',
+  background: '#1d4ed8',
+  borderRadius: '12px',
+  alignItems: 'center',
+  justifyContent: 'center'
+}}>
+  <h3 style={{ color: 'white', margin: 0, fontSize: '1.1rem' }}>
+    📊 Generate Analytics Reports
+  </h3>
+  <div style={{ display: 'flex', gap: '0.5rem' }}>
+    <button
+      onClick={() => handleGenerateAnalyticsReport('excel')}
+      disabled={reportLoading}
+      style={{
+        padding: '0.75rem 1.5rem',
+        background: '#059669',
+        color: 'white',
+        border: 'none',
+        borderRadius: '8px',
+        cursor: reportLoading ? 'not-allowed' : 'pointer',
+        display: 'flex',
+        alignItems: 'center',
+        gap: '0.5rem',
+        fontWeight: '500',
+        fontSize: '0.875rem'
+      }}
+    >
+      <FaFileExcel /> Excel Report
+    </button>
+    <button
+      onClick={() => handleGenerateAnalyticsReport('pdf')}
+      disabled={reportLoading}
+      style={{
+        padding: '0.75rem 1.5rem',
+        background: '#dc2626',
+        color: 'white',
+        border: 'none',
+        borderRadius: '8px',
+        cursor: reportLoading ? 'not-allowed' : 'pointer',
+        display: 'flex',
+        alignItems: 'center',
+        gap: '0.5rem',
+        fontWeight: '500',
+        fontSize: '0.875rem'
+      }}
+    >
+      <FaFilePdf /> PDF Report
+    </button>
+  </div>
+</div>
           {activeTab === 'analytics' && (
+            
             <div className="tab-content">
               <div className="analytics-section">
                 <h3>Grade Distribution</h3>

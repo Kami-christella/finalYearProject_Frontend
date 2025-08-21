@@ -98,7 +98,7 @@ function NewDash() {
   return (
     <div className="container-fluid vh-100 d-flex">
       {/* Sidebar (Fixed) */}
-      <asidedd
+      <aside
         className="bg-body-tertiary p-3 position-fixed top-0 start-0 vh-100 d-flex flex-column border-end"
         style={{ width: "250px" }}
       >
@@ -156,7 +156,7 @@ function NewDash() {
             </div>
           </div>
         </div>
-      </asidedd>
+      </aside>
 
       {/* Main Content Area */}
       <div className="flex-grow-1" style={{ marginLeft: "250px" }}>

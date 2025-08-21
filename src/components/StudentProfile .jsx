@@ -2062,6 +2062,8 @@
 
 // export default StudentProfile;
 
+
+//studentProfile.jsx
 import React, { useState, useRef } from "react";
 import { Notify } from "notiflix";
 import "./styles/StudentProfile.css";
@@ -2121,6 +2123,12 @@ const StudentProfile = () => {
   const [error, setError] = useState("");
   const [success, setSuccess] = useState("");
   const [step, setStep] = useState(1);
+  // mapping
+
+  const [courseContentData, setCourseContentData] = useState([]);
+const [mappingResults, setMappingResults] = useState(null);
+const [mappingInProgress, setMappingInProgress] = useState(false);
+const [showMappingResults, setShowMappingResults] = useState(false);
 
   const fileInputRef = useRef(null);
   const cameraInputRef = useRef(null);
@@ -2157,22 +2165,114 @@ const StudentProfile = () => {
         courseCode: "",
         credits: "",
         grade: "",
+        contentStudied: [] 
       },
     ]);
   };
 
+  // const updatePreviousCourse = (index, field, value) => {
+  //   const updated = coursesStudiedPreviousUniversity.map((course, i) =>
+  //     i === index ? { ...course, [field]: value } : course
+  //   );
+  //   setCoursesStudiedPreviousUniversity(updated);
+  // };
+
+
   const updatePreviousCourse = (index, field, value) => {
-    const updated = coursesStudiedPreviousUniversity.map((course, i) =>
-      i === index ? { ...course, [field]: value } : course
-    );
-    setCoursesStudiedPreviousUniversity(updated);
-  };
+  const updated = coursesStudiedPreviousUniversity.map((course, i) => {
+    if (i === index) {
+      if (field === 'contentStudied') {
+        // Handle content as comma-separated string, convert to array
+        const contentArray = typeof value === 'string' 
+          ? value.split(',').map(item => item.trim()).filter(item => item)
+          : value;
+        return { ...course, [field]: contentArray };
+      }
+      return { ...course, [field]: value };
+    }
+    return course;
+  });
+  setCoursesStudiedPreviousUniversity(updated);
+};
 
   const removePreviousCourse = (index) => {
     setCoursesStudiedPreviousUniversity(
       coursesStudiedPreviousUniversity.filter((_, i) => i !== index)
     );
   };
+
+  // Add new function for AI course mapping
+const handleAICourseMapping = async () => {
+  if (coursesStudiedPreviousUniversity.length === 0) {
+    Notify.failure('Please add at least one course before mapping');
+    return;
+  }
+
+  // Validate that all courses have content
+  const invalidCourses = coursesStudiedPreviousUniversity.filter(course => 
+    !course.courseName || !course.contentStudied || course.contentStudied.length === 0
+  );
+
+  if (invalidCourses.length > 0) {
+    Notify.failure('Please provide course names and content for all courses before mapping');
+    return;
+  }
+
+  setMappingInProgress(true);
+  setError('');
+
+  try {
+    const token = localStorage.getItem("token");
+    
+    // Prepare course data for mapping
+    const mappingData = coursesStudiedPreviousUniversity.map(course => ({
+      ...course,
+      university: formData.previousInstitution,
+      contentStudied: Array.isArray(course.contentStudied) 
+        ? course.contentStudied 
+        : course.contentStudied.split(',').map(item => item.trim()).filter(item => item)
+    }));
+
+    console.log('🚀 Sending course mapping request:', mappingData);
+console.log('Token:', localStorage.getItem('token'));
+    const response = await fetch('http://localhost:5000/api/map-courses', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${token}`
+      },
+      body: JSON.stringify({
+        courseContentData: mappingData,
+        targetProgram: 'BSc in Software Engineering'
+      })
+    });
+
+    const data = await response.json();
+    
+    if (response.ok) {
+      setMappingResults(data.data);
+      setShowMappingResults(true);
+      setCourseContentData(mappingData);
+      
+      Notify.success(`🎉 Course mapping completed! ${data.data.summary.coursesAccepted} courses accepted for transfer`);
+      
+      console.log('✅ Course mapping successful:', data.data);
+    } else {
+      throw new Error(data.message || 'Course mapping failed');
+    }
+  } catch (error) {
+    console.error('❌ Course mapping error:', error);
+    setError('Course mapping failed: ' + error.message);
+    Notify.failure('Course mapping failed: ' + error.message);
+  } finally {
+    setMappingInProgress(false);
+  }
+};
+
+// Add function to close mapping results
+const closeMappingResults = () => {
+  setShowMappingResults(false);
+};
 
   // Equivalent Courses Management
   const addEquivalentCourse = () => {
@@ -3024,7 +3124,7 @@ const StudentProfile = () => {
                     <>
                       {/* Previous University Courses */}
                       <div className="form-group full-width">
-                        <div className="section-header">
+                        {/* <div className="section-header">
                           <h5 className="step-titles">
                             Courses Studied at Previous University
                           </h5>
@@ -3035,7 +3135,7 @@ const StudentProfile = () => {
                           >
                             + Add Course
                           </button>
-                        </div>
+                        </div> */}
 
                         {coursesStudiedPreviousUniversity.map(
                           (course, index) => (
@@ -3058,6 +3158,7 @@ const StudentProfile = () => {
                                       required
                                     />
                                   </div>
+
                                   <div className="form-group">
                                     <input
                                       type="text"
@@ -3121,19 +3222,406 @@ const StudentProfile = () => {
                         )}
                       </div>
 
+                      {/* Enhanced Previous University Courses Section with AI Mapping */}
+{formData.transferStudent && (
+  <div className="form-group full-width">
+    <div className="section-header">
+      <h5 className="step-titles">
+         AUCA Course Mapping
+      </h5>
+    </div>
+    <p className="input-help" style={{ marginBottom: '1.5rem', fontSize: '0.95rem', lineHeight: '1.5' }}>
+      <strong>How it works:</strong> Describe the actual content you studied in each course. 
+      Our System  will analyze your course content and automatically map it to equivalent AUCA courses, 
+      showing you which courses you can skip and which ones you still need to complete.
+    </p>
+
+    <div className="section-header" style={{ marginTop: '2rem' }}>
+      <h6 className="step-titles">Your Previous University Courses</h6>
+      <button
+        type="button"
+        onClick={addPreviousCourse}
+        className="add-btn"
+        disabled={mappingInProgress}
+      >
+        + Add Course
+      </button>
+    </div>
+
+    {coursesStudiedPreviousUniversity.map((course, index) => (
+      <div key={index} className="dynamic-item course-mapping-item" style={{ 
+        border: '2px solid #e0e7ff', 
+        borderRadius: '12px', 
+        padding: '1.5rem', 
+        marginBottom: '1rem',
+        background: 'linear-gradient(135deg, #f8fafc 0%, #f1f5f9 100%)'
+      }}>
+        <div className="dynamic-item-content">
+          {/* Basic course info */}
+          <div className="form-row">
+            <div className="form-group">
+              <label className="form-label">
+                <span className="label-text">Course Name</span>
+                <span className="label-required">*</span>
+              </label>
+              <input
+                type="text"
+                placeholder="e.g., Data Structures and Algorithms"
+                value={course.courseName}
+                onChange={(e) => updatePreviousCourse(index, "courseName", e.target.value)}
+                className="form-input"
+                required
+                disabled={mappingInProgress}
+              />
+            </div>
+            <div className="form-group">
+              <label className="form-label">
+                <span className="label-text">Course Code</span>
+              </label>
+              <input
+                type="text"
+                placeholder="e.g., CS201"
+                value={course.courseCode}
+                onChange={(e) => updatePreviousCourse(index, "courseCode", e.target.value)}
+                className="form-input"
+                disabled={mappingInProgress}
+              />
+            </div>
+          </div>
+
+          {/* NEW: Detailed content section */}
+          <div className="form-group" style={{ marginTop: '1rem' }}>
+            <label className="form-label">
+              <span className="label-text">📚 Detailed Course Content & Topics Studied</span>
+              <span className="label-required">*</span>
+            </label>
+            <textarea
+              placeholder="List the specific topics, concepts, and skills you learned in this course. Be as detailed as possible! 
+
+Examples:
+- For Programming: 'Variables, Data types, Control structures (if-else, loops), Functions, Arrays, Object-oriented programming, Classes and Objects, Inheritance, Polymorphism'
+- For Database: 'SQL queries, Table design, Normalization, Joins, Triggers, Stored procedures, Database design principles'
+- For Math: 'Linear algebra, Matrices, Calculus, Derivatives, Integration, Differential equations'
+
+The more detailed you are, the better our AI can match your courses!"
+              value={Array.isArray(course.contentStudied) ? course.contentStudied.join(', ') : course.contentStudied || ''}
+              onChange={(e) => updatePreviousCourse(index, "contentStudied", e.target.value)}
+              className="form-input content-input"
+              rows="6"
+              required
+              disabled={mappingInProgress}
+              style={{ 
+                lineHeight: '1.6',
+                fontSize: '0.95rem'
+              }}
+            />
+            <p className="input-help" style={{ marginTop: '0.5rem' }}>
+              💡 <strong>Tip:</strong> Separate topics with commas. Include specific technologies, frameworks, 
+              algorithms, or methodologies you learned. The more specific you are, the more accurate the AI mapping will be!
+            </p>
+          </div>
+
+          <div className="form-row" style={{ marginTop: '1rem' }}>
+            <div className="form-group">
+              <label className="form-label">
+                <span className="label-text">Credits</span>
+              </label>
+              <input
+                type="number"
+                placeholder="3"
+                value={course.credits}
+                onChange={(e) => updatePreviousCourse(index, "credits", e.target.value)}
+                className="form-input"
+                min="1"
+                max="10"
+                disabled={mappingInProgress}
+              />
+            </div>
+            <div className="form-group">
+              <label className="form-label">
+                <span className="label-text">Grade Obtained</span>
+              </label>
+              <input
+                type="text"
+                placeholder="A, B+, 85%, etc."
+                value={course.grade}
+                onChange={(e) => updatePreviousCourse(index, "grade", e.target.value)}
+                className="form-input"
+                disabled={mappingInProgress}
+              />
+            </div>
+          </div>
+        </div>
+        
+        <button
+          type="button"
+          onClick={() => removePreviousCourse(index)}
+          className="remove-btn"
+          disabled={mappingInProgress}
+          style={{ marginTop: '1rem' }}
+        >
+          Remove Course
+        </button>
+      </div>
+    ))}
+
+    {/* AI Mapping Action */}
+    <div className="mapping-action" style={{ 
+      textAlign: 'center', 
+      marginTop: '2rem',
+      padding: '2rem',
+      // background: 'linear-gradient(135deg, #3b82f6 0%, #1d4ed8 100%)',
+      borderRadius: '1px',
+      color: 'white'
+    }}>
+      {/* <div style={{ marginBottom: '1.5rem' }}>
+        <h4 style={{ margin: '0 0 0.5rem 0', fontSize: '1.3rem' }}>
+          🤖 Ready for AI Course Mapping?
+        </h4>
+        <p style={{ margin: '0', opacity: '0.9', fontSize: '0.95rem' }}>
+          Our AI will analyze your course content and map it to equivalent AUCA courses
+        </p>
+      </div> */}
+      
+      <button
+        type="button"
+        onClick={handleAICourseMapping}
+        className="upload-btn primary"
+        disabled={coursesStudiedPreviousUniversity.length === 0 || mappingInProgress}
+        style={{
+          background:'#1B3058',
+          // background: mappingInProgress ? '#6b7280' : 'rgba(255, 255, 255, 0.2)',
+          border: '2px solid rgba(255, 255, 255, 0.3)',
+          color: 'white',
+          padding: '1rem 2rem',
+          fontSize: '1.1rem',
+          fontWeight: '700',
+          minWidth: '200px',
+          backdropFilter: 'blur(10px)'
+        }}
+      >
+        {mappingInProgress ? (
+          <div className="loading-content">
+            <div className="loading-spinner"></div>
+            Mapping Courses...
+          </div>
+        ) : (
+          <> Map My Courses with System</>
+        )}
+      </button>
+      
+      <p style={{ 
+        margin: '1rem 0 0 0', 
+        fontSize: '0.85rem', 
+        opacity: '0.8' 
+      }}>
+        {coursesStudiedPreviousUniversity.length === 0 
+          ? 'Add at least one course to enable mapping'
+          : `${coursesStudiedPreviousUniversity.length} course${coursesStudiedPreviousUniversity.length === 1 ? '' : 's'} ready for mapping`
+        }
+      </p>
+    </div>
+  </div>
+)}
+
+{/* Course Mapping Results Modal */}
+{showMappingResults && mappingResults && (
+  <div style={{
+    position: 'fixed',
+    top: '0',
+    left: '0',
+    width: '100%',
+    height: '100%',
+    background: 'rgba(0, 0, 0, 0.8)',
+    zIndex: '1000',
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'center',
+    padding: '2rem'
+  }}>
+    <div style={{
+      background: 'white',
+      borderRadius: '16px',
+      maxWidth: '90%',
+      maxHeight: '90%',
+      overflow: 'auto',
+      padding: '2rem',
+      position: 'relative'
+    }}>
+      <div style={{ 
+        display: 'flex', 
+        justifyContent: 'space-between', 
+        alignItems: 'center',
+        marginBottom: '2rem',
+        borderBottom: '2px solid #f1f5f9',
+        paddingBottom: '1rem'
+      }}>
+        <h3 style={{ margin: '0', color: '#1e40af' }}>
+          🎉 Course Mapping Results
+        </h3>
+        <button
+          onClick={closeMappingResults}
+          style={{
+            background: '#ef4444',
+            color: 'white',
+            border: 'none',
+            borderRadius: '8px',
+            padding: '0.5rem 1rem',
+            cursor: 'pointer'
+          }}
+        >
+          Close
+        </button>
+      </div>
+
+      {/* Summary */}
+      <div style={{ 
+        display: 'grid', 
+        gridTemplateColumns: 'repeat(auto-fit, minmax(120px, 1fr))',
+        gap: '1rem',
+        marginBottom: '2rem'
+      }}>
+        <div style={{ textAlign: 'center', padding: '1rem', background: '#f0fdf4', borderRadius: '8px' }}>
+          <div style={{ fontSize: '2rem', fontWeight: 'bold', color: '#16a34a' }}>
+            {mappingResults.summary.coursesAccepted}
+          </div>
+          <div style={{ fontSize: '0.9rem', color: '#15803d' }}>Courses Accepted</div>
+        </div>
+        <div style={{ textAlign: 'center', padding: '1rem', background: '#fef3c7', borderRadius: '8px' }}>
+          <div style={{ fontSize: '2rem', fontWeight: 'bold', color: '#d97706' }}>
+            {mappingResults.summary.partialCredits}
+          </div>
+          <div style={{ fontSize: '0.9rem', color: '#b45309' }}>Partial Credit</div>
+        </div>
+        <div style={{ textAlign: 'center', padding: '1rem', background: '#fee2e2', borderRadius: '8px' }}>
+          <div style={{ fontSize: '2rem', fontWeight: 'bold', color: '#dc2626' }}>
+            {mappingResults.summary.coursesRejected}
+          </div>
+          <div style={{ fontSize: '0.9rem', color: '#b91c1c' }}>Not Accepted</div>
+        </div>
+        <div style={{ textAlign: 'center', padding: '1rem', background: '#dbeafe', borderRadius: '8px' }}>
+          <div style={{ fontSize: '2rem', fontWeight: 'bold', color: '#2563eb' }}>
+            {mappingResults.academicPlan.estimatedSemesters}
+          </div>
+          <div style={{ fontSize: '0.9rem', color: '#1d4ed8' }}>Semesters Left</div>
+        </div>
+      </div>
+
+      {/* Academic Plan */}
+      <div style={{ marginBottom: '2rem' }}>
+        <h4 style={{ color: '#1e40af', marginBottom: '1rem' }}>
+          📊 Your Academic Plan
+        </h4>
+        <div style={{ 
+          background: '#f8fafc', 
+          padding: '1.5rem', 
+          borderRadius: '12px',
+          border: '2px solid #e2e8f0'
+        }}>
+          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))', gap: '1rem' }}>
+            <div>
+              <strong>Suggested Start Level:</strong><br/>
+              <span style={{ color: '#3b82f6' }}>{mappingResults.academicPlan.suggestedStartLevel}</span>
+            </div>
+            <div>
+              <strong>Transfer Credits:</strong><br/>
+              <span style={{ color: '#16a34a' }}>{mappingResults.academicPlan.transferCredits} credits</span>
+            </div>
+            <div>
+              <strong>Completion:</strong><br/>
+              <span style={{ color: '#7c3aed' }}>{mappingResults.academicPlan.completionPercentage}% complete</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      {/* Detailed Mappings */}
+      <div>
+        <h4 style={{ color: '#1e40af', marginBottom: '1rem' }}>
+          📚 Course-by-Course Analysis
+        </h4>
+        <div style={{ maxHeight: '400px', overflow: 'auto' }}>
+          {mappingResults.mappingResults.map((result, index) => (
+            <div key={index} style={{ 
+              border: '1px solid #e2e8f0',
+              borderRadius: '8px',
+              padding: '1rem',
+              marginBottom: '1rem',
+              background: result.creditTransferStatus === 'full_credit' ? '#f0fdf4' :
+                          result.creditTransferStatus === 'partial_credit' ? '#fef3c7' : '#fee2e2'
+            }}>
+              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'start', marginBottom: '0.5rem' }}>
+                <div>
+                  <strong>{result.previousCourseName}</strong>
+                  {result.previousCourseCode && (
+                    <span style={{ color: '#6b7280', marginLeft: '0.5rem' }}>
+                      ({result.previousCourseCode})
+                    </span>
+                  )}
+                </div>
+                <div style={{ 
+                  padding: '0.25rem 0.75rem',
+                  borderRadius: '12px',
+                  fontSize: '0.8rem',
+                  fontWeight: 'bold',
+                  background: result.creditTransferStatus === 'full_credit' ? '#16a34a' :
+                              result.creditTransferStatus === 'partial_credit' ? '#d97706' : '#dc2626',
+                  color: 'white'
+                }}>
+                  {result.matchPercentage}% match
+                </div>
+              </div>
+              
+              {result.aucaCourseName && (
+                <div style={{ marginBottom: '0.5rem' }}>
+                  <strong>Maps to:</strong> {result.aucaCourseName} ({result.aucaCourseCode})
+                </div>
+              )}
+              
+              <div style={{ fontSize: '0.9rem', color: '#4b5563' }}>
+                {result.aiReasoning}
+              </div>
+              
+              {result.matchingTopics && result.matchingTopics.length > 0 && (
+                <div style={{ marginTop: '0.5rem', fontSize: '0.85rem' }}>
+                  <strong>Matching topics:</strong> {result.matchingTopics.join(', ')}
+                </div>
+              )}
+            </div>
+          ))}
+        </div>
+      </div>
+
+      <div style={{ 
+        marginTop: '2rem', 
+        padding: '1rem',
+        background: '#dbeafe',
+        borderRadius: '8px',
+        textAlign: 'center'
+      }}>
+        <p style={{ margin: '0', color: '#1e40af' }}>
+          🎓 <strong>Great news!</strong> You can skip {mappingResults.summary.coursesAccepted} courses and 
+          start at {mappingResults.academicPlan.suggestedStartLevel}. 
+          Complete your profile to get personalized academic recommendations!
+        </p>
+      </div>
+    </div>
+  </div>
+)}
+
                       {/* Course Equivalence Mapping */}
                       <div className="form-group full-width">
                         <div className="section-header">
-                          <h5 className="step-titles">
+                          {/* <h5 className="step-titles">
                             Course Equivalence Mapping
-                          </h5>
-                          <button
+                          </h5> */}
+                          {/* <button
                             type="button"
                             onClick={addEquivalentCourse}
                             className="add-btn"
                           >
                             + Add Equivalent Course
-                          </button>
+                          </button> */}
                         </div>
                         <p className="input-help">
                           Map your previous university courses to equivalent

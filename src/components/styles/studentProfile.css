@@ -1,4 +1,4 @@
-/* Modern Blue & White Student Profile Design with Enhanced Animations */
+/* studentProfile.css */
 
 * {
   margin: 0;
@@ -1581,4 +1581,88 @@ textarea.form-input {
   .profile-content {
     padding: 0;
   }
+}
+
+/* Course Mapping Specific Styles */
+.course-mapping-item {
+  transition: all 0.3s ease;
+}
+
+.course-mapping-item:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 25px rgba(59, 130, 246, 0.15);
+}
+
+.content-input {
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  line-height: 1.6;
+  resize: vertical;
+}
+
+.content-input:focus {
+  border-color: #3b82f6;
+  box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+}
+
+.mapping-action {
+  animation: mappingActionPulse 3s ease-in-out infinite;
+}
+
+@keyframes mappingActionPulse {
+  0%, 100% { 
+    transform: scale(1);
+    box-shadow: 0 8px 32px rgba(59, 130, 246, 0.3);
+  }
+  50% { 
+    transform: scale(1.02);
+    box-shadow: 0 12px 40px rgba(59, 130, 246, 0.4);
+  }
+}
+
+.mapping-action button:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 12px 40px rgba(255, 255, 255, 0.3);
+}
+
+/* Results Modal Styles */
+.mapping-results-modal {
+  backdrop-filter: blur(8px);
+}
+
+.mapping-results-content {
+  box-shadow: 0 25px 50px rgba(0, 0, 0, 0.2);
+  border: 2px solid rgba(59, 130, 246, 0.1);
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+  .course-mapping-item {
+    padding: 1rem;
+  }
+  
+  .mapping-action {
+    padding: 1.5rem 1rem;
+  }
+  
+  .mapping-results-content {
+    margin: 1rem;
+    padding: 1.5rem;
+  }
+}
+
+/* Loading states */
+.mapping-disabled {
+  opacity: 0.6;
+  pointer-events: none;
+}
+
+/* Success animations */
+@keyframes mappingSuccess {
+  0% { transform: scale(1); }
+  50% { transform: scale(1.05); }
+  100% { transform: scale(1); }
+}
+
+.mapping-success {
+  animation: mappingSuccess 0.6s ease-out;
 }
