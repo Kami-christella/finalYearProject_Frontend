@@ -444,7 +444,7 @@ const ComprehensiveDashboard = () => {
         {/* Quick Stats */}
         <div className="stats-grid">
           <div className="stat-card">
-            <div className="stat-icon">👤</div>
+            {/* <div className="stat-icon">👤</div> */}
             <div className="stat-content">
               <div className="stat-value">{hasProfile ? 'Complete' : 'Incomplete'}</div>
               <div className="stat-label">Profile Status</div>
