@@ -14,7 +14,7 @@ const SIDEBAR_ITEMS = [
   { id: 'students', label: 'All Students', icon: '👥' },
   // { id: 'pending', label: 'Pending Reviews', icon: '⏳' },
   // { id: 'approved', label: 'Approved', icon: '✅' },
-  { id: 'transfer', label: 'Transfer Students', icon: '🔄' },
+  // { id: 'transfer', label: 'Transfer Students', icon: '🔄' },
   { id: 'appointments', label: 'Appointments', icon: '📅' },
   { id: 'activity', label: 'Activity Log', icon: '📋' }
 ];
@@ -1072,7 +1072,7 @@ const handleLogoutBtn = () => {
           {activeTab === 'overview' && (
             <div className="tab-content">
               <div className="stats-grid">
-                
+
                 <div className="stat-card">
                   {/* <div className="stat-icon">👥</div> */}
                   <div className="stat-content">
@@ -1133,7 +1133,7 @@ const handleLogoutBtn = () => {
 {/* Students Tab (All, Pending, Approved, Transfer) */}
 {(activeTab === 'students' || activeTab === 'pending' || activeTab === 'approved' || activeTab === 'transfer') && (
   <div className="tab-content">
-
+<div className="table_header"><th style={{textAlign:'center'}}>STUDENTS WHO CREATED PROFILE</th> </div> 
     {/* Filters and Actions */}
     <div className="filters-section">
       <div className="search-box">
@@ -1203,7 +1203,7 @@ const handleLogoutBtn = () => {
       </div>
     )}
 
-    <div className="table_header"><th style={{textAlign:'center'}}>STUDENTS WHO CREATED PROFILE</th> <br/></div> 
+    
 
     {/* Rest of your existing code continues here... */}
 

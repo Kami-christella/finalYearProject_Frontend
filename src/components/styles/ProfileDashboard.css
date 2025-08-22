@@ -368,7 +368,7 @@
   }
 }
 
-.stat-card {
+.stat-cards {
   background: rgba(255, 255, 255, 0.95);
   backdrop-filter: blur(20px);
   border: 2px solid rgba(59, 130, 246, 0.1);
@@ -383,7 +383,7 @@
   overflow: hidden;
 }
 
-.stat-card::before {
+.stat-cards::before {
   content: '';
   position: absolute;
   top: 0;
@@ -394,13 +394,13 @@
   transition: left 0.6s ease;
 }
 
-.stat-card:hover {
+.stat-cards:hover {
   transform: translateY(-5px) scale(1.02);
   box-shadow: 0 15px 40px rgba(59, 130, 246, 0.15);
   border-color: rgba(59, 130, 246, 0.2);
 }
 
-.stat-card:hover::before {
+.stat-cards:hover::before {
   left: 100%;
 }
 
@@ -415,7 +415,7 @@
   transition: all 0.3s ease;
 }
 
-.stat-card:hover .stat-icon {
+.stat-cards:hover .stat-icon {
   transform: scale(1.1) rotate(5deg);
   box-shadow: 0 8px 25px rgba(59, 130, 246, 0.4);
 }
@@ -427,9 +427,9 @@
 }
 
 .stat-number {
-  font-size: 2rem;
+  font-size: 0.2rem;
   font-weight: 800;
-  color: #1e40af;
+  color: #1B3058;
   line-height: 1;
 }
 
@@ -1229,7 +1229,7 @@
     gap: 1rem;
   }
 
-  .stat-card {
+  .stat-cards {
     padding: 1.5rem;
   }
 
@@ -1239,7 +1239,7 @@
   }
 
   .stat-number {
-    font-size: 1.5rem;
+    font-size: 0.5rem;
   }
 
   .tabs-navigation {
@@ -1395,7 +1395,7 @@
 
 /* Fix any purple references in borders */
 .profile-header,
-.stat-card,
+.stat-cards,
 .tab-content,
 .info-card,
 .document-item,
@@ -1409,7 +1409,7 @@
 /* Ensure all gradient backgrounds use blue */
 .stat-icon,
 .document-icon {
-  background: linear-gradient(135deg, #3b82f6, #1d4ed8) !important;
+  background: linear-gradient(135deg, #1B3058, #1B3058) !important;
 }
 
 /* Fix badge colors to use blue */
@@ -1443,13 +1443,13 @@
 
 /* Ensure shimmer effects use blue */
 .profile-header::before,
-.stat-card::before,
+.stat-cards::before,
 .cta-section::before {
   background: linear-gradient(90deg, transparent, rgba(59, 130, 246, 0.03), transparent) !important;
 }
 
 /* Fix any purple in hover states */
-.stat-card:hover,
+.stat-cards:hover,
 .info-card:hover,
 .document-item:hover,
 .experience-item:hover,
@@ -1504,7 +1504,7 @@
   }
 
   .profile-header,
-  .stat-card,
+  .stat-cards,
   .tab-content,
   .info-card {
     background: rgba(30, 41, 59, 0.95);
@@ -1614,7 +1614,7 @@
   }
 
   .profile-header,
-  .stat-card,
+  .stat-cards,
   .tab-content,
   .info-card {
     background: white;
@@ -1651,7 +1651,7 @@
 /* High contrast mode support */
 @media (prefers-contrast: high) {
   .profile-header,
-  .stat-card,
+  .stat-cards,
   .tab-content,
   .info-card {
     border: 3px solid #3b82f6;

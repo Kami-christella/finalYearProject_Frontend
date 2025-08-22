@@ -141,28 +141,28 @@ const ProfileDashboard = () => {
 
         {/* Quick Stats */}
         <div className="stats-section">
-          <div className="stat-card">
+          <div className="stat-cards">
             <div className="stat-icon">📊</div>
             <div className="stat-content">
               <div className="stat-number">{profile.completionPercentage || 100}%</div>
               <div>Profile Complete</div>
             </div>
           </div>
-          <div className="stat-card">
+          <div className="stat-cards">
             <div className="stat-icon">⚡</div>
             <div className="stat-content">
               <div className="stat-number">{profile.skills?.length || 0}</div>
               <div>Skills Listed</div>
             </div>
           </div>
-          <div className="stat-card">
+          <div className="stat-cards">
             <div className="stat-icon">💡</div>
             <div className="stat-content">
               <div className="stat-number">{profile.interests?.length || 0}</div>
               <div>Interests</div>
             </div>
           </div>
-          <div className="stat-card">
+          <div className="stat-cards">
             <div className="stat-icon">💼</div>
             <div className="stat-content">
               <div className="stat-number">{profile.workExperience?.length || 0}</div>

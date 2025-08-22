@@ -23,7 +23,7 @@ const SIDEBAR_ITEMS = [
   // { id: 'students', label: 'All Students', icon: '👥' },
   { id: 'users', label: 'User Management', icon: '👤' }, 
   // { id: 'roles', label: 'Role Management', icon: '🔧' }, 
-  { id: 'transfer', label: 'Transfer Students', icon: '🔄' },
+  // { id: 'transfer', label: 'Transfer Students', icon: '🔄' },
   { id: 'analytics', label: 'Analytics', icon: '📈' },
   { id: 'activity', label: 'Activity Log', icon: '📋' }
 ];
@@ -1685,7 +1685,7 @@ const handleLogoutBtn = () => {
             {showDropdown && (
               <div className="profile-dropdown position-absolute bg-white shadow p-2 rounded" style={{ right: "0px", top: "40px" }}>
                 <p className=""></p>
-                   {userName} 
+                  <b>Username:</b>  {userName} <br/><br/>
                 <button className="logout-button btn btn-danger btn-sm w-100" onClick={handleLogoutBtn}><IoIosLogOut /> Logout</button>
               </div>
             )}
@@ -1950,7 +1950,7 @@ const handleLogoutBtn = () => {
               {/* Enhanced Filters Section */}
               <h2 style={{textAlign:'center'}}>Table Of All System Users</h2>
                <p style={{ margin: 0, color: '#64748b' }}>
-                Manage users, permissions, and access controls
+                {/* Manage users, permissions, and access controls */}
               </p>
               
               <div className="filters-section" style={{ marginBottom: '1.5rem' }}>
@@ -2556,7 +2556,8 @@ const handleLogoutBtn = () => {
   gap: '1rem',
   marginBottom: '2rem',
   padding: '1rem',
-  background: '#1d4ed8',
+  background:'#1B3058',
+  // background: '#1d4ed8',
   borderRadius: '12px',
   alignItems: 'center',
   justifyContent: 'center'

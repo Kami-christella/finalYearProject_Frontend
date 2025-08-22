@@ -2123,6 +2123,7 @@ const StudentProfile = () => {
   const [error, setError] = useState("");
   const [success, setSuccess] = useState("");
   const [step, setStep] = useState(1);
+const [hasCompletedMapping, setHasCompletedMapping] = useState(false);
   // mapping
 
   const [courseContentData, setCourseContentData] = useState([]);
@@ -2165,7 +2166,16 @@ const [showMappingResults, setShowMappingResults] = useState(false);
         courseCode: "",
         credits: "",
         grade: "",
-        contentStudied: [] 
+        contentStudied: [],
+         aucaCourseName: "",
+         //new fields
+      aucaCourseCode: "",
+      matchPercentage: 0,
+      creditTransferStatus: "",
+      aiReasoning: "",
+      matchingTopics: [],
+      missingTopics: [],
+      additionalTopics: []
       },
     ]);
   };
@@ -2202,13 +2212,13 @@ const [showMappingResults, setShowMappingResults] = useState(false);
   };
 
   // Add new function for AI course mapping
-const handleAICourseMapping = async () => {
+
+  const handleAICourseMapping = async () => {
   if (coursesStudiedPreviousUniversity.length === 0) {
     Notify.failure('Please add at least one course before mapping');
     return;
   }
 
-  // Validate that all courses have content
   const invalidCourses = coursesStudiedPreviousUniversity.filter(course => 
     !course.courseName || !course.contentStudied || course.contentStudied.length === 0
   );
@@ -2224,7 +2234,6 @@ const handleAICourseMapping = async () => {
   try {
     const token = localStorage.getItem("token");
     
-    // Prepare course data for mapping
     const mappingData = coursesStudiedPreviousUniversity.map(course => ({
       ...course,
       university: formData.previousInstitution,
@@ -2234,7 +2243,8 @@ const handleAICourseMapping = async () => {
     }));
 
     console.log('🚀 Sending course mapping request:', mappingData);
-console.log('Token:', localStorage.getItem('token'));
+
+    // CHANGE THIS LINE - Update the endpoint
     const response = await fetch('http://localhost:5000/api/map-courses', {
       method: 'POST',
       headers: {
@@ -2250,13 +2260,33 @@ console.log('Token:', localStorage.getItem('token'));
     const data = await response.json();
     
     if (response.ok) {
+      // ADD THIS SECTION - Update courses with mapping results
+      const updatedCoursesWithMapping = coursesStudiedPreviousUniversity.map((course, index) => {
+        const mappingResult = data.data.mappingResults[index];
+        if (mappingResult) {
+          return {
+            ...course,
+            aucaCourseName: mappingResult.aucaCourseName || "",
+            aucaCourseCode: mappingResult.aucaCourseCode || "",
+            matchPercentage: mappingResult.matchPercentage || 0,
+            creditTransferStatus: mappingResult.creditTransferStatus || "",
+            aiReasoning: mappingResult.aiReasoning || "",
+            matchingTopics: mappingResult.matchingTopics || [],
+            missingTopics: mappingResult.missingTopics || [],
+            additionalTopics: mappingResult.additionalTopics || []
+          };
+        }
+        return course;
+      });
+
+      setCoursesStudiedPreviousUniversity(updatedCoursesWithMapping);
       setMappingResults(data.data);
       setShowMappingResults(true);
+      setHasCompletedMapping(true); // ADD THIS LINE
       setCourseContentData(mappingData);
       
       Notify.success(`🎉 Course mapping completed! ${data.data.summary.coursesAccepted} courses accepted for transfer`);
       
-      console.log('✅ Course mapping successful:', data.data);
     } else {
       throw new Error(data.message || 'Course mapping failed');
     }
@@ -2266,6 +2296,34 @@ console.log('Token:', localStorage.getItem('token'));
     Notify.failure('Course mapping failed: ' + error.message);
   } finally {
     setMappingInProgress(false);
+  }
+};
+
+// Helper function to get status color
+const getStatusColor = (status) => {
+  switch (status) {
+    case 'full_credit':
+      return '#16a34a';
+    case 'partial_credit':
+      return '#d97706';
+    case 'no_credit':
+      return '#dc2626';
+    default:
+      return '#6b7280';
+  }
+};
+
+// Helper function to get status text
+const getStatusText = (status) => {
+  switch (status) {
+    case 'full_credit':
+      return 'Full Credit';
+    case 'partial_credit':
+      return 'Partial Credit';
+    case 'no_credit':
+      return 'No Credit';
+    default:
+      return 'Not Mapped';
   }
 };
 
@@ -2698,11 +2756,11 @@ const closeMappingResults = () => {
                 <div className="form-grid">
                   <div className="form-group">
                     <label className="form-label">
-                      <span className="label-text">Nationality</span>
-                      <span className="label-required">*</span>
+                      {/* <span className="label-text">Nationality</span> */}
+                      {/* <span className="label-required">*</span> */}
                     </label>
                     <div className="input-wrapper">
-                      <span className="input-icon">🌍</span>
+                      {/* <span className="input-icon">🌍</span> */}
                       <input
                         type="text"
                         name="nationality"
@@ -2710,18 +2768,18 @@ const closeMappingResults = () => {
                         onChange={handleChange}
                         required
                         className="form-input"
-                        placeholder="e.g., Rwanda"
+                        placeholder="Nationality"
                       />
                     </div>
                   </div>
 
                   <div className="form-group">
                     <label className="form-label">
-                      <span className="label-text">Date of Birth</span>
-                      <span className="label-required">*</span>
+                      {/* <span className="label-text">Date of Birth</span>
+                      <span className="label-required">*</span> */}
                     </label>
                     <div className="input-wrapper">
-                      <span className="input-icon">📅</span>
+                      {/* <span className="input-icon">📅</span> */}
                       <input
                         type="date"
                         name="dateOfBirth"
@@ -2729,17 +2787,18 @@ const closeMappingResults = () => {
                         onChange={handleChange}
                         required
                         className="form-input"
+                        placeholder="Date of Birth"
                       />
                     </div>
                   </div>
 
                   <div className="form-group">
                     <label className="form-label">
-                      <span className="label-text">Age</span>
-                      <span className="label-required">*</span>
+                      {/* <span className="label-text">Age</span>
+                      <span className="label-required">*</span> */}
                     </label>
                     <div className="input-wrapper">
-                      <span className="input-icon">🎂</span>
+                      {/* <span className="input-icon">🎂</span> */}
                       <input
                         type="number"
                         name="age"
@@ -2749,18 +2808,18 @@ const closeMappingResults = () => {
                         min="16"
                         max="100"
                         className="form-input"
-                        placeholder="e.g., 19"
+                        placeholder="Age"
                       />
                     </div>
                   </div>
 
                   <div className="form-group">
                     <label className="form-label">
-                      <span className="label-text">Gender</span>
-                      <span className="label-required">*</span>
+                      {/* <span className="label-text">Gender</span>
+                      <span className="label-required">*</span> */}
                     </label>
                     <div className="input-wrapper">
-                      <span className="input-icon">⚧️</span>
+                      {/* <span className="input-icon">⚧️</span> */}
                       <select
                         name="gender"
                         value={formData.gender}
@@ -2777,11 +2836,11 @@ const closeMappingResults = () => {
 
                   <div className="form-group">
                     <label className="form-label">
-                      <span className="label-text">Country</span>
-                      <span className="label-required">*</span>
+                      {/* <span className="label-text">Country</span>
+                      <span className="label-required">*</span> */}
                     </label>
                     <div className="input-wrapper">
-                      <span className="input-icon">🏳️</span>
+                      {/* <span className="input-icon">🏳️</span> */}
                       <input
                         type="text"
                         name="country"
@@ -2789,18 +2848,18 @@ const closeMappingResults = () => {
                         onChange={handleChange}
                         required
                         className="form-input"
-                        placeholder="e.g., Rwanda"
+                        placeholder="Country"
                       />
                     </div>
                   </div>
 
                   <div className="form-group">
                     <label className="form-label">
-                      <span className="label-text">Phone Number</span>
-                      <span className="label-required">*</span>
+                      {/* <span className="label-text">Phone Number</span>
+                      <span className="label-required">*</span> */}
                     </label>
                     <div className="input-wrapper">
-                      <span className="input-icon">📱</span>
+                      {/* <span className="input-icon">📱</span> */}
                       <input
                         type="tel"
                         name="phoneNumber"
@@ -2808,18 +2867,18 @@ const closeMappingResults = () => {
                         onChange={handleChange}
                         required
                         className="form-input"
-                        placeholder="e.g., +250788123456 or 0788123456"
+                        placeholder="Phone Number"
                       />
                     </div>
                   </div>
 
                   <div className="form-group">
                     <label className="form-label">
-                      <span className="label-text">Marital Status</span>
-                      <span className="label-required">*</span>
+                      {/* <span className="label-text">Marital Status</span>
+                      <span className="label-required">*</span> */}
                     </label>
                     <div className="input-wrapper">
-                      <span className="input-icon">💑</span>
+                      {/* <span className="input-icon">💑</span> */}
                       <select
                         name="maritalStatus"
                         value={formData.maritalStatus}
@@ -2827,7 +2886,7 @@ const closeMappingResults = () => {
                         required
                         className="form-input"
                       >
-                        <option value="">Select Status</option>
+                        <option value="">Select Marital Status</option>
                         <option value="Single">Single</option>
                         <option value="Married">Married</option>
                         <option value="Divorced">Divorced</option>
@@ -2841,11 +2900,12 @@ const closeMappingResults = () => {
 
                   <div className="form-group">
                     <label className="form-label">
-                      <span className="label-text">Religion</span>
-                      <span className="label-required">*</span>
+                      {/* <span className="label-text">Religion</span>
+                      <span className="label-required">*</span> */}
                     </label>
                     <div className="input-wrapper">
-                      <span className="input-icon">🙏</span>
+                      {/* <span className="input-icon">🙏</span> */}
+                     
                       <select
                         name="yourReligion"
                         value={formData.yourReligion}
@@ -2908,12 +2968,12 @@ const closeMappingResults = () => {
                       <div className="form-group">
                         <label className="form-label">
                           <span className="label-text">
-                            Previous Institution
+                            {/* Previous Institution */}
                           </span>
-                          <span className="label-required">*</span>
+                          {/* <span className="label-required">*</span> */}
                         </label>
                         <div className="input-wrapper">
-                          <span className="input-icon">🏫</span>
+                          {/* <span className="input-icon">🏫</span> */}
                           <input
                             type="text"
                             name="previousInstitution"
@@ -2921,7 +2981,7 @@ const closeMappingResults = () => {
                             onChange={handleChange}
                             required={formData.transferStudent}
                             className="form-input"
-                            placeholder="e.g., University of Rwanda"
+                            placeholder="Previous Institution"
                           />
                         </div>
                       </div>
@@ -2929,12 +2989,12 @@ const closeMappingResults = () => {
                       <div className="form-group">
                         <label className="form-label">
                           <span className="label-text">
-                            Overall Grade at Previous University
+                            {/* Overall Grade at Previous University */}
                           </span>
-                          <span className="label-required">*</span>
+                          {/* <span className="label-required">*</span> */}
                         </label>
                         <div className="input-wrapper">
-                          <span className="input-icon">📊</span>
+                          {/* <span className="input-icon">📊</span> */}
                           <select
                             name="overallGradePreviousUniversity"
                             value={formData.overallGradePreviousUniversity}
@@ -2942,7 +3002,7 @@ const closeMappingResults = () => {
                             required={formData.transferStudent}
                             className="form-input"
                           >
-                            <option value="">Select Grade Range</option>
+                            <option value="">Grade Range At Previous University</option>
                             <option value="Below 50%">Below 50%</option>
                             <option value="Satisfactory (50%-60.9%)">
                               Satisfactory (50%-60.9%)
@@ -2967,11 +3027,11 @@ const closeMappingResults = () => {
 
                   <div className="form-group">
                     <label className="form-label">
-                      <span className="label-text">Current Academic Level</span>
-                      <span className="label-required">*</span>
+                      {/* <span className="label-text">Current Academic Level</span> */}
+                      {/* <span className="label-required">*</span> */}
                     </label>
                     <div className="input-wrapper">
-                      <span className="input-icon">📚</span>
+                      {/* <span className="input-icon">📚</span> */}
                       <select
                         name="currentAcademicLevel"
                         value={formData.currentAcademicLevel}
@@ -2979,7 +3039,7 @@ const closeMappingResults = () => {
                         required
                         className="form-input"
                       >
-                        <option value="">Select Level</option>
+                        <option value="">Current Academic Level</option>
                         <option value="O-Level">O-Level</option>
                         <option value="A-Level">A-Level</option>
                         <option value="Bachelor's Degree">
@@ -2994,11 +3054,11 @@ const closeMappingResults = () => {
 
                   <div className="form-group">
                     <label className="form-label">
-                      <span className="label-text">Student Program</span>
-                      <span className="label-required">*</span>
+                      {/* <span className="label-text">Student Program</span> */}
+                      {/* <span className="label-required">*</span> */}
                     </label>
                     <div className="input-wrapper">
-                      <span className="input-icon">🕐</span>
+                      {/* <span className="input-icon">🕐</span> */}
                       <select
                         name="studentProgram"
                         value={formData.studentProgram}
@@ -3006,7 +3066,7 @@ const closeMappingResults = () => {
                         required
                         className="form-input"
                       >
-                        <option value="">Select Program</option>
+                        <option value="">Select Student Program</option>
                         <option value="Day Program">Day Program</option>
                         <option value="Evening Program">Evening Program</option>
                       </select>
@@ -3015,11 +3075,11 @@ const closeMappingResults = () => {
 
                   <div className="form-group">
                     <label className="form-label">
-                      <span className="label-text">High School Grades</span>
-                      <span className="label-required">*</span>
+                      {/* <span className="label-text">High School Grades</span>
+                      <span className="label-required">*</span> */}
                     </label>
                     <div className="input-wrapper">
-                      <span className="input-icon">📈</span>
+                      {/* <span className="input-icon">📈</span> */}
                       <input
                         type="number"
                         name="highSchoolGrades"
@@ -3029,18 +3089,18 @@ const closeMappingResults = () => {
                         min="0"
                         max="100"
                         className="form-input"
-                        placeholder="e.g., 75"
+                        placeholder="High School Grades"
                       />
                     </div>
                   </div>
 
                   <div className="form-group">
                     <label className="form-label">
-                      <span className="label-text">Sponsorship Details</span>
-                      <span className="label-required">*</span>
+                      {/* <span className="label-text">Sponsorship Details</span> */}
+                      {/* <span className="label-required">*</span> */}
                     </label>
                     <div className="input-wrapper">
-                      <span className="input-icon">💰</span>
+                      {/* <span className="input-icon">💰</span> */}
                       <select
                         name="sponsorshipDetails"
                         value={formData.sponsorshipDetails}
@@ -3048,7 +3108,7 @@ const closeMappingResults = () => {
                         required
                         className="form-input"
                       >
-                        <option value="">Select Sponsorship</option>
+                        <option value="">Select Sponsorship Details</option>
                         <option value="Self">Self</option>
                         <option value="Parents">Parents</option>
                         <option value="Government">Government</option>
@@ -3062,29 +3122,30 @@ const closeMappingResults = () => {
                   <div className="form-group">
                     <label className="form-label">
                       <span className="label-text">
-                        Courses Studied in Secondary
+                        {/* Courses Studied in Secondary */}
+                        {/* Faculty Studied In previous University */}
                       </span>
                     </label>
                     <div className="input-wrapper">
-                      <span className="input-icon">📖</span>
+                      {/* <span className="input-icon">📖</span> */}
                       <input
                         type="text"
                         name="coursesStudiedInSecondary"
                         value={formData.coursesStudiedInSecondary}
                         onChange={handleChange}
                         className="form-input"
-                        placeholder="e.g., Mathematics, Physics, Chemistry"
+                        placeholder="Courses Studied in Secondary"
                       />
                     </div>
                   </div>
 
                   <div className="form-group">
                     <label className="form-label">
-                      <span className="label-text">Have Job</span>
-                      <span className="label-required">*</span>
+                      {/* <span className="label-text">Have Job</span>
+                      <span className="label-required">*</span> */}
                     </label>
                     <div className="input-wrapper">
-                      <span className="input-icon">💼</span>
+                      {/* <span className="input-icon">💼</span> */}
                       <select
                         name="haveJob"
                         value={formData.haveJob}
@@ -3092,7 +3153,7 @@ const closeMappingResults = () => {
                         required
                         className="form-input"
                       >
-                        <option value="">Select Option</option>
+                        <option value="">Have Job</option>
                         <option value="Yes">Yes</option>
                         <option value="No">No</option>
                         <option value="Part-time">Part-time</option>
@@ -3137,89 +3198,292 @@ const closeMappingResults = () => {
                           </button>
                         </div> */}
 
-                        {coursesStudiedPreviousUniversity.map(
-                          (course, index) => (
-                            <div key={index} className="dynamic-item">
-                              <div className="dynamic-item-content">
-                                <div className="form-row">
-                                  <div className="form-group">
-                                    <input
-                                      type="text"
-                                      placeholder="Course Name"
-                                      value={course.courseName}
-                                      onChange={(e) =>
-                                        updatePreviousCourse(
-                                          index,
-                                          "courseName",
-                                          e.target.value
-                                        )
-                                      }
-                                      className="form-input"
-                                      required
-                                    />
-                                  </div>
+                       {coursesStudiedPreviousUniversity.map((course, index) => (
+  <div key={index} style={{
+    border: '1px solid #e5e7eb',
+    borderRadius: '6px',
+    padding: '16px',
+    marginBottom: '12px',
+    backgroundColor: 'white'
+  }}>
+    {/* Basic Course Info */}
+    <div style={{
+      display: 'grid',
+      gridTemplateColumns: '1fr 1fr',
+      gap: '12px',
+      marginBottom: '12px'
+    }}>
+      <div>
+        <label style={{
+          display: 'block',
+          fontSize: '12px',
+          fontWeight: '500',
+          color: '#374151',
+          marginBottom: '3px'
+        }}>
+          Course Name <span style={{ color: '#dc2626' }}>*</span>
+        </label>
+        <input
+          type="text"
+          placeholder="e.g., Data Structures and Algorithms"
+          value={course.courseName}
+          onChange={(e) => updatePreviousCourse(index, "courseName", e.target.value)}
+          required
+          disabled={mappingInProgress}
+          style={{
+            width: '100%',
+            padding: '6px 8px',
+            border: '1px solid #d1d5db',
+            borderRadius: '4px',
+            fontSize: '13px',
+            backgroundColor: mappingInProgress ? '#f9fafb' : 'white'
+          }}
+        />
+      </div>
+      <div>
+        <label style={{
+          display: 'block',
+          fontSize: '12px',
+          fontWeight: '500',
+          color: '#374151',
+          marginBottom: '3px'
+        }}>
+          Course Code
+        </label>
+        <input
+          type="text"
+          placeholder="e.g., CS201"
+          value={course.courseCode}
+          onChange={(e) => updatePreviousCourse(index, "courseCode", e.target.value)}
+          disabled={mappingInProgress}
+          style={{
+            width: '100%',
+            padding: '6px 8px',
+            border: '1px solid #d1d5db',
+            borderRadius: '4px',
+            fontSize: '13px',
+            backgroundColor: mappingInProgress ? '#f9fafb' : 'white'
+          }}
+        />
+      </div>
+    </div>
 
-                                  <div className="form-group">
-                                    <input
-                                      type="text"
-                                      placeholder="Course Code"
-                                      value={course.courseCode}
-                                      onChange={(e) =>
-                                        updatePreviousCourse(
-                                          index,
-                                          "courseCode",
-                                          e.target.value
-                                        )
-                                      }
-                                      className="form-input"
-                                    />
-                                  </div>
-                                </div>
-                                <div className="form-row">
-                                  <div className="form-group">
-                                    <input
-                                      type="number"
-                                      placeholder="Credits"
-                                      value={course.credits}
-                                      onChange={(e) =>
-                                        updatePreviousCourse(
-                                          index,
-                                          "credits",
-                                          e.target.value
-                                        )
-                                      }
-                                      className="form-input"
-                                      min="1"
-                                      max="10"
-                                    />
-                                  </div>
-                                  <div className="form-group">
-                                    <input
-                                      type="text"
-                                      placeholder="Grade Obtained"
-                                      value={course.grade}
-                                      onChange={(e) =>
-                                        updatePreviousCourse(
-                                          index,
-                                          "grade",
-                                          e.target.value
-                                        )
-                                      }
-                                      className="form-input"
-                                    />
-                                  </div>
-                                </div>
-                              </div>
-                              <button
-                                type="button"
-                                onClick={() => removePreviousCourse(index)}
-                                className="remove-btn"
-                              >
-                                Remove
-                              </button>
-                            </div>
-                          )
-                        )}
+    {/* Course Content */}
+    <div style={{ marginBottom: '12px' }}>
+      <label style={{
+        display: 'block',
+        fontSize: '12px',
+        fontWeight: '500',
+        color: '#374151',
+        marginBottom: '3px'
+      }}>
+        📚 Detailed Course Content & Topics Studied <span style={{ color: '#dc2626' }}>*</span>
+      </label>
+      <textarea
+        placeholder="List the specific topics, concepts, and skills you learned in this course. Be as detailed as possible!"
+        value={Array.isArray(course.contentStudied) ? course.contentStudied.join(', ') : course.contentStudied || ''}
+        onChange={(e) => updatePreviousCourse(index, "contentStudied", e.target.value)}
+        required
+        disabled={mappingInProgress}
+        rows="4"
+        style={{
+          width: '100%',
+          padding: '8px',
+          border: '1px solid #d1d5db',
+          borderRadius: '4px',
+          fontSize: '13px',
+          lineHeight: '1.4',
+          backgroundColor: mappingInProgress ? '#f9fafb' : 'white',
+          resize: 'vertical'
+        }}
+      />
+    </div>
+
+    {/* Credits and Grade */}
+    <div style={{
+      display: 'grid',
+      gridTemplateColumns: '1fr 1fr',
+      gap: '12px',
+      marginBottom: '12px'
+    }}>
+      <div>
+        <label style={{
+          display: 'block',
+          fontSize: '12px',
+          fontWeight: '500',
+          color: '#374151',
+          marginBottom: '3px'
+        }}>
+          Credits
+        </label>
+        <input
+          type="number"
+          placeholder="3"
+          value={course.credits}
+          onChange={(e) => updatePreviousCourse(index, "credits", e.target.value)}
+          min="1"
+          max="10"
+          disabled={mappingInProgress}
+          style={{
+            width: '100%',
+            padding: '6px 8px',
+            border: '1px solid #d1d5db',
+            borderRadius: '4px',
+            fontSize: '13px',
+            backgroundColor: mappingInProgress ? '#f9fafb' : 'white'
+          }}
+        />
+      </div>
+      <div>
+        <label style={{
+          display: 'block',
+          fontSize: '12px',
+          fontWeight: '500',
+          color: '#374151',
+          marginBottom: '3px'
+        }}>
+          Grade Obtained
+        </label>
+        <input
+          type="text"
+          placeholder="A, B+, 85%, etc."
+          value={course.grade}
+          onChange={(e) => updatePreviousCourse(index, "grade", e.target.value)}
+          disabled={mappingInProgress}
+          style={{
+            width: '100%',
+            padding: '6px 8px',
+            border: '1px solid #d1d5db',
+            borderRadius: '4px',
+            fontSize: '13px',
+            backgroundColor: mappingInProgress ? '#f9fafb' : 'white'
+          }}
+        />
+      </div>
+    </div>
+
+    {/* ADD THIS SECTION - Mapping Results Display */}
+    {hasCompletedMapping && course.aucaCourseName && (
+      <div style={{
+        marginTop: '16px',
+        padding: '12px',
+        backgroundColor: '#f8fafc',
+        border: '1px solid #e2e8f0',
+        borderRadius: '4px'
+      }}>
+        <div style={{ marginBottom: '8px' }}>
+          <span style={{
+            fontSize: '12px',
+            fontWeight: '600',
+            color: '#1B3058'
+          }}>
+            Mapping Result:
+          </span>
+        </div>
+        
+        <div style={{
+          display: 'flex',
+          justifyContent: 'space-between',
+          alignItems: 'center',
+          marginBottom: '8px'
+        }}>
+          <div>
+            <div style={{
+              fontSize: '13px',
+              fontWeight: '500',
+              color: '#374151'
+            }}>
+              {course.aucaCourseName}
+            </div>
+            <div style={{
+              fontSize: '11px',
+              color: '#6b7280'
+            }}>
+              {course.aucaCourseCode}
+            </div>
+          </div>
+          <div style={{
+            display: 'flex',
+            alignItems: 'center',
+            gap: '8px'
+          }}>
+            <span style={{
+              fontSize: '11px',
+              fontWeight: '600',
+              color: getStatusColor(course.creditTransferStatus),
+              backgroundColor: 'white',
+              padding: '2px 6px',
+              borderRadius: '10px',
+              border: `1px solid ${getStatusColor(course.creditTransferStatus)}`
+            }}>
+              {getStatusText(course.creditTransferStatus)}
+            </span>
+            <span style={{
+              fontSize: '12px',
+              fontWeight: '600',
+              color: '#1B3058'
+            }}>
+              {course.matchPercentage}% match
+            </span>
+          </div>
+        </div>
+
+        {course.aiReasoning && (
+          <div style={{
+            fontSize: '11px',
+            color: '#6b7280',
+            lineHeight: '1.4',
+            marginBottom: '6px'
+          }}>
+            <strong>System Analysis:</strong> {course.aiReasoning}
+          </div>
+        )}
+
+        {course.matchingTopics && course.matchingTopics.length > 0 && (
+          <div style={{
+            fontSize: '11px',
+            color: '#059669'
+          }}>
+            <strong>Matching topics:</strong> {course.matchingTopics.join(', ')}
+          </div>
+        )}
+
+        {course.missingTopics && course.missingTopics.length > 0 && (
+          <div style={{
+            fontSize: '11px',
+            color: '#dc2626',
+            marginTop: '4px'
+          }}>
+            <strong>Missing topics:</strong> {course.missingTopics.join(', ')}
+          </div>
+        )}
+      </div>
+    )}
+
+    {/* Remove Button */}
+    <div style={{ marginTop: '12px', textAlign: 'right' }}>
+      <button
+        type="button"
+        onClick={() => removePreviousCourse(index)}
+        disabled={mappingInProgress}
+        style={{
+          backgroundColor: '#dc2626',
+          color: 'white',
+          border: 'none',
+          borderRadius: '4px',
+          padding: '4px 8px',
+          fontSize: '11px',
+          fontWeight: '500',
+          cursor: 'pointer',
+          opacity: mappingInProgress ? 0.6 : 1
+        }}
+      >
+        Remove Course
+      </button>
+    </div>
+  </div>
+))}
+                        {/* end */}
                       </div>
 
                       {/* Enhanced Previous University Courses Section with AI Mapping */}
@@ -3297,28 +3561,22 @@ const closeMappingResults = () => {
             </label>
             <textarea
               placeholder="List the specific topics, concepts, and skills you learned in this course. Be as detailed as possible! 
-
-Examples:
-- For Programming: 'Variables, Data types, Control structures (if-else, loops), Functions, Arrays, Object-oriented programming, Classes and Objects, Inheritance, Polymorphism'
-- For Database: 'SQL queries, Table design, Normalization, Joins, Triggers, Stored procedures, Database design principles'
-- For Math: 'Linear algebra, Matrices, Calculus, Derivatives, Integration, Differential equations'
-
-The more detailed you are, the better our AI can match your courses!"
+The more detailed you are, the better our System can match your courses!"
               value={Array.isArray(course.contentStudied) ? course.contentStudied.join(', ') : course.contentStudied || ''}
               onChange={(e) => updatePreviousCourse(index, "contentStudied", e.target.value)}
               className="form-input content-input"
-              rows="6"
-              required
-              disabled={mappingInProgress}
+              // rows="6"
+              // required
+              // disabled={mappingInProgress}
               style={{ 
                 lineHeight: '1.6',
                 fontSize: '0.95rem'
               }}
             />
-            <p className="input-help" style={{ marginTop: '0.5rem' }}>
+            {/* <p className="input-help" style={{ marginTop: '0.5rem' }}>
               💡 <strong>Tip:</strong> Separate topics with commas. Include specific technologies, frameworks, 
               algorithms, or methodologies you learned. The more specific you are, the more accurate the AI mapping will be!
-            </p>
+            </p> */}
           </div>
 
           <div className="form-row" style={{ marginTop: '1rem' }}>
@@ -3343,7 +3601,7 @@ The more detailed you are, the better our AI can match your courses!"
               </label>
               <input
                 type="text"
-                placeholder="A, B+, 85%, etc."
+                placeholder=" eg:60% "
                 value={course.grade}
                 onChange={(e) => updatePreviousCourse(index, "grade", e.target.value)}
                 className="form-input"
@@ -3383,32 +3641,43 @@ The more detailed you are, the better our AI can match your courses!"
         </p>
       </div> */}
       
-      <button
-        type="button"
-        onClick={handleAICourseMapping}
-        className="upload-btn primary"
-        disabled={coursesStudiedPreviousUniversity.length === 0 || mappingInProgress}
-        style={{
-          background:'#1B3058',
-          // background: mappingInProgress ? '#6b7280' : 'rgba(255, 255, 255, 0.2)',
-          border: '2px solid rgba(255, 255, 255, 0.3)',
-          color: 'white',
-          padding: '1rem 2rem',
-          fontSize: '1.1rem',
-          fontWeight: '700',
-          minWidth: '200px',
-          backdropFilter: 'blur(10px)'
-        }}
-      >
-        {mappingInProgress ? (
-          <div className="loading-content">
-            <div className="loading-spinner"></div>
-            Mapping Courses...
-          </div>
-        ) : (
-          <> Map My Courses with System</>
-        )}
-      </button>
+    <button
+  type="button"
+  onClick={handleAICourseMapping}
+  disabled={coursesStudiedPreviousUniversity.length === 0 || mappingInProgress}
+  style={{
+    backgroundColor: mappingInProgress ? '#6b7280' : '#1B3058',
+    color: 'white',
+    border: 'none',
+    borderRadius: '6px',
+    padding: '12px 24px',
+    fontSize: '14px',
+    fontWeight: '600',
+    cursor: mappingInProgress ? 'not-allowed' : 'pointer',
+    minWidth: '200px',
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'center',
+    gap: '8px',
+    margin: '0 auto'
+  }}
+>
+  {mappingInProgress ? (
+    <>
+      <div style={{
+        width: '16px',
+        height: '16px',
+        border: '2px solid rgba(255, 255, 255, 0.3)',
+        borderTop: '2px solid white',
+        borderRadius: '50%',
+        animation: 'spin 1s linear infinite'
+      }}></div>
+      Mapping Courses...
+    </>
+  ) : (
+    <>🤖 Map My Courses with AI</>
+  )}
+</button>
       
       <p style={{ 
         margin: '1rem 0 0 0', 
@@ -3456,8 +3725,8 @@ The more detailed you are, the better our AI can match your courses!"
         borderBottom: '2px solid #f1f5f9',
         paddingBottom: '1rem'
       }}>
-        <h3 style={{ margin: '0', color: '#1e40af' }}>
-          🎉 Course Mapping Results
+        <h3 style={{ margin: '0', color: '#1B3058' }}>
+           Course Mapping Results
         </h3>
         <button
           onClick={closeMappingResults}
@@ -3509,8 +3778,8 @@ The more detailed you are, the better our AI can match your courses!"
 
       {/* Academic Plan */}
       <div style={{ marginBottom: '2rem' }}>
-        <h4 style={{ color: '#1e40af', marginBottom: '1rem' }}>
-          📊 Your Academic Plan
+        <h4 style={{ color: '#1B3058', marginBottom: '1rem' }}>
+           Your Academic Plan
         </h4>
         <div style={{ 
           background: '#f8fafc', 
@@ -3521,15 +3790,15 @@ The more detailed you are, the better our AI can match your courses!"
           <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))', gap: '1rem' }}>
             <div>
               <strong>Suggested Start Level:</strong><br/>
-              <span style={{ color: '#3b82f6' }}>{mappingResults.academicPlan.suggestedStartLevel}</span>
+              <span style={{ color: '#1B3058' }}>{mappingResults.academicPlan.suggestedStartLevel}</span>
             </div>
             <div>
               <strong>Transfer Credits:</strong><br/>
-              <span style={{ color: '#16a34a' }}>{mappingResults.academicPlan.transferCredits} credits</span>
+              <span style={{ color: '#1B3058' }}>{mappingResults.academicPlan.transferCredits} credits</span>
             </div>
             <div>
               <strong>Completion:</strong><br/>
-              <span style={{ color: '#7c3aed' }}>{mappingResults.academicPlan.completionPercentage}% complete</span>
+              <span style={{ color: '#1B3058' }}>{mappingResults.academicPlan.completionPercentage}% complete</span>
             </div>
           </div>
         </div>
@@ -3537,8 +3806,8 @@ The more detailed you are, the better our AI can match your courses!"
 
       {/* Detailed Mappings */}
       <div>
-        <h4 style={{ color: '#1e40af', marginBottom: '1rem' }}>
-          📚 Course-by-Course Analysis
+        <h4 style={{ color: '#1B3058', marginBottom: '1rem' }}>
+           Course-by-Course Analysis
         </h4>
         <div style={{ maxHeight: '400px', overflow: 'auto' }}>
           {mappingResults.mappingResults.map((result, index) => (
@@ -3564,7 +3833,7 @@ The more detailed you are, the better our AI can match your courses!"
                   borderRadius: '12px',
                   fontSize: '0.8rem',
                   fontWeight: 'bold',
-                  background: result.creditTransferStatus === 'full_credit' ? '#16a34a' :
+                  background: result.creditTransferStatus === 'full_credit' ? '#1B3058' :
                               result.creditTransferStatus === 'partial_credit' ? '#d97706' : '#dc2626',
                   color: 'white'
                 }}>
@@ -3599,7 +3868,7 @@ The more detailed you are, the better our AI can match your courses!"
         borderRadius: '8px',
         textAlign: 'center'
       }}>
-        <p style={{ margin: '0', color: '#1e40af' }}>
+        <p style={{ margin: '0', color: '#1B3058' }}>
           🎓 <strong>Great news!</strong> You can skip {mappingResults.summary.coursesAccepted} courses and 
           start at {mappingResults.academicPlan.suggestedStartLevel}. 
           Complete your profile to get personalized academic recommendations!
