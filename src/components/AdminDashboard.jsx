@@ -13,6 +13,7 @@ import { useNavigate, useLocation } from "react-router-dom";
 import { FaFilePdf, FaFileExcel, FaDownload, FaChartBar } from "react-icons/fa";
 
 
+
 // Add these constants after your imports
 const COLORS = ["#0088FE", "#00C49F", "#FFBB28", "#FF8042", "#8884D8", "#82CA9D", "#FFC658", "#FF6B6B", "#4ECDC4", "#45B7D1"];
 const BAR_COLORS = ["#8884D8", "#82CA9D", "#FFC658", "#FF7C7C", "#8DD1E1", "#D084D0", "#FFB347", "#87D68D", "#FFB6C1", "#20B2AA"];
@@ -757,6 +758,7 @@ const handleGenerateUserReport = async (format = 'excel') => {
       advisor: <span className="role-badge advisor">Advisor</span>,
       student: <span className="role-badge student">Student</span>
     };
+    
     return badges[role] || <span className="role-badge">{role}</span>;
   };
 
@@ -767,23 +769,44 @@ const handleGenerateUserReport = async (format = 'excel') => {
   };
 
   // Filter users based on active tab
-  const getFilteredUsers = () => {
-    let filtered = users;
-    
-    switch (activeTab) {
-      case 'users':
-        // Show all users
-        break;
-      case 'roles':
-        // Show users with role management focus
-        filtered = users.filter(user => user.role === 'advisor' || user.role === 'admin');
-        break;
-      default:
-        break;
-    }
-    
-    return filtered;
-  };
+const getFilteredUsers = () => {
+  let filtered = [...users];
+
+  // Filter by active tab
+  switch (activeTab) {
+    case 'users':
+      // Show all users
+      break;
+    case 'roles':
+      // Only advisors and admins
+      filtered = filtered.filter(
+        (user) => user.role?.toLowerCase() === 'advisor' || user.role?.toLowerCase() === 'admin'
+      );
+      break;
+    default:
+      break;
+  }
+
+  // Filter by role dropdown
+  if (filterRole && filterRole !== 'all') {
+    filtered = filtered.filter(
+      (user) => user.role?.toLowerCase() === filterRole.toLowerCase()
+    );
+  }
+
+  // Filter by search
+  if (searchTerm) {
+    filtered = filtered.filter((user) =>
+      [user.name, user.email]
+        .filter(Boolean) // ignore nulls
+        .some((field) => field.toLowerCase().includes(searchTerm.toLowerCase()))
+    );
+  }
+
+  return filtered; // just return the filtered array
+};
+
+
   const handleEditUser = async (e) => {
     e.preventDefault();
     try {
@@ -1588,6 +1611,8 @@ const handleLogoutBtn = () => {
       'Bachelor Of Theology': ['Bachelor of Theology']
     };
     return departments[faculty] || [];
+    
+
   };
 
   // Loading screen for overview fetch
@@ -1948,7 +1973,7 @@ const handleLogoutBtn = () => {
           {(activeTab === 'users' || activeTab === 'roles') && (
             <div className="tab-content">
               {/* Enhanced Filters Section */}
-              <h2 style={{textAlign:'center'}}>Table Of All System Users</h2>
+              <h2 style={{textAlign:'center'}}>All Users</h2>
                <p style={{ margin: 0, color: '#64748b' }}>
                 {/* Manage users, permissions, and access controls */}
               </p>
@@ -2024,7 +2049,7 @@ const handleLogoutBtn = () => {
                       onChange={(e) => setFilterRole(e.target.value)}
                       className="filter-select"
                     >
-                      <option value="all">All Roles</option>
+                      <option value="all">All users</option>
                       <option value="student">Students</option>
                       <option value="advisor">Advisors</option>
                       <option value="admin">Admins</option>
@@ -2045,7 +2070,7 @@ const handleLogoutBtn = () => {
                   
 
                  <button
-  onClick={() => navigate('/login')} // Redirect to login page
+  onClick={() => navigate('/Signup')} // Redirect to login page
   style={{
     padding: '0.75rem 1rem',
     background: 'linear-gradient(135deg, #1e293b, #1e293b)',
@@ -2091,118 +2116,103 @@ const handleLogoutBtn = () => {
               }}>
                 
                 <table style={{ width: '100%', borderCollapse: 'collapse' }}>
-                  <thead style={{ background: '#f8fafc', borderBottom: '1px solid #e2e8f0' }}>
-                    <tr>
-                      <th style={{ padding: '1rem', textAlign: 'left', fontWeight: '600' }}>
-                        <input
-                          type="checkbox"
-                          checked={selectedUsers.length === getFilteredUsers().length && getFilteredUsers().length > 0}
-                          onChange={handleSelectAllUsers}
-                        />
+  <thead style={{ background: '#f8fafc', borderBottom: '1px solid #e2e8f0' }}>
+    <tr>
+      <th style={{ padding: '1rem', textAlign: 'left', fontWeight: '600' }}>
+        <input
+          type="checkbox"
+          checked={selectedUsers.length === getFilteredUsers().length && getFilteredUsers().length > 0}
+          onChange={handleSelectAllUsers}
+        />
+      </th>
+      <th style={{ padding: '1rem', textAlign: 'left', fontWeight: '600' }}>User</th>
+      <th style={{ padding: '1rem', textAlign: 'left', fontWeight: '600' }}>Role</th>
+      <th style={{ padding: '1rem', textAlign: 'left', fontWeight: '600' }}>Status</th>
+      <th style={{ padding: '1rem', textAlign: 'left', fontWeight: '600' }}>Created</th>
+      <th style={{ padding: '1rem', textAlign: 'left', fontWeight: '600' }}>Actions</th>
+    </tr>
+  </thead>
+  <tbody>
+    {getFilteredUsers().map((user) => (
+      <tr key={user._id} style={{ borderBottom: '1px solid #f1f5f9' }}>
+        <td style={{ padding: '1rem' }}>
+          <input
+            type="checkbox"
+            checked={selectedUsers.includes(user._id)}
+            onChange={() => handleSelectUser(user._id)}
+          />
+        </td>
+        <td style={{ padding: '1rem' }}>
+          <div>
+            <div style={{ fontWeight: '500', color: '#1e293b' }}>{user.name}</div>
+            <div style={{ fontSize: '0.875rem', color: '#64748b' }}>{user.email}</div>
+            {user.department && (
+              <div style={{ fontSize: '0.75rem', color: '#64748b' }}>{user.department}</div>
+            )}
+          </div>
+        </td>
+        <td style={{ padding: '1rem', color: 'black', fontWeight: '500', fontSize: '0.75rem' }}>
+          {user.role ? user.role.charAt(0).toUpperCase() + user.role.slice(1) : 'Unknown'}
+        </td>
+        <td style={{ padding: '1rem', color: 'black', fontWeight: '500', fontSize: '0.75rem' }}>
+          {user.isActive ? 'Active' : 'Inactive'}
+        </td>
+        <td style={{ padding: '1rem', fontSize: '0.875rem', color: '#64748b' }}>
+          {formatDate(user.createdAt)}
+        </td>
+        <td style={{ padding: '1rem' }}>
+          <div style={{ display: 'flex', gap: '0.5rem' }}>
+            <button
+              onClick={() => openEditUser(user)}
+              style={{
+                padding: '0.25rem 0.5rem',
+                background: '#fbbf24',
+                color: 'white',
+                border: 'none',
+                borderRadius: '4px',
+                cursor: 'pointer',
+                fontSize: '0.75rem'
+              }}
+            >
+              ✏️ Edit
+            </button>
+            {user.role === 'student' && (
+              <button
+                onClick={() => handleAssignAdvisor(user._id)}
+                style={{
+                  padding: '0.25rem 0.5rem',
+                  background: '#059669',
+                  color: 'white',
+                  border: 'none',
+                  borderRadius: '4px',
+                  cursor: 'pointer',
+                  fontSize: '0.75rem'
+                }}
+              >
+                👨‍🏫 Advisor
+              </button>
+            )}
+            <button
+              onClick={() => handleDeleteUser(user._id)}
+              style={{
+                padding: '0.25rem 0.5rem',
+                background: '#dc2626',
+                color: 'white',
+                border: 'none',
+                borderRadius: '4px',
+                cursor: 'pointer',
+                fontSize: '0.75rem'
+              }}
+            >
+              🗑️ Delete
+            </button>
+          </div>
+        </td>
+      </tr>
+    ))}
+  </tbody>
+</table>
 
-                      </th>
-                      <th style={{ padding: '1rem', textAlign: 'left', fontWeight: '600' }}>User</th>
-                      <th style={{ padding: '1rem', textAlign: 'left', fontWeight: '600' }}>Role</th>
-                      <th style={{ padding: '1rem', textAlign: 'left', fontWeight: '600' }}>Status</th>
-                      <th style={{ padding: '1rem', textAlign: 'left', fontWeight: '600' }}>Created</th>
-                      <th style={{ padding: '1rem', textAlign: 'left', fontWeight: '600' }}>Actions</th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    
-                    {getFilteredUsers().map((user, index) => (
-                      <tr key={user._id} style={{ borderBottom: '1px solid #f1f5f9' }}>
-                        <td style={{ padding: '1rem' }}>
-                          <input
-                            type="checkbox"
-                            checked={selectedUsers.includes(user._id)}
-                            onChange={() => handleSelectUser(user._id)}
-                          />
-                        </td>
-                        <td style={{ padding: '1rem' }}>
-                          <div>
-                            <div style={{ fontWeight: '500', color: '#1e293b' }}>{user.name}</div>
-                            <div style={{ fontSize: '0.875rem', color: '#64748b' }}>{user.email}</div>
-                            {user.department && (
-                              <div style={{ fontSize: '0.75rem', color: '#64748b' }}>{user.department}</div>
-                            )}
-                          </div>
-                        </td>
-                        <td style={{ padding: '1rem' }}>
-                          {getRoleBadge(user.role)}
-                        </td>
-                        <td style={{ padding: '1rem' }}>
-                          {getUserStatusBadge(user.isActive)}
-                        </td>
-                        <td style={{ padding: '1rem', fontSize: '0.875rem', color: '#64748b' }}>
-                          {formatDate(user.createdAt)}
-                        </td>
-                        <td style={{ padding: '1rem' }}>
-                          <div style={{ display: 'flex', gap: '0.5rem' }}>
-                            <button
-                              onClick={() => openUserDetails(user)}
-                              style={{
-                                padding: '0.25rem 0.5rem',
-                                background: '#dbeafe',
-                                color: '#1d4ed8',
-                                border: 'none',
-                                borderRadius: '4px',
-                                cursor: 'pointer',
-                                fontSize: '0.75rem'
-                              }}
-                            >
-                              👁️ View
-                            </button>
-                            <button
-                              onClick={() => openEditUser(user)}
-                              style={{
-                                padding: '0.25rem 0.5rem',
-                                background: '#fbbf24',
-                                color: 'white',
-                                border: 'none',
-                                borderRadius: '4px',
-                                cursor: 'pointer',
-                                fontSize: '0.75rem'
-                              }}
-                            >
-                              ✏️ Edit
-                            </button>
-                            {user.role === 'student' && (
-                              <button
-                                onClick={() => handleAssignAdvisor(user._id)}
-                                style={{
-                                  padding: '0.25rem 0.5rem',
-                                  background: '#059669',
-                                  color: 'white',
-                                  border: 'none',
-                                  borderRadius: '4px',
-                                  cursor: 'pointer',
-                                  fontSize: '0.75rem'
-                                }}
-                              >
-                                👨‍🏫 Advisor
-                              </button>
-                            )}
-                            <button
-                              onClick={() => handleDeleteUser(user._id)}
-                              style={{
-                                padding: '0.25rem 0.5rem',
-                                background: '#dc2626',
-                                color: 'white',
-                                border: 'none',
-                                borderRadius: '4px',
-                                cursor: 'pointer',
-                                fontSize: '0.75rem'
-                              }}
-                            >
-                              🗑️ Delete
-                            </button>
-                          </div>
-                        </td>
-                      </tr>
-                    ))}
-                  </tbody>
-                </table>
 {/* ADD THIS IN YOUR USERS TAB AFTER FILTERS */}
 {selectedUsers.length > 0 && (
   <div className="selected-users-reports" style={{ 

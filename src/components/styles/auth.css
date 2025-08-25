@@ -1,5 +1,7 @@
 /* Compact Blue & White Auth Design with Reduced Height */
-
+.auth-container {
+  background: #ffffff; 
+}
 * {
   margin: 0;
   padding: 0;

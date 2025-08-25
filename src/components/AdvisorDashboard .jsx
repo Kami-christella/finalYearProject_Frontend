@@ -687,6 +687,12 @@ useEffect(() => {
   
   try {
     const token = localStorage.getItem('token');
+    
+    if (!token) {
+      Notify.failure('Please log in again');
+      return;
+    }
+    
     const response = await fetch(`http://localhost:5000/api/appointments/confirm`, {
       method: 'PUT',
       headers: { 
@@ -701,7 +707,7 @@ useEffect(() => {
     
     if (response.ok) {
       Notify.success('Appointment confirmed successfully');
-      fetchAppointments(); // Refresh the appointments list
+      fetchAppointments();
     } else {
       const error = await response.json();
       throw new Error(error.message || 'Failed to confirm appointment');

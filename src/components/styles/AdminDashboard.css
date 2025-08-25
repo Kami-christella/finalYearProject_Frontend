@@ -920,3 +920,18 @@
   }
 }
 
+.status-badge.active {
+  background-color: #059669; /* green */
+  color: white;
+  padding: 2px 6px;
+  border-radius: 4px;
+  font-size: 0.75rem;
+}
+
+.status-badge.inactive {
+  background-color: #f87171; /* red */
+  color: white;
+  padding: 2px 6px;
+  border-radius: 4px;
+  font-size: 0.75rem;
+}

@@ -963,7 +963,7 @@ const Login = () => {
   const handleSignupRedirect = () => {
     window.location.href = '/signup';
   };
-
+ 
   return (
     <div className="auth-container">
       <div className="auth-bg">
