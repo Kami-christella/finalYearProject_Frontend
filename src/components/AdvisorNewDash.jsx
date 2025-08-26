@@ -27,15 +27,14 @@ function NewDash() {
     const tokenFromStorage = localStorage.getItem('userToken');
 
     if (tokenFromStorage) {
-      try {
-        // Parse the JSON string to get the object with user data
+      
         const userData = JSON.parse(tokenFromStorage);
         
         // Check if we have a name directly in the user data
         if (userData.name) {
           setUserName(userData.name);
         } 
-        // Try to get name from the token if it exists
+       
         else if (userData.token) {
           try {
             const base64Url = userData.token.split('.')[1];
