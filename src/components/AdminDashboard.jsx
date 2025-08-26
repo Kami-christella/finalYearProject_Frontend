@@ -160,7 +160,7 @@ const [reportForm, setReportForm] = useState({
     name: '',
     email: '',
     password: '',
-    role: 'student',
+    userRole: 'user',
     phone: '',
     department: ''
   });
@@ -168,7 +168,7 @@ const [reportForm, setReportForm] = useState({
   const [editUserForm, setEditUserForm] = useState({
     name: '',
     email: '',
-    role: '',
+    userRole: '',
     phone: '',
     department: '',
     isActive: true
@@ -386,7 +386,7 @@ const fetchDashboardData = async () => {
       const params = new URLSearchParams({
         page: page.toString(),
         limit: pagination.itemsPerPage.toString(),
-        role: filterRole,
+        userRole: filterRole,
         searchTerm,
         isActive: filterStatus
       });
@@ -515,7 +515,7 @@ const fetchDashboardData = async () => {
           userIds: selectedUsers,
           action: bulkOperationForm.action,
           data: bulkOperationForm.action === 'assignRole' ? {
-            role: bulkOperationForm.role,
+            userRole: bulkOperationForm.userRole,
             department: bulkOperationForm.department
           } : undefined
         })
@@ -730,7 +730,7 @@ const handleGenerateUserReport = async (format = 'excel') => {
     setEditUserForm({
       name: user.name,
       email: user.email,
-      role: user.role,
+      userRole: user.userRole,
       phone: user.phone || '',
       department: user.department || '',
       isActive: user.isActive
@@ -780,7 +780,7 @@ const getFilteredUsers = () => {
     case 'roles':
       // Only advisors and admins
       filtered = filtered.filter(
-        (user) => user.role?.toLowerCase() === 'advisor' || user.role?.toLowerCase() === 'admin'
+        (user) => user.userRole?.toLowerCase() === 'advisor' || user.userRole?.toLowerCase() === 'admin'
       );
       break;
     default:
@@ -790,7 +790,7 @@ const getFilteredUsers = () => {
   // Filter by role dropdown
   if (filterRole && filterRole !== 'all') {
     filtered = filtered.filter(
-      (user) => user.role?.toLowerCase() === filterRole.toLowerCase()
+      (user) => user.userRole?.toLowerCase() === filterRole.toLowerCase()
     );
   }
 
@@ -2127,7 +2127,7 @@ const handleLogoutBtn = () => {
       </th>
       <th style={{ padding: '1rem', textAlign: 'left', fontWeight: '600' }}>User</th>
       <th style={{ padding: '1rem', textAlign: 'left', fontWeight: '600' }}>Role</th>
-      <th style={{ padding: '1rem', textAlign: 'left', fontWeight: '600' }}>Status</th>
+      {/* <th style={{ padding: '1rem', textAlign: 'left', fontWeight: '600' }}>Status</th> */}
       <th style={{ padding: '1rem', textAlign: 'left', fontWeight: '600' }}>Created</th>
       <th style={{ padding: '1rem', textAlign: 'left', fontWeight: '600' }}>Actions</th>
     </tr>
@@ -2152,11 +2152,11 @@ const handleLogoutBtn = () => {
           </div>
         </td>
         <td style={{ padding: '1rem', color: 'black', fontWeight: '500', fontSize: '0.75rem' }}>
-          {user.role ? user.role.charAt(0).toUpperCase() + user.role.slice(1) : 'Unknown'}
+          {user.userRole ? user.userRole.charAt(0).toUpperCase() + user.userRole.slice(1) : 'Unknown'}
         </td>
-        <td style={{ padding: '1rem', color: 'black', fontWeight: '500', fontSize: '0.75rem' }}>
+        {/* <td style={{ padding: '1rem', color: 'black', fontWeight: '500', fontSize: '0.75rem' }}>
           {user.isActive ? 'Active' : 'Inactive'}
-        </td>
+        </td> */}
         <td style={{ padding: '1rem', fontSize: '0.875rem', color: '#64748b' }}>
           {formatDate(user.createdAt)}
         </td>
@@ -2176,7 +2176,7 @@ const handleLogoutBtn = () => {
             >
               ✏️ Edit
             </button>
-            {user.role === 'student' && (
+            {user.userRole === 'user' && (
               <button
                 onClick={() => handleAssignAdvisor(user._id)}
                 style={{
@@ -2599,20 +2599,20 @@ const handleLogoutBtn = () => {
       onClick={() => handleGenerateAnalyticsReport('pdf')}
       disabled={reportLoading}
       style={{
-        padding: '0.75rem 1.5rem',
-        background: '#dc2626',
-        color: 'white',
-        border: 'none',
-        borderRadius: '8px',
-        cursor: reportLoading ? 'not-allowed' : 'pointer',
-        display: 'flex',
-        alignItems: 'center',
-        gap: '0.5rem',
-        fontWeight: '500',
-        fontSize: '0.875rem'
+        // padding: '0.75rem 1.5rem',
+        // // background: '#dc2626',
+        // color: 'white',
+        // border: 'none',
+        // borderRadius: '8px',
+        // cursor: reportLoading ? 'not-allowed' : 'pointer',
+        // display: 'flex',
+        // alignItems: 'center',
+        // gap: '0.5rem',
+        // fontWeight: '500',
+        // fontSize: '0.875rem'
       }}
     >
-      <FaFilePdf /> PDF Report
+      {/* <FaFilePdf /> PDF Report */}
     </button>
   </div>
 </div>

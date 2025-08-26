@@ -687,6 +687,7 @@ useEffect(() => {
   
   try {
     const token = localStorage.getItem('token');
+    console.log('Token:', token); // Debug line
     
     if (!token) {
       Notify.failure('Please log in again');
