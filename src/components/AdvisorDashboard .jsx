@@ -149,6 +149,75 @@ const [appointmentForm, setAppointmentForm] = useState({
       }
     }
   }, []);
+  // Format time for calendar display (12-hour format)
+  const formatTimeForCalendar = (timeString) => {
+    if (!timeString) return 'No Time';
+    
+    try {
+      const [hours, minutes] = timeString.split(':');
+      const hour24 = parseInt(hours);
+      const hour12 = hour24 === 0 ? 12 : hour24 > 12 ? hour24 - 12 : hour24;
+      const ampm = hour24 >= 12 ? 'PM' : 'AM';
+      
+      return `${hour12}:${minutes} ${ampm}`;
+    } catch (error) {
+      return timeString; // Return original if parsing fails
+    }
+  };
+
+  // Enhanced function to get appointments with time sorting for a specific date
+  const getAppointmentsForDateSorted = (date) => {
+    return appointments
+      .filter(appointment => {
+        const appointmentDate = new Date(appointment.date);
+        return appointmentDate.toDateString() === date.toDateString();
+      })
+      .sort((a, b) => {
+        // Sort by time
+        const timeA = a.startTime || a.time || '00:00';
+        const timeB = b.startTime || b.time || '00:00';
+        return timeA.localeCompare(timeB);
+      });
+  };
+
+  // Get time range display
+  const getTimeRangeDisplay = (appointment) => {
+    const startTime = appointment.startTime || appointment.time;
+    const endTime = appointment.endTime;
+    
+    if (!startTime) return 'No time set';
+    
+    if (endTime && endTime !== startTime) {
+      return `${formatTimeForCalendar(startTime)} - ${formatTimeForCalendar(endTime)}`;
+    } else {
+      const duration = appointment.duration || 30;
+      const [hours, minutes] = startTime.split(':');
+      const startDate = new Date();
+      startDate.setHours(parseInt(hours), parseInt(minutes));
+      const endDate = new Date(startDate.getTime() + duration * 60000);
+      const calculatedEndTime = `${endDate.getHours().toString().padStart(2, '0')}:${endDate.getMinutes().toString().padStart(2, '0')}`;
+      
+      return `${formatTimeForCalendar(startTime)} - ${formatTimeForCalendar(calculatedEndTime)}`;
+    }
+  };
+
+  // Get status color for appointments
+  const getStatusColor = (status) => {
+    switch (status) {
+      case 'available':
+        return '#28a745'; // Green
+      case 'booked':
+        return '#007bff'; // Blue
+      case 'completed':
+        return '#6c757d'; // Gray
+      case 'cancelled':
+        return '#dc3545'; // Red
+      case 'in-progress':
+        return '#fd7e14'; // Orange
+      default:
+        return '#6c757d'; // Default gray
+    }
+  };
 
   // ADD THIS: Get user name from localStorage
 useEffect(() => {
@@ -1519,6 +1588,7 @@ const handleLogoutBtn = () => {
                         <div key={day} className="calendar-day-header">{day}</div>
                       ))}
                     </div>
+                    
                     <div className="calendar-days">
                       {generateCalendarDays(currentCalendarDate).map((day, index) => (
                         <div 
@@ -1527,17 +1597,8 @@ const handleLogoutBtn = () => {
                           onClick={() => handleCalendarDayClick(day.date)}
                         >
                           <span className="day-number">{day.date.getDate()}</span>
+                        
                           {/* <div className="day-appointments">
-                            {getAppointmentsForDate(day.date).slice(0, 3).map((apt, i) => (
-                              <div key={i} className={`mini-appointment ${apt.status}`}>
-                                {apt.time} - {apt.status === 'booked' ? apt.studentName : 'Available'}
-                              </div>
-                            ))}
-                            {getAppointmentsForDate(day.date).length > 3 && (
-                              <div className="more-appointments">+{getAppointmentsForDate(day.date).length - 3} more</div>
-                            )}
-                          </div> */}
-                          <div className="day-appointments">
   {getAppointmentsForDate(day.date).slice(0, 3).map((apt, i) => (
     <div key={i} className={`mini-appointment ${apt.status}`}>
       {apt.status === 'booked' ? (
@@ -1552,7 +1613,34 @@ const handleLogoutBtn = () => {
   {getAppointmentsForDate(day.date).length > 3 && (
     <div className="more-appointments">+{getAppointmentsForDate(day.date).length - 3} more</div>
   )}
+</div> */}
+
+<div className="day-appointments">
+  {getAppointmentsForDate(day.date).slice(0, 3).map((apt, i) => (
+    <div key={i} className={`mini-appointment ${apt.status}`} title={`${apt.startTime || apt.time} - ${apt.status} ${apt.student?.name || apt.studentName || ''}`}>
+      <div className="appointment-time-display">
+        {formatTimeForCalendar(apt.startTime || apt.time)}
+      </div>
+      <div className="appointment-status-display">
+        {apt.status === 'booked' ? (
+          <span className="booked-label">
+            {apt.student?.name?.split(' ')[0] || apt.studentName?.split(' ')[0] || 'Booked'}
+          </span>
+        ) : apt.status === 'available' ? (
+          <span className="available-label">Available</span>
+        ) : (
+          <span className="other-status-label">{apt.status}</span>
+        )}
+      </div>
+    </div>
+  ))}
+  {getAppointmentsForDate(day.date).length > 3 && (
+    <div className="more-appointments" title={`${getAppointmentsForDate(day.date).length - 3} more appointments on this day`}>
+      +{getAppointmentsForDate(day.date).length - 3} more
+    </div>
+  )}
 </div>
+
                           {/* end */}
                         </div>
                       ))}
