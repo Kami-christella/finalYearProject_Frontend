@@ -834,8 +834,8 @@ const handleEditUser = async (e) => {
     
     console.log('Sending update data:', updateData); // Debug log
     
-    //const response = await fetch(`http://localhost:5000/users/updateuser//${selectedUser._id}`, {
-     const response = await fetch(`http://localhost:5000/api/admin/users/${selectedUser._id}/update`, {
+    const response = await fetch(`http://localhost:5000/api/users/updateuser/${selectedUser._id}`, {
+     
       method: 'PUT',
       headers: {
         'Content-Type': 'application/json',
@@ -843,6 +843,7 @@ const handleEditUser = async (e) => {
       },
       body: JSON.stringify(updateData)
     });
+    console.log("id",selectedUser._id)
 
     console.log('Response status:', response.status); // Debug log
     
