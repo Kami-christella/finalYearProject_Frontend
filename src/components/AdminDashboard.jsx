@@ -735,6 +735,14 @@ const handleGenerateUserReport = async (format = 'excel') => {
       department: user.department || '',
       isActive: user.isActive
     });
+     console.log('Edit form data:', { // Debug log
+    name: user.name,
+    email: user.email,
+    userRole: user.userRole || user.role,
+    phone: user.phone,
+    department: user.department,
+    isActive: user.isActive
+  });
     setShowEditUserModal(true);
   };
 
@@ -807,31 +815,91 @@ const getFilteredUsers = () => {
 };
 
 
-  const handleEditUser = async (e) => {
-    e.preventDefault();
-    try {
-      const token = localStorage.getItem('token');
-      const response = await fetch(`http://localhost:5000/api/admin/users/${selectedUser._id}/update`, {
-        method: 'PUT',
-        headers: {
-          'Content-Type': 'application/json',
-          'Authorization': `Bearer ${token}`
-        },
-        body: JSON.stringify(editUserForm)
-      });
+const handleEditUser = async (e) => {
+  e.preventDefault();
+  console.log('Submitting edit form:', editUserForm); // Debug log
+  
+  try {
+    const token = localStorage.getItem('token');
+    
+    // Prepare the data to send
+    const updateData = {
+      name: editUserForm.name,
+      email: editUserForm.email,
+      userRole: editUserForm.userRole, // Make sure this matches what your backend expects
+      phone: editUserForm.phone,
+      department: editUserForm.department,
+      isActive: editUserForm.isActive
+    };
+    
+    console.log('Sending update data:', updateData); // Debug log
+    
+    //const response = await fetch(`http://localhost:5000/users/updateuser//${selectedUser._id}`, {
+     const response = await fetch(`http://localhost:5000/api/admin/users/${selectedUser._id}/update`, {
+      method: 'PUT',
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${token}`
+      },
+      body: JSON.stringify(updateData)
+    });
 
-      if (response.ok) {
-        Notify.success('User updated successfully!');
-        setShowEditUserModal(false);
-        fetchUsers();
-      } else {
-        const error = await response.json();
-        Notify.failure(error.message || 'Failed to update user');
-      }
-    } catch (error) {
-      Notify.failure('Error updating user');
+    console.log('Response status:', response.status); // Debug log
+    
+    if (response.ok) {
+      const result = await response.json();
+      console.log('Update result:', result); // Debug log
+      
+      Notify.success('User updated successfully!');
+      setShowEditUserModal(false);
+      
+      // Reset form
+      setEditUserForm({
+        name: '',
+        email: '',
+        userRole: '',
+        phone: '',
+        department: '',
+        isActive: true
+      });
+      
+      fetchUsers(); // Refresh the users list
+    } else {
+      const error = await response.json();
+      console.error('Update error:', error); // Debug log
+      Notify.failure(error.message || 'Failed to update user');
     }
-  };
+  } catch (error) {
+    console.error('Request error:', error); // Debug log
+    Notify.failure('Error updating user: ' + error.message);
+  }
+};
+
+  // const handleEditUser = async (e) => {
+  //   e.preventDefault();
+  //   try {
+  //     const token = localStorage.getItem('token');
+  //     const response = await fetch(`http://localhost:5000/api/admin/users/${selectedUser._id}/update`, {
+  //       method: 'PUT',
+  //       headers: {
+  //         'Content-Type': 'application/json',
+  //         'Authorization': `Bearer ${token}`
+  //       },
+  //       body: JSON.stringify(editUserForm)
+  //     });
+
+  //     if (response.ok) {
+  //       Notify.success('User updated successfully!');
+  //       setShowEditUserModal(false);
+  //       fetchUsers();
+  //     } else {
+  //       const error = await response.json();
+  //       Notify.failure(error.message || 'Failed to update user');
+  //     }
+  //   } catch (error) {
+  //     Notify.failure('Error updating user');
+  //   }
+  // };
 
   // Add function to close dropdown when clicking outside
   useEffect(() => {
@@ -2166,7 +2234,7 @@ const handleLogoutBtn = () => {
               onClick={() => openEditUser(user)}
               style={{
                 padding: '0.25rem 0.5rem',
-                background: '#fbbf24',
+                background: '#1B3058',
                 color: 'white',
                 border: 'none',
                 borderRadius: '4px',
@@ -2176,7 +2244,7 @@ const handleLogoutBtn = () => {
             >
               ✏️ Edit
             </button>
-            {user.userRole === 'user' && (
+            {/* {user.userRole === 'user' && (
               <button
                 onClick={() => handleAssignAdvisor(user._id)}
                 style={{
@@ -2191,7 +2259,7 @@ const handleLogoutBtn = () => {
               >
                 👨‍🏫 Advisor
               </button>
-            )}
+            )} */}
             <button
               onClick={() => handleDeleteUser(user._id)}
               style={{
@@ -2212,7 +2280,106 @@ const handleLogoutBtn = () => {
     ))}
   </tbody>
 </table>
+{/* Edit User Modal - Add this before the closing </div> */}
+{showEditUserModal && selectedUser && (
+  <div className="modal-overlay">
+    <div className="modal-content">
+      <div className="modal-header">
+        <h2>Edit User: {selectedUser.name}</h2>
+        <button onClick={() => setShowEditUserModal(false)} className="modal-close">✕</button>
+      </div>
 
+      <form onSubmit={handleEditUser} className="user-form">
+        <div className="form-row">
+          <div className="form-group">
+            <label className="form-label">Name *</label>
+            <input
+              type="text"
+              value={editUserForm.name}
+              onChange={(e) => setEditUserForm({ ...editUserForm, name: e.target.value })}
+              className="form-input"
+              required
+            />
+          </div>
+          <div className="form-group">
+            <label className="form-label">Email *</label>
+            <input
+              type="email"
+              value={editUserForm.email}
+              onChange={(e) => setEditUserForm({ ...editUserForm, email: e.target.value })}
+              className="form-input"
+              required
+            />
+          </div>
+        </div>
+
+        <div className="form-row">
+          <div className="form-group">
+            <label className="form-label">Role *</label>
+            <select
+              value={editUserForm.userRole}
+              onChange={(e) => setEditUserForm({ ...editUserForm, userRole: e.target.value })}
+              className="form-select"
+              required
+            >
+              <option value="">Select Role</option>
+              <option value="user">Student</option>
+              <option value="advisor">Advisor</option>
+              <option value="admin">Admin</option>
+            </select>
+          </div>
+          <div className="form-group">
+            <label className="form-label">Department</label>
+            <input
+              type="text"
+              value={editUserForm.department}
+              onChange={(e) => setEditUserForm({ ...editUserForm, department: e.target.value })}
+              className="form-input"
+              placeholder="Department (optional)"
+            />
+          </div>
+        </div>
+
+        <div className="form-row">
+          <div className="form-group">
+            <label className="form-label">Phone</label>
+            <input
+              type="tel"
+              value={editUserForm.phone}
+              onChange={(e) => setEditUserForm({ ...editUserForm, phone: e.target.value })}
+              className="form-input"
+              placeholder="Phone number (optional)"
+            />
+          </div>
+          <div className="form-group">
+            <label className="form-label">Status</label>
+            <select
+              value={editUserForm.isActive}
+              onChange={(e) => setEditUserForm({ ...editUserForm, isActive: e.target.value === 'true' })}
+              className="form-select"
+            >
+              <option value="true">Active</option>
+              <option value="false">Inactive</option>
+            </select>
+          </div>
+        </div>
+
+        <div className="modal-actions">
+          <button 
+            type="button" 
+            onClick={() => setShowEditUserModal(false)} 
+            className="btn-cancel"
+          >
+            Cancel
+          </button>
+          <button type="submit" className="btn-submit">
+            Update User
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+)}
 {/* ADD THIS IN YOUR USERS TAB AFTER FILTERS */}
 {selectedUsers.length > 0 && (
   <div className="selected-users-reports" style={{ 
