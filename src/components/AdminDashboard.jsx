@@ -731,18 +731,11 @@ const handleGenerateUserReport = async (format = 'excel') => {
       name: user.name,
       email: user.email,
       userRole: user.userRole,
-      phone: user.phone || '',
-      department: user.department || '',
+      // phone: user.phone || '',
+      // department: user.department || '',
       isActive: user.isActive
     });
-     console.log('Edit form data:', { // Debug log
-    name: user.name,
-    email: user.email,
-    userRole: user.userRole || user.role,
-    phone: user.phone,
-    department: user.department,
-    isActive: user.isActive
-  });
+    
     setShowEditUserModal(true);
   };
 
@@ -826,9 +819,9 @@ const handleEditUser = async (e) => {
     const updateData = {
       name: editUserForm.name,
       email: editUserForm.email,
-      userRole: editUserForm.userRole, // Make sure this matches what your backend expects
-      phone: editUserForm.phone,
-      department: editUserForm.department,
+      userRole: editUserForm.userRole, 
+      // phone: editUserForm.phone,
+      // department: editUserForm.department,
       isActive: editUserForm.isActive
     };
     
@@ -859,9 +852,9 @@ const handleEditUser = async (e) => {
         name: '',
         email: '',
         userRole: '',
-        phone: '',
-        department: '',
-        isActive: true
+        // phone: '',
+        // department: '',
+        isActive: ''
       });
       
       fetchUsers(); // Refresh the users list
@@ -2261,6 +2254,7 @@ const handleLogoutBtn = () => {
                 👨‍🏫 Advisor
               </button>
             )} */}
+            {/*
             <button
               onClick={() => handleDeleteUser(user._id)}
               style={{
@@ -2274,7 +2268,7 @@ const handleLogoutBtn = () => {
               }}
             >
               🗑️ Delete
-            </button>
+            </button> */}
           </div>
         </td>
       </tr>
@@ -2329,7 +2323,7 @@ const handleLogoutBtn = () => {
               <option value="admin">Admin</option>
             </select>
           </div>
-          <div className="form-group">
+          {/* <div className="form-group">
             <label className="form-label">Department</label>
             <input
               type="text"
@@ -2338,20 +2332,7 @@ const handleLogoutBtn = () => {
               className="form-input"
               placeholder="Department (optional)"
             />
-          </div>
-        </div>
-
-        <div className="form-row">
-          <div className="form-group">
-            <label className="form-label">Phone</label>
-            <input
-              type="tel"
-              value={editUserForm.phone}
-              onChange={(e) => setEditUserForm({ ...editUserForm, phone: e.target.value })}
-              className="form-input"
-              placeholder="Phone number (optional)"
-            />
-          </div>
+          </div> */}
           <div className="form-group">
             <label className="form-label">Status</label>
             <select
@@ -2363,6 +2344,20 @@ const handleLogoutBtn = () => {
               <option value="false">Inactive</option>
             </select>
           </div>
+        </div>
+
+        <div className="form-row">
+          {/* <div className="form-group">
+            <label className="form-label">Phone</label>
+            <input
+              type="tel"
+              value={editUserForm.phone}
+              onChange={(e) => setEditUserForm({ ...editUserForm, phone: e.target.value })}
+              className="form-input"
+              placeholder="Phone number (optional)"
+            />
+          </div> */}
+          
         </div>
 
         <div className="modal-actions">
@@ -2767,20 +2762,20 @@ const handleLogoutBtn = () => {
       onClick={() => handleGenerateAnalyticsReport('pdf')}
       disabled={reportLoading}
       style={{
-        // padding: '0.75rem 1.5rem',
-        // // background: '#dc2626',
-        // color: 'white',
-        // border: 'none',
-        // borderRadius: '8px',
-        // cursor: reportLoading ? 'not-allowed' : 'pointer',
-        // display: 'flex',
-        // alignItems: 'center',
-        // gap: '0.5rem',
-        // fontWeight: '500',
-        // fontSize: '0.875rem'
+        padding: '0.75rem 1.5rem',
+         background: '#dc2626',
+        color: 'white',
+        border: 'none',
+        borderRadius: '8px',
+        cursor: reportLoading ? 'not-allowed' : 'pointer',
+        display: 'flex',
+        alignItems: 'center',
+        gap: '0.5rem',
+        fontWeight: '500',
+        fontSize: '0.875rem'
       }}
     >
-      {/* <FaFilePdf /> PDF Report */}
+      <FaFilePdf /> PDF Report
     </button>
   </div>
 </div>

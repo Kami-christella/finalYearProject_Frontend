@@ -50,7 +50,7 @@ const StudentAppointmentDashboard = () => {
       date: '2025-08-16',
       time: '15:00',
       type: 'both',
-      location: 'Office 205, Masoro Campus / Online',
+      location: 'Office 205, Gishushu Campus / Online',
       advisorName: 'Prof. John Uwimana',
       available: true
     },

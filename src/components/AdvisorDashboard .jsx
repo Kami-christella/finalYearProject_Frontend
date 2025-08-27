@@ -421,7 +421,7 @@ useEffect(() => {
           date: slot.date,
           startTime: slot.time,
           endTime: slot.time,
-          duration: 30,
+          duration: slot.duration || 30,
           meetingType: slot.type,
           location: slot.location,
           notes: ''
