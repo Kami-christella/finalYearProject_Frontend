@@ -28,6 +28,7 @@ const ComprehensiveDashboard = () => {
     fetchAllData();
   }, []);
 
+  
   const fetchAllData = async () => {
     try {
       await Promise.all([
@@ -204,7 +205,7 @@ const ComprehensiveDashboard = () => {
     if (result.success && result.data?.recommendations) {
       console.log('✅ New recommendations received:', result.data.recommendations);
       setRecommendations(result.data.recommendations);
-      Notify.success('🎉 New AI recommendations generated successfully!');
+      Notify.success('🎉 New  recommendations generated successfully!');
       
       // Switch to recommendations tab to show results
       setActiveSection('recommendations');

@@ -585,23 +585,111 @@ useEffect(() => {
       Notify.failure('Failed to create appointment: ' + error.message);
     }
   };
+  const handleUpdateAppointment = async (e) => {
+  e.preventDefault();
+  try {
+    const token = localStorage.getItem('token');
+    
+    // Format data to match backend expectations
+    const updateData = {
+      slotId: selectedAppointment._id,
+      date: appointmentForm.date,
+      time: appointmentForm.startTime,
+      type: appointmentForm.meetingType,
+      location: appointmentForm.meetingType === 'online' ? appointmentForm.meetingLink : undefined,
+      duration: appointmentForm.duration,
+      notes: appointmentForm.notes
+    };
 
-  const handleEditAppointment = (appointment) => {
-    setSelectedAppointment(appointment);
-    setAppointmentForm({
-      date: appointment.date.split('T')[0],
-      startTime: appointment.startTime,
-      endTime: appointment.endTime,
-      duration: appointment.duration || 30,
-      isRecurring: false,
-      recurringPattern: 'weekly',
-      recurringEndDate: '',
-      notes: appointment.notes || '',
-      meetingType: appointment.type || 'physical',
-      meetingLink: appointment.location || ''
+    const response = await fetch('http://localhost:5000/api/slots/update', {
+      method: 'PUT',
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${token}`
+      },
+      body: JSON.stringify(updateData)
     });
-    setShowEditAppointmentModal(true);
-  };
+    
+    if (response.ok) {
+      Notify.success('Appointment slot updated successfully');
+      setShowEditAppointmentModal(false);
+      setSelectedAppointment(null);
+      setAppointmentForm({
+        date: '',
+        startTime: '',
+        endTime: '',
+        duration: 30,
+        isRecurring: false,
+        recurringPattern: 'weekly',
+        recurringEndDate: '',
+        notes: '',
+        meetingType: 'physical',
+        meetingLink: ''
+      });
+      fetchAppointments();
+    } else {
+      const error = await response.json();
+      throw new Error(error.message || 'Failed to update appointment');
+    }
+  } catch (error) {
+    Notify.failure('Failed to update appointment: ' + error.message);
+  }
+};
+  const handleEditAppointment = (appointment) => {
+  setSelectedAppointment(appointment);
+  
+  // Properly format the date for the input field
+  const appointmentDate = new Date(appointment.date);
+  const formattedDate = appointmentDate.toISOString().split('T')[0];
+  
+  setAppointmentForm({
+    date: formattedDate,
+    startTime: appointment.startTime || appointment.time || '',
+    endTime: appointment.endTime || appointment.time || '',
+    duration: appointment.duration || 30,
+    isRecurring: false,
+    recurringPattern: 'weekly',
+    recurringEndDate: '',
+    notes: appointment.notes || '',
+    meetingType: appointment.type || appointment.meetingType || 'physical',
+    meetingLink: appointment.location || appointment.meetingLink || ''
+  });
+  
+  console.log('Editing appointment:', appointment);
+  console.log('Form data set:', {
+    date: formattedDate,
+    startTime: appointment.startTime || appointment.time,
+    meetingType: appointment.type || appointment.meetingType
+  });
+  
+  setShowEditAppointmentModal(true);
+};
+
+
+
+// ADD this function after your existing handleCreateAppointment function (around line 600-700)
+
+
+  // const handleEditAppointment = (appointment) => {
+  //   setSelectedAppointment(appointment);
+  //   setAppointmentForm({
+  //     date: appointment.date.split('T')[0],
+  //     startTime: appointment.startTime,
+  //     endTime: appointment.endTime,
+  //     duration: appointment.duration || 30,
+  //     isRecurring: false,
+  //     recurringPattern: 'weekly',
+  //     recurringEndDate: '',
+  //     notes: appointment.notes || '',
+  //     meetingType: appointment.type || 'physical',
+  //     meetingLink: appointment.location || ''
+  //   });
+  //   setShowEditAppointmentModal(true);
+  // };
+
+  // REPLACE your existing handleEditAppointment function with this improved version
+
+
 
   const handleDeleteAppointment = async (appointmentId) => {
     if (!window.confirm('Are you sure you want to delete this appointment slot?')) {
@@ -2338,6 +2426,7 @@ const handleLogoutBtn = () => {
       </div>
     </div>
   )}
+  
 </div>
                   <div className="modal-actions">
                     <button type="button" onClick={() => setShowCreateAppointmentModal(false)} className="btn-cancel">
@@ -2350,11 +2439,146 @@ const handleLogoutBtn = () => {
                 </form>
               </div>
             </div>
+            
           )}
+
+          {/* Edit Appointment Modal */}
+{showEditAppointmentModal && selectedAppointment && (
+  <div className="modal-overlay">
+    <div className="modal-content large-modal">
+      <div className="modal-header">
+        <h2>Edit Appointment Slot</h2>
+        <button onClick={() => setShowEditAppointmentModal(false)} className="modal-close">✕</button>
+      </div>
+
+      <form onSubmit={handleUpdateAppointment} className="appointment-form">
+        <div className="form-row">
+          <div className="form-group">
+            <label className="form-label">Date *</label>
+            <input
+              type="date"
+              value={appointmentForm.date}
+              onChange={(e) => setAppointmentForm({ ...appointmentForm, date: e.target.value })}
+              className="form-input"
+              required
+              min={new Date().toISOString().split('T')[0]}
+            />
+          </div>
+          <div className="form-group">
+            <label className="form-label">Duration (minutes) *</label>
+            <select
+              value={appointmentForm.duration}
+              onChange={(e) => setAppointmentForm({ ...appointmentForm, duration: parseInt(e.target.value) })}
+              className="form-select"
+              required
+            >
+              <option value={15}>15 minutes</option>
+              <option value={30}>30 minutes</option>
+              <option value={45}>45 minutes</option>
+              <option value={60}>1 hour</option>
+              <option value={90}>1.5 hours</option>
+              <option value={120}>2 hours</option>
+            </select>
+          </div>
+        </div>
+
+        <div className="form-row">
+          <div className="form-group">
+            <label className="form-label">Start Time *</label>
+            <input
+              type="time"
+              value={appointmentForm.startTime}
+              onChange={(e) => {
+                const startTime = e.target.value;
+                const [hours, minutes] = startTime.split(':');
+                const startDate = new Date();
+                startDate.setHours(parseInt(hours), parseInt(minutes));
+                const endDate = new Date(startDate.getTime() + appointmentForm.duration * 60000);
+                const endTime = `${endDate.getHours().toString().padStart(2, '0')}:${endDate.getMinutes().toString().padStart(2, '0')}`;
+                
+                setAppointmentForm({ 
+                  ...appointmentForm, 
+                  startTime: startTime,
+                  endTime: endTime
+                });
+              }}
+              className="form-input"
+              required
+            />
+          </div>
+          <div className="form-group">
+            <label className="form-label">End Time</label>
+            <input
+              type="time"
+              value={appointmentForm.endTime}
+              readOnly
+              className="form-input readonly"
+            />
+          </div>
+        </div>
+
+        <div className="form-row">
+          <div className="form-group">
+            <label className="form-label">Meeting Type *</label>
+            <select
+              value={appointmentForm.meetingType}
+              onChange={(e) => setAppointmentForm({ ...appointmentForm, meetingType: e.target.value })}
+              className="form-select"
+              required
+            >
+              <option value="physical">In-Person</option>
+              <option value="online">Online Meeting</option>
+              <option value="both">Both (Student Choice)</option>
+            </select>
+          </div>
+          {appointmentForm.meetingType === 'online' && (
+            <div className="form-group">
+              <label className="form-label">Meeting Link</label>
+              <input
+                type="url"
+                value={appointmentForm.meetingLink}
+                onChange={(e) => setAppointmentForm({ ...appointmentForm, meetingLink: e.target.value })}
+                className="form-input"
+                placeholder="https://zoom.us/j/123456789 or Google Meet link"
+              />
+              <small className="form-help">Leave empty to auto-generate meeting link</small>
+            </div>
+          )}
+        </div>
+
+        <div className="form-group">
+          <label className="form-label">Notes</label>
+          <textarea
+            value={appointmentForm.notes}
+            onChange={(e) => setAppointmentForm({ ...appointmentForm, notes: e.target.value })}
+            className="form-textarea"
+            rows="3"
+            placeholder="Any additional notes for this appointment slot..."
+            maxLength="500"
+          />
+        </div>
+
+        <div className="modal-actions">
+          <button type="button" onClick={() => setShowEditAppointmentModal(false)} className="btn-cancel">
+            Cancel
+          </button>
+          <button type="submit" className="btn-submit">
+            Update Appointment Slot
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+)}
+          
         </main>
       </div>
     </div>
+    
   );
+  
 };
+
+
 
 export default AdvisorDashboard;
