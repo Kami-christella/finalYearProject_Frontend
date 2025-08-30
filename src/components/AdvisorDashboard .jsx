@@ -592,7 +592,7 @@ useEffect(() => {
     
     // Format data to match backend expectations
     const updateData = {
-      slotId: selectedAppointment._id,
+      // slotId: selectedAppointment._id,
       date: appointmentForm.date,
       time: appointmentForm.startTime,
       type: appointmentForm.meetingType,
@@ -601,7 +601,7 @@ useEffect(() => {
       notes: appointmentForm.notes
     };
 
-    const response = await fetch('http://localhost:5000/api/slots/update', {
+    const response = await fetch(`http://localhost:5000/api/appointments/slots/update/${selectedAppointment._id}`, {
       method: 'PUT',
       headers: {
         'Content-Type': 'application/json',
