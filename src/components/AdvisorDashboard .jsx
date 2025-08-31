@@ -87,20 +87,6 @@ const [showUserDropdown, setShowUserDropdown] = useState(false);
   });
 
   // Appointment form state
-  // const [appointmentForm, setAppointmentForm] = useState({
-  //   date: '',
-  //   startTime: '',
-  //   endTime: '',
-  //   duration: 30,
-  //   isRecurring: false,
-  //   recurringPattern: 'weekly',
-  //   recurringEndDate: '',
-  //   notes: '',
-  //   meetingType: 'physical',
-  //   meetingLink: ''
-  // });
-
-  // Appointment form state
 const [appointmentForm, setAppointmentForm] = useState({
   date: '',
   startTime: '',
@@ -206,17 +192,17 @@ const [appointmentForm, setAppointmentForm] = useState({
   const getStatusColor = (status) => {
     switch (status) {
       case 'available':
-        return '#28a745'; // Green
+        return '#28a745'; 
       case 'booked':
-        return '#007bff'; // Blue
+        return '#007bff'; 
       case 'completed':
-        return '#6c757d'; // Gray
+        return '#6c757d'; 
       case 'cancelled':
-        return '#dc3545'; // Red
+        return '#dc3545'; 
       case 'in-progress':
-        return '#fd7e14'; // Orange
+        return '#fd7e14'; 
       default:
-        return '#6c757d'; // Default gray
+        return '#6c757d'; 
     }
   };
 
