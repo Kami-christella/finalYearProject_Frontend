@@ -27,6 +27,7 @@ const [showUserDropdown, setShowUserDropdown] = useState(false);
   const [students, setStudents] = useState([]);
   const [filteredStudents, setFilteredStudents] = useState([]);
   const [selectedStudent, setSelectedStudent] = useState(null);
+  const [appointmentViewMode, setAppointmentViewMode] = useState('card');
   const [loading, setLoading] = useState(false);
   const [userName, setUserName] = useState("User");
   const [searchTerm, setSearchTerm] = useState('');
@@ -295,19 +296,6 @@ useEffect(() => {
     };
   }, []);
 
-    // Add function to close dropdown when clicking outside
-  // useEffect(() => {
-  //   const handleClickOutside = (event) => {
-  //     if (!event.target.closest('.user-profile-dropdown')) {
-  //       setShowUserDropdown(false);
-  //     }
-  //   };
-
-  //   document.addEventListener('mousedown', handleClickOutside);
-  //   return () => {
-  //     document.removeEventListener('mousedown', handleClickOutside);
-  //   };
-  // }, []);
   
   const fetchStudents = async (page = 1) => {
     try {
@@ -851,7 +839,7 @@ useEffect(() => {
       return;
     }
     
-    const response = await fetch(`http://localhost:5000/api/appointments/confirm`, {
+    const response = await fetch(`http://localhost:5000/api/appointments/confirm/${appointmentId}`, {
       method: 'PUT',
       headers: { 
         'Content-Type': 'application/json',
