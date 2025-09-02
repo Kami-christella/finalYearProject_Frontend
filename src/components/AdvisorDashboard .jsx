@@ -2353,7 +2353,7 @@ const handleLogoutBtn = () => {
                       maxLength="500"
                     />
                   </div>
-                    {/* NEW: Add this recurring section */}
+                    {/* recurring section */}
 <div className="recurring-section">
   <div className="recurring-checkbox">
     <input
