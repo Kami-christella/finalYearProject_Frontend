@@ -1089,7 +1089,8 @@ const ComprehensiveDashboard = () => {
       console.log('📡 Fetching existing recommendations...');
       const token = localStorage.getItem('token');
       
-      const response = await fetch('http://localhost:5000/api/ai-recommendation/recommendations', {
+      // Try the latest recommendations endpoint first
+      const response = await fetch('http://localhost:5000/api/recommendations/latest', {
         method: 'GET',
         headers: { 
           'Authorization': `Bearer ${token}`,
@@ -1101,26 +1102,11 @@ const ComprehensiveDashboard = () => {
         const data = await response.json();
         console.log('✅ Recommendations response:', data);
         
-        // Handle different response structures
+        // Handle the expected response structure from getLatestRecommendations
         let recommendationsArray = [];
         
-        if (data.success && data.data) {
-          // New format: { success: true, data: { recommendations: [...] } }
-          if (data.data.recommendations && Array.isArray(data.data.recommendations)) {
-            recommendationsArray = data.data.recommendations;
-          }
-          // Alternative format: { success: true, data: [...] }
-          else if (Array.isArray(data.data)) {
-            recommendationsArray = data.data;
-          }
-        }
-        // Direct array format: [...]
-        else if (Array.isArray(data)) {
-          recommendationsArray = data;
-        }
-        // Legacy format: { recommendations: [...] }
-        else if (data.recommendations && Array.isArray(data.recommendations)) {
-          recommendationsArray = data.recommendations;
+        if (data.success && data.data && data.data.recommendations) {
+          recommendationsArray = data.data.recommendations;
         }
 
         setRecommendations(recommendationsArray);
