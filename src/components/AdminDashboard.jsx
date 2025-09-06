@@ -1,4 +1,4 @@
-//AdvisorDashboard.jsx
+//AdminDashboard.jsx
 import React, { useState, useEffect } from 'react';
 // Add these imports at the top of AdvisorDashboard.jsx
 import { PieChart, Pie, Cell, BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer, LineChart, Line } from "recharts";
@@ -112,12 +112,8 @@ const [showUserDropdown, setShowUserDropdown] = useState(false);
   const [activityLog, setActivityLog] = useState([]);
   const [currentDocument, setCurrentDocument] = useState(null);
   const [users, setUsers] = useState([]);
-  const [selectedUsers, setSelectedUsers] = useState([]);
-  const [filterRole, setFilterRole] = useState('all');
-  const [showReportModal, setShowReportModal] = useState(false);
-const [reportLoading, setReportLoading] = useState(false);
-const [reportForm, setReportForm] = useState({
-  reportType: 'system',
+  const [reportForm, setReportForm] = useState({
+  reportType: 'users',
   format: 'excel',
   dateRange: 'month',
   startDate: '',
@@ -125,6 +121,19 @@ const [reportForm, setReportForm] = useState({
   includeCharts: true,
   filters: {}
 });
+  const [selectedUsers, setSelectedUsers] = useState([]);
+  const [filterRole, setFilterRole] = useState('all');
+  const [showReportModal, setShowReportModal] = useState(false);
+const [reportLoading, setReportLoading] = useState(false);
+// const [reportForm, setReportForm] = useState({
+//   reportType: 'system',
+//   format: 'excel',
+//   dateRange: 'month',
+//   startDate: '',
+//   endDate: '',
+//   includeCharts: true,
+//   filters: {}
+// });
 
   
   const navigate = useNavigate();
@@ -544,7 +553,8 @@ const handleGenerateSystemReport = async (format = 'excel') => {
     const token = localStorage.getItem('token');
     
     const params = new URLSearchParams({
-      reportType: reportForm.reportType,
+     
+      reportType: 'system',
       startDate: reportForm.startDate,
       endDate: reportForm.endDate,
       includeCharts: reportForm.includeCharts
@@ -612,10 +622,20 @@ const handleGenerateAnalyticsReport = async (format = 'excel') => {
     setReportLoading(false);
   }
 };
-
-// Generate Custom Report
 const handleGenerateCustomReport = async () => {
   try {
+    // Validate custom date range
+    if (reportForm.dateRange === 'custom') {
+      if (!reportForm.startDate || !reportForm.endDate) {
+        Notify.failure('Please select both start and end dates for custom range');
+        return;
+      }
+      if (new Date(reportForm.startDate) > new Date(reportForm.endDate)) {
+        Notify.failure('Start date cannot be after end date');
+        return;
+      }
+    }
+
     setReportLoading(true);
     const token = localStorage.getItem('token');
     
@@ -637,23 +657,46 @@ const handleGenerateCustomReport = async () => {
       const url = window.URL.createObjectURL(blob);
       const a = document.createElement('a');
       a.href = url;
-      a.download = `custom-${reportForm.reportType}-report-${new Date().toISOString().split('T')[0]}.${reportForm.format === 'pdf' ? 'pdf' : 'xlsx'}`;
+      
+      // Generate descriptive filename
+      const dateStr = reportForm.dateRange === 'custom' 
+        ? `${reportForm.startDate}-to-${reportForm.endDate}`
+        : reportForm.dateRange;
+      const filterStr = Object.keys(reportForm.filters).length > 0 ? '-filtered' : '';
+      
+      a.download = `custom-${reportForm.reportType}-report-${dateStr}${filterStr}-${new Date().toISOString().split('T')[0]}.${reportForm.format === 'pdf' ? 'pdf' : 'xlsx'}`;
       document.body.appendChild(a);
       a.click();
       window.URL.revokeObjectURL(url);
       document.body.removeChild(a);
       
-      Notify.success(`Custom ${reportForm.format.toUpperCase()} report downloaded successfully!`);
+      Notify.success(`Custom ${reportForm.format.toUpperCase()} report generated successfully!`);
       setShowReportModal(false);
+      
+      // Reset form
+      setReportForm({
+        reportType: 'users',
+        format: 'excel',
+        dateRange: 'month',
+        startDate: '',
+        endDate: '',
+        includeCharts: true,
+        filters: {}
+      });
     } else {
-      throw new Error('Failed to generate custom report');
+      const error = await response.json();
+      throw new Error(error.message || 'Failed to generate custom report');
     }
   } catch (error) {
+    console.error('Custom report error:', error);
     Notify.failure('Error generating custom report: ' + error.message);
   } finally {
     setReportLoading(false);
   }
 };
+
+
+
 
 // Generate User Report for selected users
 const handleGenerateUserReport = async (format = 'excel') => {
@@ -2724,7 +2767,86 @@ const handleLogoutBtn = () => {
 
     {/* Analytics Tab - Add this section */}
     {/* ADD THIS AT THE TOP OF YOUR ANALYTICS TAB */}
-<div style={{
+    <div style={{
+      display: 'flex',
+      gap: '1rem',
+      marginBottom: '2rem',
+      padding: '1.5rem',
+      background: '#1B3058',
+      borderRadius: '12px',
+      alignItems: 'center',
+      justifyContent: 'space-between',
+      flexWrap: 'wrap'
+    }}>
+      <div>
+        <h3 style={{ color: 'white', margin: 0, fontSize: '1.2rem' }}>
+          📊 Analytics & Custom Reports
+        </h3>
+        <p style={{ color: '#cbd5e1', margin: '0.5rem 0 0 0', fontSize: '0.875rem' }}>
+          Generate detailed reports with custom filters and date ranges
+        </p>
+      </div>
+      <div style={{ display: 'flex', gap: '0.5rem', flexWrap: 'wrap' }}>
+        <button
+          onClick={() => handleGenerateAnalyticsReport('excel')}
+          disabled={reportLoading}
+          style={{
+            padding: '0.75rem 1.25rem',
+            background: '#059669',
+            color: 'white',
+            border: 'none',
+            borderRadius: '8px',
+            cursor: reportLoading ? 'not-allowed' : 'pointer',
+            display: 'flex',
+            alignItems: 'center',
+            gap: '0.5rem',
+            fontWeight: '500',
+            fontSize: '0.875rem'
+          }}
+        >
+          <FaFileExcel /> Quick Excel
+        </button>
+        <button
+          onClick={() => handleGenerateAnalyticsReport('pdf')}
+          disabled={reportLoading}
+          style={{
+            padding: '0.75rem 1.25rem',
+            background: '#dc2626',
+            color: 'white',
+            border: 'none',
+            borderRadius: '8px',
+            cursor: reportLoading ? 'not-allowed' : 'pointer',
+            display: 'flex',
+            alignItems: 'center',
+            gap: '0.5rem',
+            fontWeight: '500',
+            fontSize: '0.875rem'
+          }}
+        >
+          <FaFilePdf /> Quick PDF
+        </button>
+        <button
+          onClick={() => setShowReportModal(true)}
+          disabled={reportLoading}
+          style={{
+            padding: '0.75rem 1.25rem',
+            background: '#7c3aed',
+            color: 'white',
+            border: 'none',
+            borderRadius: '8px',
+            cursor: reportLoading ? 'not-allowed' : 'pointer',
+            display: 'flex',
+            alignItems: 'center',
+            gap: '0.5rem',
+            fontWeight: '500',
+            fontSize: '0.875rem'
+          }}
+        >
+          <FaChartBar /> Custom Report
+        </button>
+      </div>
+    </div>
+{/* <div style={{
   display: 'flex',
   gap: '1rem',
   marginBottom: '2rem',
@@ -2778,7 +2900,8 @@ const handleLogoutBtn = () => {
       <FaFilePdf /> PDF Report
     </button>
   </div>
-</div>
+</div> */}
+{/* start */}
           {activeTab === 'analytics' && (
             
             <div className="tab-content">
@@ -3810,7 +3933,234 @@ const handleLogoutBtn = () => {
               </div>
             </div>
           )}
+          {/* Custom Reports Modal */}
+{showReportModal && (
+  <div className="modal-overlay">
+    <div className="modal-content large-modal">
+      <div className="modal-header">
+        <h2>Generate Custom Report</h2>
+        <button onClick={() => setShowReportModal(false)} className="modal-close">✕</button>
+      </div>
+
+      <form onSubmit={handleGenerateCustomReport} className="custom-report-form">
+        <div className="form-row">
+          <div className="form-group">
+            <label className="form-label">Report Type *</label>
+            <select
+              value={reportForm.reportType}
+              onChange={(e) => setReportForm({ ...reportForm, reportType: e.target.value })}
+              className="form-select"
+              required
+            >
+              <option value="users">Users Report</option>
+              <option value="profiles">Student Profiles Report</option>
+              <option value="assessments">Assessments Report</option>
+              <option value="activity">Activity Report</option>
+            </select>
+          </div>
+          <div className="form-group">
+            <label className="form-label">Format *</label>
+            <select
+              value={reportForm.format}
+              onChange={(e) => setReportForm({ ...reportForm, format: e.target.value })}
+              className="form-select"
+              required
+            >
+              <option value="excel">Excel (.xlsx)</option>
+              <option value="pdf">PDF</option>
+            </select>
+          </div>
+        </div>
+
+        <div className="form-row">
+          <div className="form-group">
+            <label className="form-label">Date Range *</label>
+            <select
+              value={reportForm.dateRange}
+              onChange={(e) => setReportForm({ 
+                ...reportForm, 
+                dateRange: e.target.value,
+                startDate: e.target.value === 'custom' ? reportForm.startDate : '',
+                endDate: e.target.value === 'custom' ? reportForm.endDate : ''
+              })}
+              className="form-select"
+              required
+            >
+              <option value="week">Last Week</option>
+              <option value="month">Last Month</option>
+              <option value="quarter">Last Quarter (3 months)</option>
+              <option value="year">Last Year</option>
+              <option value="custom">Custom Date Range</option>
+            </select>
+          </div>
+        </div>
+
+        {reportForm.dateRange === 'custom' && (
+          <div className="form-row">
+            <div className="form-group">
+              <label className="form-label">Start Date *</label>
+              <input
+                type="date"
+                value={reportForm.startDate}
+                onChange={(e) => setReportForm({ ...reportForm, startDate: e.target.value })}
+                className="form-input"
+                required
+                max={new Date().toISOString().split('T')[0]}
+              />
+            </div>
+            <div className="form-group">
+              <label className="form-label">End Date *</label>
+              <input
+                type="date"
+                value={reportForm.endDate}
+                onChange={(e) => setReportForm({ ...reportForm, endDate: e.target.value })}
+                className="form-input"
+                required
+                min={reportForm.startDate}
+                max={new Date().toISOString().split('T')[0]}
+              />
+            </div>
+          </div>
+        )}
+
+        {/* Advanced Filters Section */}
+        <div className="advanced-filters" style={{ 
+          marginTop: '1.5rem', 
+          padding: '1rem', 
+          background: '#f8fafc', 
+          borderRadius: '8px',
+          border: '1px solid #e2e8f0'
+        }}>
+          <h4 style={{ marginBottom: '1rem', color: '#374151' }}>Advanced Filters (Optional)</h4>
           
+          {reportForm.reportType === 'users' && (
+            <div className="form-row">
+              <div className="form-group">
+                <label className="form-label">User Role</label>
+                <select
+                  value={reportForm.filters.userRole || ''}
+                  onChange={(e) => setReportForm({ 
+                    ...reportForm, 
+                    filters: { ...reportForm.filters, userRole: e.target.value }
+                  })}
+                  className="form-select"
+                >
+                  <option value="">All Roles</option>
+                  <option value="student">Students</option>
+                  <option value="advisor">Advisors</option>
+                  <option value="admin">Admins</option>
+                </select>
+              </div>
+              <div className="form-group">
+                <label className="form-label">Account Status</label>
+                <select
+                  value={reportForm.filters.isActive || ''}
+                  onChange={(e) => setReportForm({ 
+                    ...reportForm, 
+                    filters: { ...reportForm.filters, isActive: e.target.value }
+                  })}
+                  className="form-select"
+                >
+                  <option value="">All Status</option>
+                  <option value="true">Active Only</option>
+                  <option value="false">Inactive Only</option>
+                </select>
+              </div>
+            </div>
+          )}
+
+          {reportForm.reportType === 'profiles' && (
+            <div className="form-row">
+              <div className="form-group">
+                <label className="form-label">Approval Status</label>
+                <select
+                  value={reportForm.filters.isStudentApproved || ''}
+                  onChange={(e) => setReportForm({ 
+                    ...reportForm, 
+                    filters: { ...reportForm.filters, isStudentApproved: e.target.value }
+                  })}
+                  className="form-select"
+                >
+                  <option value="">All Profiles</option>
+                  <option value="true">Approved Only</option>
+                  <option value="false">Pending Only</option>
+                </select>
+              </div>
+              <div className="form-group">
+                <label className="form-label">Faculty</label>
+                <select
+                  value={reportForm.filters.desiredFaculty || ''}
+                  onChange={(e) => setReportForm({ 
+                    ...reportForm, 
+                    filters: { ...reportForm.filters, desiredFaculty: e.target.value }
+                  })}
+                  className="form-select"
+                >
+                  <option value="">All Faculties</option>
+                  <option value="Faculty of Business Administration">Business Administration</option>
+                  <option value="Faculty of Information Technology">Information Technology</option>
+                  <option value="Faculty of Health Sciences">Health Sciences</option>
+                  <option value="Faculty of Medicine">Medicine</option>
+                  <option value="Faculty in Education">Education</option>
+                  <option value="Bachelor Of Theology">Theology</option>
+                </select>
+              </div>
+            </div>
+          )}
+
+          {reportForm.reportType === 'activity' && (
+            <div className="form-group">
+              <label className="form-label">Activity Type</label>
+              <select
+                value={reportForm.filters.activityType || ''}
+                onChange={(e) => setReportForm({ 
+                  ...reportForm, 
+                  filters: { ...reportForm.filters, activityType: e.target.value }
+                })}
+                className="form-select"
+              >
+                <option value="">All Activities</option>
+                <option value="registration">New Registrations</option>
+                <option value="profile">Profile Creations</option>
+                <option value="assessment">Assessment Completions</option>
+              </select>
+            </div>
+          )}
+        </div>
+
+        <div className="form-group" style={{ marginTop: '1rem' }}>
+          <label className="form-label">
+            <input
+              type="checkbox"
+              checked={reportForm.includeCharts}
+              onChange={(e) => setReportForm({ ...reportForm, includeCharts: e.target.checked })}
+              style={{ marginRight: '0.5rem' }}
+            />
+            Include charts and visualizations (PDF only)
+          </label>
+        </div>
+
+        <div className="modal-actions" style={{ marginTop: '2rem' }}>
+          <button 
+            type="button" 
+            onClick={() => setShowReportModal(false)} 
+            className="btn-cancel"
+            disabled={reportLoading}
+          >
+            Cancel
+          </button>
+          <button 
+            type="submit" 
+            className="btn-submit"
+            disabled={reportLoading}
+          >
+            {reportLoading ? 'Generating...' : `Generate ${reportForm.format.toUpperCase()} Report`}
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+)}
         </main>
       </div>
     </div>
