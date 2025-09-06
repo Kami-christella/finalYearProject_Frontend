@@ -8,7 +8,7 @@ import AUCALOGO from "../assets/images/AUCALOGO.png"
 import { IoMdPerson } from "react-icons/io";
 import { IoIosLogOut } from "react-icons/io";
 import { useNavigate, useLocation } from "react-router-dom";
-//import QuestionsManager from './QuestionsManager.jsx';
+import QuestionsManager from './QuestionsManager.jsx';
 
 const SIDEBAR_ITEMS = [
   { id: 'overview', label: 'Overview', icon: '📊' },
@@ -1209,13 +1209,13 @@ const handleLogoutBtn = () => {
           </div>
 
           {/* Questions Manager Tab */}
- {/* {activeTab === 'questionsManager' && (
+ {activeTab === 'questionsManager' && (
   <div className="tab-content">
     <div className="questions-manager-wrapper">
       <QuestionsManager />
     </div>
   </div>
-)}   */}
+)}  
 
           {/* Overview Tab */}
           {activeTab === 'overview' && (
