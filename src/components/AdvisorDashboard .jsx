@@ -8,6 +8,7 @@ import AUCALOGO from "../assets/images/AUCALOGO.png"
 import { IoMdPerson } from "react-icons/io";
 import { IoIosLogOut } from "react-icons/io";
 import { useNavigate, useLocation } from "react-router-dom";
+//import QuestionsManager from './QuestionsManager.jsx';
 
 const SIDEBAR_ITEMS = [
   { id: 'overview', label: 'Overview', icon: '📊' },
@@ -1207,6 +1208,15 @@ const handleLogoutBtn = () => {
           </div>
           </div>
 
+          {/* Questions Manager Tab */}
+ {/* {activeTab === 'questionsManager' && (
+  <div className="tab-content">
+    <div className="questions-manager-wrapper">
+      <QuestionsManager />
+    </div>
+  </div>
+)}   */}
+
           {/* Overview Tab */}
           {activeTab === 'overview' && (
             <div className="tab-content">
@@ -1272,7 +1282,10 @@ const handleLogoutBtn = () => {
 {/* Students Tab (All, Pending, Approved, Transfer) */}
 {(activeTab === 'students' || activeTab === 'pending' || activeTab === 'approved' || activeTab === 'transfer') && (
   <div className="tab-content">
-<div className="table_header"><th style={{textAlign:'center'}}>STUDENTS WHO CREATED PROFILE</th> </div> 
+    <div className="table_header">
+  <h3 style={{textAlign:'center', margin: 0}}>STUDENTS WHO CREATED PROFILE</h3>
+</div>
+{/* <div className="table_header"><th style={{textAlign:'center'}}>STUDENTS WHO CREATED PROFILE</th> </div>  */}
     {/* Filters and Actions */}
     <div className="filters-section">
       <div className="search-box">
@@ -1341,10 +1354,6 @@ const handleLogoutBtn = () => {
         </div>
       </div>
     )}
-
-    
-
-    {/* Rest of your existing code continues here... */}
 
 
     {/* Students Table */}

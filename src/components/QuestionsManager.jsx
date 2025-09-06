@@ -1,14 +1,11 @@
-import { useState, useEffect, useContext, useRef } from 'react';
-import { AuthContext } from './context/AuthContext';
+import { useState, useEffect, useRef } from 'react';
 import axios from 'axios';
 import "./Dashboard_Styles/AdminQuestion.css";
-// import * as XLSX from 'xlsx';
 
 function QuestionManager() {  
   const [questions, setQuestions] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
-  const { authToken } = useContext(AuthContext);
   const [filteredQuestions, setFilteredQuestions] = useState([]);
   const [showSuccessMessage, setShowSuccessMessage] = useState(false);
   const [successMessage, setSuccessMessage] = useState('');
@@ -36,29 +33,119 @@ function QuestionManager() {
   
   const fileInputRef = useRef(null);
   const formRef = useRef(null);
-  let tokenValue;
 
-  try {
-    const tokenFromStorage = localStorage.getItem('userToken');
-    if (tokenFromStorage) {
-      const parsedToken = JSON.parse(tokenFromStorage);
-      tokenValue = parsedToken.token || tokenFromStorage;
+  // IMPROVED: Centralized token getter with better error handling
+  const getToken = () => {
+    try {
+      // Check multiple possible token storage locations
+      const possibleTokens = [
+        localStorage.getItem('token'),
+        localStorage.getItem('userToken'), 
+        localStorage.getItem('authToken'),
+        localStorage.getItem('accessToken')
+      ];
+
+      for (const token of possibleTokens) {
+        if (token) {
+          // Try to parse if it's JSON, otherwise return as-is
+          try {
+            const parsed = JSON.parse(token);
+            if (parsed.token) return parsed.token;
+            if (parsed.accessToken) return parsed.accessToken;
+            if (parsed.authToken) return parsed.authToken;
+            return token; // If parsing doesn't reveal a nested token, use the original
+          } catch {
+            // If parsing fails, it's probably a plain string token
+            if (token.startsWith('Bearer ')) {
+              return token.substring(7); // Remove 'Bearer ' prefix
+            }
+            return token;
+          }
+        }
+      }
+      
+      return null;
+    } catch (e) {
+      console.error("Error getting token:", e);
+      return null;
     }
-  } catch (e) {
-    console.error("Error parsing token:", e);
-    tokenValue = authToken;
-  }
+  };
 
-  // Fetch all questions
+  // DEBUG: Add token validation
+  const validateToken = () => {
+    const token = getToken();
+    console.log('Token found:', token ? 'Yes' : 'No');
+    console.log('Token length:', token ? token.length : 0);
+    console.log('Token preview:', token ? token.substring(0, 20) + '...' : 'None');
+    
+    // Check if token looks like a JWT
+    if (token && token.includes('.')) {
+      const parts = token.split('.');
+      console.log('Token appears to be JWT with', parts.length, 'parts');
+    }
+    
+    return token;
+  };
+
+  // Fetch all questions with improved error handling
+  const fetchQuestions = async () => {
+    try {
+      setLoading(true);
+      const token = validateToken(); // Use the debug function
+      
+      if (!token) {
+        throw new Error("No authentication token found. Please login again.");
+      }
+
+      console.log('Making request to:', 'http://localhost:5000/api/questions/getAll');
+      console.log('With token:', token.substring(0, 20) + '...');
+
+      const response = await axios.get(
+        `http://localhost:5000/api/questions/getAll`,
+        {
+          headers: {
+            'Authorization': `Bearer ${token}`,
+            'Content-Type': 'application/json'
+          }
+        }
+      );
+      
+      console.log('Response received:', response.status);
+      setQuestions(Array.isArray(response.data) ? response.data : []);
+      setError(null); // Clear any previous errors
+      setLoading(false);
+    } catch (err) {
+      console.error("Error fetching questions:", err);
+      console.error("Error response:", err.response?.data);
+      console.error("Error status:", err.response?.status);
+      
+      if (err.response?.status === 403) {
+        setError("Access denied. Please check your authentication or contact administrator.");
+      } else if (err.response?.status === 401) {
+        setError("Authentication failed. Please login again.");
+      } else {
+        setError("Failed to load questions. Please try again later.");
+      }
+      setQuestions([]);
+      setLoading(false);
+    }
+  };
+
+  // Initial load effect
   useEffect(() => {
-    if (tokenValue) {
+    const token = getToken();
+    console.log('Component mounted, token available:', !!token);
+    
+    if (token) {
       fetchQuestions();
+    } else {
+      setError("Authentication required. Please login again.");
+      setLoading(false);
     }
-  }, [authToken, tokenValue]);
+  }, []);
   
   // Filter questions when filter category changes or questions data changes
   useEffect(() => {
-    // Add safety check to ensure questions is an array
     if (!Array.isArray(questions)) {
       setFilteredQuestions([]);
       return;
@@ -87,34 +174,6 @@ function QuestionManager() {
       formRef.current.scrollIntoView({ behavior: 'smooth' });
     }
   }, [isEditing]);
-  
-  if (!tokenValue) {
-    console.error("Auth token is missing!");
-    return <div className="error-message">You must be logged in to access this page.</div>;
-  }
-  
-  const fetchQuestions = async () => {
-    try {
-      setLoading(true);
-      const response = await axios.get(
-        `http://localhost:5000/api/questions/getAll`,
-        {
-          headers: {
-            Authorization: `Bearer ${tokenValue}`
-          }
-        }
-      );
-      
-      // Ensure we always set an array
-      setQuestions(Array.isArray(response.data) ? response.data : []);
-      setLoading(false);
-    } catch (err) {
-      console.error("Error fetching questions:", err);
-      setError("Failed to load questions. Please try again later.");
-      setQuestions([]); // Set empty array on error
-      setLoading(false);
-    }
-  };
 
   // Handle form input changes
   const handleInputChange = (e) => {
@@ -154,44 +213,53 @@ function QuestionManager() {
     }
   };
 
-  // Handle form submission
+  // Handle form submission with consistent token usage
   const handleSubmit = async (e) => {
     e.preventDefault();
     
     try {
+      const token = getToken();
+      
+      if (!token) {
+        setError("Authentication required. Please login again.");
+        return;
+      }
+
+      const config = {
+        headers: {
+          'Authorization': `Bearer ${token}`,
+          'Content-Type': 'application/json'
+        }
+      };
+
       if (isEditing) {
-        // Update existing question
         await axios.put(
           `http://localhost:5000/api/questions/update/${currentQuestion._id}`,
           currentQuestion,
-          {
-            headers: {
-              Authorization: `Bearer ${tokenValue}`
-            }
-          }
+          config
         );
         showPopupMessage('Question updated successfully!');
       } else {
-        // Create new question
         await axios.post(
           `http://localhost:5000/api/questions/create`,
           currentQuestion,
-          {
-            headers: {
-              Authorization: `Bearer ${tokenValue}`
-            }
-          }
+          config
         );
         showPopupMessage('Question created successfully!');
       }
       
-      // Refresh questions list
       await fetchQuestions();
       resetForm();
       setError(null);
     } catch (err) {
       console.error("Error saving question:", err);
-      setError(err.response?.data?.error || "Failed to save question");
+      if (err.response?.status === 403) {
+        setError("Access denied. Please check your permissions.");
+      } else if (err.response?.status === 401) {
+        setError("Authentication failed. Please login again.");
+      } else {
+        setError(err.response?.data?.error || "Failed to save question");
+      }
     }
   };
 
@@ -207,29 +275,35 @@ function QuestionManager() {
     setActiveTab('individual');
   };
 
-  // Delete question
+  // Delete question with consistent token usage
   const handleDelete = async (id) => {
     if (!window.confirm("Are you sure you want to delete this question?")) {
       return;
     }
 
     try {
+      const token = getToken();
+      
+      if (!token) {
+        setError("Authentication required. Please login again.");
+        return;
+      }
+
       await axios.delete(
         `http://localhost:5000/api/questions/delete/${id}`,
         {
           headers: {
-            Authorization: `Bearer ${tokenValue}`
+            'Authorization': `Bearer ${token}`,
+            'Content-Type': 'application/json'
           }
         }
       );
       
-      // Remove question from state
       setQuestions(prevQuestions => 
         Array.isArray(prevQuestions) ? prevQuestions.filter(q => q._id !== id) : []
       );
       showPopupMessage('Question deleted successfully!');
       
-      // If the deleted question was being edited, reset the form
       if (isEditing && currentQuestion._id === id) {
         resetForm();
       }
@@ -237,7 +311,13 @@ function QuestionManager() {
       setError(null);
     } catch (err) {
       console.error("Error deleting question:", err);
-      setError("Failed to delete question");
+      if (err.response?.status === 403) {
+        setError("Access denied. Cannot delete this question.");
+      } else if (err.response?.status === 401) {
+        setError("Authentication failed. Please login again.");
+      } else {
+        setError("Failed to delete question");
+      }
     }
   };
 
@@ -267,7 +347,6 @@ function QuestionManager() {
 
   // Download template function
   const downloadTemplate = () => {
-    // Create a template worksheet
     const template = [
       ['question', 'option1', 'option2', 'option3', 'option4', 'type', 'category', 'order', 'active'],
       ['What is your preferred learning style?', 'Visual', 'Auditory', 'Reading/Writing', 'Kinesthetic', 'radio', 'career', '1', 'TRUE'],
@@ -275,14 +354,6 @@ function QuestionManager() {
       ['', '', '', '', '', '', '', '', ''],
       ['NOTE: type must be "radio" or "checkbox". category must be "career", "skills", or "personality". active must be "TRUE" or "FALSE"']
     ];
-    
-    // Note: XLSX functionality commented out - uncomment when XLSX is available
-    /*
-    const ws = XLSX.utils.aoa_to_sheet(template);
-    const wb = XLSX.utils.book_new();
-    XLSX.utils.book_append_sheet(wb, ws, "Question Template");
-    XLSX.writeFile(wb, "question_import_template.xlsx");
-    */
     
     console.log("Template download would create file with this data:", template);
     alert("XLSX library not available. Please implement the download template functionality.");
@@ -301,129 +372,6 @@ function QuestionManager() {
     setProgress(0);
     setImportStatus('Reading file...');
     
-    // Note: File reading functionality commented out - uncomment when XLSX is available
-    /*
-    const reader = new FileReader();
-    
-    reader.onload = async (e) => {
-      try {
-        const data = new Uint8Array(e.target.result);
-        const workbook = XLSX.read(data, { type: 'array' });
-        
-        // Get the first worksheet
-        const worksheetName = workbook.SheetNames[0];
-        const worksheet = workbook.Sheets[worksheetName];
-        
-        // Convert to JSON
-        const jsonData = XLSX.utils.sheet_to_json(worksheet);
-        
-        if (jsonData.length === 0) {
-          setImportError('No data found in the file.');
-          setIsImporting(false);
-          return;
-        }
-        
-        setImportStatus(`Processing ${jsonData.length} questions...`);
-        
-        // Process and validate each question
-        const processedQuestions = [];
-        let hasErrors = false;
-        
-        for (let i = 0; i < jsonData.length; i++) {
-          const row = jsonData[i];
-          setProgress(Math.floor((i / jsonData.length) * 100));
-          
-          // Skip empty rows
-          if (!row.question || row.question.trim() === '') continue;
-          
-          // Extract options (columns named option1, option2, etc.)
-          const options = [];
-          for (let j = 1; j <= 10; j++) {
-            const optionKey = `option${j}`;
-            if (row[optionKey] && row[optionKey].trim() !== '') {
-              options.push(row[optionKey]);
-            }
-          }
-          
-          // Validate required fields
-          if (options.length < 1) {
-            setImportError(`Row ${i + 2}: At least one option is required.`);
-            hasErrors = true;
-            break;
-          }
-          
-          if (!['radio', 'checkbox'].includes(row.type?.toLowerCase())) {
-            setImportError(`Row ${i + 2}: Type must be 'radio' or 'checkbox'.`);
-            hasErrors = true;
-            break;
-          }
-          
-          if (!['career', 'skills', 'personality'].includes(row.category?.toLowerCase())) {
-            setImportError(`Row ${i + 2}: Category must be 'career', 'skills', or 'personality'.`);
-            hasErrors = true;
-            break;
-          }
-          
-          // Create question object
-          const question = {
-            question: row.question,
-            options: options,
-            type: row.type.toLowerCase(),
-            category: row.category.toLowerCase(),
-            order: parseInt(row.order) || 0,
-            active: row.active?.toString().toUpperCase() === 'TRUE'
-          };
-          
-          processedQuestions.push(question);
-        }
-        
-        if (hasErrors) {
-          setIsImporting(false);
-          return;
-        }
-        
-        // Import questions to the backend
-        setImportStatus(`Uploading ${processedQuestions.length} questions...`);
-        
-        const response = await axios.post(
-          `http://localhost:5000/api/questions/batch`,
-          { questions: processedQuestions },
-          {
-            headers: {
-              Authorization: `Bearer ${tokenValue}`
-            }
-          }
-        );
-        
-        setProgress(100);
-        setImportStatus(`Successfully imported ${processedQuestions.length} questions.`);
-        showPopupMessage(`Successfully imported ${processedQuestions.length} questions.`);
-        
-        // Refresh questions list
-        await fetchQuestions();
-        
-        // Reset file input
-        setFile(null);
-        setFileName('');
-        if (fileInputRef.current) {
-          fileInputRef.current.value = '';
-        }
-      } catch (err) {
-        console.error("Error importing questions:", err);
-        setImportError(err.response?.data?.error || "Failed to import questions. Please check your file format.");
-      } finally {
-        setIsImporting(false);
-      }
-    };
-    
-    reader.onerror = () => {
-      setImportError('Error reading file.');
-      setIsImporting(false);
-    };
-    
-    reader.readAsArrayBuffer(file);
-    */
-    
     // Temporary implementation without XLSX
     setImportError('XLSX library not available. Please implement bulk import functionality.');
     setIsImporting(false);
@@ -431,7 +379,6 @@ function QuestionManager() {
 
   // Function to group questions by category with safety checks
   const getQuestionsByCategory = () => {
-    // Ensure questions is an array before filtering
     const safeQuestions = Array.isArray(questions) ? questions : [];
     
     const careerQuestions = safeQuestions.filter(q => q.category === 'career');
@@ -467,7 +414,17 @@ function QuestionManager() {
     <div className="admin-question-container">
       <h2 className="title">Assessment Question Manager</h2>
       
-      {error && <div className="error-message">{error}</div>}
+      {error && (
+        <div className="error-message">
+          {error}
+          <button 
+            onClick={() => window.location.reload()} 
+            style={{marginLeft: '10px', padding: '5px 10px'}}
+          >
+            Refresh Page
+          </button>
+        </div>
+      )}
       <SuccessPopup />
       
       <div className="tab-navigation">
@@ -676,7 +633,6 @@ function QuestionManager() {
           </select>
         </div>
         
-        {/* Questions grouped by category */}
         {filterCategory === 'all' ? (
           <>
             {/* Career Questions */}
@@ -818,7 +774,6 @@ function QuestionManager() {
             </div>
           </>
         ) : (
-          // Filtered questions based on selected category
           <div className="questions-list">
             {filteredQuestions.length === 0 ? (
               <p>No questions found in this category.</p>
