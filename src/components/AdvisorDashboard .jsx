@@ -12,6 +12,7 @@ import { useNavigate, useLocation } from "react-router-dom";
 const SIDEBAR_ITEMS = [
   { id: 'overview', label: 'Overview', icon: '📊' },
   { id: 'students', label: 'All Students', icon: '👥' },
+  { id: 'questionsManager', label: 'Questions Manager', icon: '📋' },
   // { id: 'pending', label: 'Pending Reviews', icon: '⏳' },
   // { id: 'approved', label: 'Approved', icon: '✅' },
   // { id: 'transfer', label: 'Transfer Students', icon: '🔄' },

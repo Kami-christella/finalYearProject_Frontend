@@ -1929,20 +1929,20 @@ const ComprehensiveDashboard = () => {
         {/* Footer Actions */}
         <div className="dashboard-footer">
           <div className="footer-actions">
-            <button 
+            {/* <button 
               onClick={handleLogout}
               className="logout-btn"
             >
               <span className="btn-icon">🚪</span>
               Logout
-            </button>
-            <button 
+            </button> */}
+            {/* <button 
               onClick={() => window.location.reload()}
               className="refresh-btn"
             >
               <span className="btn-icon">🔄</span>
               Refresh Data
-            </button>
+            </button> */}
           </div>
           <div className="footer-info">
             <p>Dashboard last updated: {formatDate(new Date())}</p>

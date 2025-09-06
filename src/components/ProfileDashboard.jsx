@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { Notify } from 'notiflix';
 import './styles/ProfileDashboard.css'; 
 
-const ProfileDashboard = () => {
+const ProfileDashboard = () => { 
   const [profile, setProfile] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
