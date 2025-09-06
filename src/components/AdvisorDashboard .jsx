@@ -1129,6 +1129,7 @@ const handleLogoutBtn = () => {
               ))}
             </nav>
             <div className="sidebar-footer">
+             
               <button className="logout-btn" onClick={handleLogout}>Logout</button>
             </div>
           </aside>
@@ -1201,7 +1202,7 @@ const handleLogoutBtn = () => {
             {showDropdown && (
               <div className="profile-dropdown position-absolute bg-white shadow p-2 rounded" style={{ right: "0px", top: "40px" }}>
                 <p className=""></p>
-              
+               <b>Username:</b>  {userName} <br/><br/>
                 <button className="logout-button btn btn-danger btn-sm w-100" onClick={handleLogoutBtn}><IoIosLogOut /> Logout</button>
               </div>
             )}
