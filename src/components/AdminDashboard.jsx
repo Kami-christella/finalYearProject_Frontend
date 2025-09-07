@@ -51,7 +51,17 @@ const transformFacultyDataForBarChart = (facultyDistribution) => {
     uv: faculty.count
   }));
 };
-
+// Add this after your existing transformation functions
+const transformRecommendedFacultiesForBarChart = (topFaculties) => {
+  if (!topFaculties || !Array.isArray(topFaculties)) return [];
+  return topFaculties.map(faculty => ({
+    name: faculty._id.length > 20 ? faculty._id.substring(0, 20) + '...' : faculty._id,
+    fullName: faculty._id,
+    students: faculty.count,
+    uv: faculty.count,
+    avgMatch: faculty.avgMatchPercentage || 0
+  }));
+};
 const transformProgramDataForBarChart = (programPreferences) => {
   if (!programPreferences || !Array.isArray(programPreferences)) return [];
   return programPreferences.map((program, index) => ({
@@ -303,12 +313,55 @@ useEffect(() => {
     document.removeEventListener('mousedown', handleClickOutside);
   };
 }, []);
+// const fetchDashboardData = async () => {
+//   try {
+//     setLoading(true);
+//     const token = localStorage.getItem('token');
+    
+//     // Fetch from both endpoints simultaneously
+//     const [adminResponse, studentResponse] = await Promise.all([
+//       fetch('http://localhost:5000/api/admin/dashboard', {
+//         headers: { 'Authorization': `Bearer ${token}` }
+//       }).catch(() => ({ ok: false })),
+      
+//       fetch('http://localhost:5000/api/student/profiles/statistics', {
+//         headers: { 'Authorization': `Bearer ${token}` }
+//       }).catch(() => ({ ok: false }))
+//     ]);
+
+//     let combinedData = {};
+
+//     // Process admin dashboard data
+//     if (adminResponse.ok) {
+//       const adminData = await adminResponse.json();
+//       console.log('Admin data:', adminData); // Debug log
+//       combinedData.timeTracking = adminData.data?.timeTracking || {};
+//       combinedData.userManagement = adminData.data?.userManagement || {};
+//     }
+
+//     // Process student statistics data
+//     if (studentResponse.ok) {
+//       const studentData = await studentResponse.json();
+//       console.log('Student data:', studentData); // Debug log
+//       combinedData = { ...combinedData, ...studentData.statistics };
+//     }
+
+//     console.log('Final combined data:', combinedData); // Debug log
+//     setStatistics(combinedData);
+
+//   } catch (error) {
+//     console.error('Error loading dashboard:', error);
+//     Notify.failure('Error loading dashboard');
+//   } finally {
+//     setLoading(false);
+//   }
+// };
+
 const fetchDashboardData = async () => {
   try {
     setLoading(true);
     const token = localStorage.getItem('token');
     
-    // Fetch from both endpoints simultaneously
     const [adminResponse, studentResponse] = await Promise.all([
       fetch('http://localhost:5000/api/admin/dashboard', {
         headers: { 'Authorization': `Bearer ${token}` }
@@ -324,19 +377,21 @@ const fetchDashboardData = async () => {
     // Process admin dashboard data
     if (adminResponse.ok) {
       const adminData = await adminResponse.json();
-      console.log('Admin data:', adminData); // Debug log
+      console.log('Admin data:', adminData);
+      
       combinedData.timeTracking = adminData.data?.timeTracking || {};
       combinedData.userManagement = adminData.data?.userManagement || {};
+      
+      // ADD THIS: Set analytics data including new recommendation stats
+      setAnalytics(adminData.data?.analytics || {});
     }
 
     // Process student statistics data
     if (studentResponse.ok) {
       const studentData = await studentResponse.json();
-      console.log('Student data:', studentData); // Debug log
       combinedData = { ...combinedData, ...studentData.statistics };
     }
 
-    console.log('Final combined data:', combinedData); // Debug log
     setStatistics(combinedData);
 
   } catch (error) {
@@ -346,28 +401,6 @@ const fetchDashboardData = async () => {
     setLoading(false);
   }
 };
-  // const fetchDashboardData = async () => {
-  //   try {
-  //     setLoading(true);
-  //     const token = localStorage.getItem('token');
-  //     const response = await fetch('http://localhost:5000/api/student/profiles/statistics', {
-  //       headers: { 'Authorization': `Bearer ${token}` }
-  //     });
-  //     if (response.ok) {
-  //       const data = await response.json();
-  //       setStatistics(data.statistics || {});
-  //     } else {
-  //       console.error('Failed to fetch dashboard data:', response.status);
-  //       Notify.failure('Failed to fetch dashboard data');
-  //     }
-  //   } catch (error) {
-  //     console.error('Error loading dashboard:', error);
-  //     Notify.failure('Error loading dashboard');
-  //   } finally {
-  //     setLoading(false);
-  //   }
-  // };
-
     // Add function to fetch user details (optional)
   const fetchUserDetails = async () => {
     try {
@@ -3351,7 +3384,7 @@ const handleLogoutBtn = () => {
               </div>
 
               <div className="analytics-section">
-                <h3>Faculty Distribution</h3>
+                <h3>Student Faculty Preferences</h3>
                 <div className="faculty-stats">
                   {analytics.facultyDistribution && analytics.facultyDistribution.length > 0 ? (
                     <div className="bar-chart-container" style={{ width: '100%' }}>
@@ -3393,6 +3426,49 @@ const handleLogoutBtn = () => {
                   )}
                 </div>
               </div>
+               <div className="analytics-section">
+      <h3>Top Recommended Faculties (AI Recommendations)</h3>
+      <div className="faculty-stats">
+        {analytics.recommendationStats?.topFaculties && analytics.recommendationStats.topFaculties.length > 0 ? (
+          <div className="bar-chart-container" style={{ width: '100%' }}>
+            <ResponsiveContainer width="100%" height={300}>
+              <BarChart 
+                data={transformRecommendedFacultiesForBarChart(analytics.recommendationStats.topFaculties)}
+                margin={{ top: 20, right: 30, left: 20, bottom: 80 }}
+              >
+                <CartesianGrid strokeDasharray="3 3" />
+                <XAxis 
+                  dataKey="name" 
+                  angle={-45}
+                  textAnchor="end"
+                  height={100}
+                  fontSize={12}
+                />
+                <YAxis />
+                <Tooltip 
+                  formatter={(value, name, props) => [
+                    `${value} students recommended (${props.payload.avgMatch.toFixed(1)}% avg match)`, 
+                    props.payload.fullName
+                  ]}
+                />
+                <Bar dataKey="students">
+                  {transformRecommendedFacultiesForBarChart(analytics.recommendationStats.topFaculties).map((entry, index) => (
+                    <Cell 
+                      key={`cell-${index}`} 
+                      fill={PROGRAM_COLORS[index % PROGRAM_COLORS.length]} // Use different colors than faculty distribution
+                    />
+                  ))}
+                </Bar>
+              </BarChart>
+            </ResponsiveContainer>
+          </div>
+        ) : (
+          <div className="no-data">
+            <p>No AI recommendation data available</p>
+          </div>
+        )}
+      </div>
+    </div>
             </div>
           )}
 
