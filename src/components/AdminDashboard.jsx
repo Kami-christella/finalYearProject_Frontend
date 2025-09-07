@@ -547,20 +547,19 @@ const fetchDashboardData = async () => {
   };
 
 // Generate System Report (PDF/Excel)
+
 const handleGenerateSystemReport = async (format = 'excel') => {
   try {
     setReportLoading(true);
     const token = localStorage.getItem('token');
     
     const params = new URLSearchParams({
-     
-      reportType: 'system',
-      startDate: reportForm.startDate,
-      endDate: reportForm.endDate,
-      includeCharts: reportForm.includeCharts
+      format: format,
+      includeCharts: 'true',
+      includeAnalytics: 'true'
     });
 
-    const response = await fetch(`http://localhost:5000/api/admin/reports/system/${format}?${params}`, {
+    const response = await fetch(`http://localhost:5000/api/admin/reports/system?${params}`, {
       headers: { 'Authorization': `Bearer ${token}` }
     });
 
@@ -569,24 +568,68 @@ const handleGenerateSystemReport = async (format = 'excel') => {
       const url = window.URL.createObjectURL(blob);
       const a = document.createElement('a');
       a.href = url;
-      a.download = `system-report-${new Date().toISOString().split('T')[0]}.${format === 'pdf' ? 'pdf' : 'xlsx'}`;
+      
+      const timestamp = new Date().toISOString().split('T')[0];
+      a.download = `system-report-${timestamp}.${format === 'pdf' ? 'pdf' : 'xlsx'}`;
+      
       document.body.appendChild(a);
       a.click();
       window.URL.revokeObjectURL(url);
       document.body.removeChild(a);
       
-      Notify.success(`${format.toUpperCase()} report downloaded successfully!`);
+      Notify.success(`${format.toUpperCase()} system report downloaded successfully!`);
     } else {
-      throw new Error('Failed to generate report');
+      const errorData = await response.json().catch(() => ({}));
+      throw new Error(errorData.message || 'Failed to generate system report');
     }
   } catch (error) {
-    Notify.failure('Error generating report: ' + error.message);
+    console.error('System report error:', error);
+    Notify.failure('Error generating system report: ' + error.message);
   } finally {
     setReportLoading(false);
   }
 };
+// const handleGenerateSystemReport = async (format = 'excel') => {
+//   try {
+//     setReportLoading(true);
+//     const token = localStorage.getItem('token');
+    
+//     const params = new URLSearchParams({
+     
+//       reportType: 'system',
+//       startDate: reportForm.startDate,
+//       endDate: reportForm.endDate,
+//       includeCharts: reportForm.includeCharts
+//     });
+
+//     const response = await fetch(`http://localhost:5000/api/admin/reports/system/${format}?${params}`, {
+//       headers: { 'Authorization': `Bearer ${token}` }
+//     });
+
+//     if (response.ok) {
+//       const blob = await response.blob();
+//       const url = window.URL.createObjectURL(blob);
+//       const a = document.createElement('a');
+//       a.href = url;
+//       a.download = `system-report-${new Date().toISOString().split('T')[0]}.${format === 'pdf' ? 'pdf' : 'xlsx'}`;
+//       document.body.appendChild(a);
+//       a.click();
+//       window.URL.revokeObjectURL(url);
+//       document.body.removeChild(a);
+      
+//       Notify.success(`${format.toUpperCase()} report downloaded successfully!`);
+//     } else {
+//       throw new Error('Failed to generate report');
+//     }
+//   } catch (error) {
+//     Notify.failure('Error generating report: ' + error.message);
+//   } finally {
+//     setReportLoading(false);
+//   }
+// };
 
 // Generate Analytics Report
+
 const handleGenerateAnalyticsReport = async (format = 'excel') => {
   try {
     setReportLoading(true);
@@ -594,7 +637,8 @@ const handleGenerateAnalyticsReport = async (format = 'excel') => {
     
     const params = new URLSearchParams({
       format: format,
-      period: reportForm.dateRange
+      period: 'month', // You might want to make this configurable
+      includeCharts: format === 'pdf' ? 'true' : 'false'
     });
 
     const response = await fetch(`http://localhost:5000/api/admin/reports/analytics?${params}`, {
@@ -606,7 +650,10 @@ const handleGenerateAnalyticsReport = async (format = 'excel') => {
       const url = window.URL.createObjectURL(blob);
       const a = document.createElement('a');
       a.href = url;
-      a.download = `analytics-report-${reportForm.dateRange}-${new Date().toISOString().split('T')[0]}.${format === 'pdf' ? 'pdf' : 'xlsx'}`;
+      
+      const timestamp = new Date().toISOString().split('T')[0];
+      a.download = `analytics-report-month-${timestamp}.${format === 'pdf' ? 'pdf' : 'xlsx'}`;
+      
       document.body.appendChild(a);
       a.click();
       window.URL.revokeObjectURL(url);
@@ -614,16 +661,65 @@ const handleGenerateAnalyticsReport = async (format = 'excel') => {
       
       Notify.success(`Analytics ${format.toUpperCase()} report downloaded successfully!`);
     } else {
-      throw new Error('Failed to generate analytics report');
+      const errorData = await response.json().catch(() => ({}));
+      throw new Error(errorData.message || 'Failed to generate analytics report');
     }
   } catch (error) {
+    console.error('Analytics report error:', error);
     Notify.failure('Error generating analytics report: ' + error.message);
   } finally {
     setReportLoading(false);
   }
 };
-const handleGenerateCustomReport = async () => {
+// const handleGenerateAnalyticsReport = async (format = 'excel') => {
+//   try {
+//     setReportLoading(true);
+//     const token = localStorage.getItem('token');
+    
+//     const params = new URLSearchParams({
+//       format: format,
+//       period: reportForm.dateRange
+//     });
+
+//     const response = await fetch(`http://localhost:5000/api/admin/reports/analytics?${params}`, {
+//       headers: { 'Authorization': `Bearer ${token}` }
+//     });
+
+//     if (response.ok) {
+//       const blob = await response.blob();
+//       const url = window.URL.createObjectURL(blob);
+//       const a = document.createElement('a');
+//       a.href = url;
+//       a.download = `analytics-report-${reportForm.dateRange}-${new Date().toISOString().split('T')[0]}.${format === 'pdf' ? 'pdf' : 'xlsx'}`;
+//       document.body.appendChild(a);
+//       a.click();
+//       window.URL.revokeObjectURL(url);
+//       document.body.removeChild(a);
+      
+//       Notify.success(`Analytics ${format.toUpperCase()} report downloaded successfully!`);
+//     } else {
+//       throw new Error('Failed to generate analytics report');
+//     }
+//   } catch (error) {
+//     Notify.failure('Error generating analytics report: ' + error.message);
+//   } finally {
+//     setReportLoading(false);
+//   }
+// };
+
+
+const handleGenerateCustomReport = async (e) => {
+  e.preventDefault();
+  
   try {
+    setReportLoading(true);
+    const token = localStorage.getItem('token');
+    
+    if (!token) {
+      Notify.failure('Authentication token missing. Please log in again.');
+      return;
+    }
+
     // Validate custom date range
     if (reportForm.dateRange === 'custom') {
       if (!reportForm.startDate || !reportForm.endDate) {
@@ -636,16 +732,97 @@ const handleGenerateCustomReport = async () => {
       }
     }
 
-    setReportLoading(true);
-    const token = localStorage.getItem('token');
-    
+    // Build comprehensive query parameters
     const params = new URLSearchParams({
       format: reportForm.format,
       reportType: reportForm.reportType,
       dateRange: reportForm.dateRange,
-      startDate: reportForm.startDate,
-      endDate: reportForm.endDate,
-      filters: JSON.stringify(reportForm.filters)
+      includeCharts: reportForm.includeCharts.toString()
+    });
+
+    // Add custom date range if selected
+    if (reportForm.dateRange === 'custom') {
+      params.append('startDate', reportForm.startDate);
+      params.append('endDate', reportForm.endDate);
+    }
+
+    // Add filters if they exist
+    Object.entries(reportForm.filters).forEach(([key, value]) => {
+      if (value && value !== '') {
+        params.append(`filter_${key}`, value);
+      }
+    });
+
+    const url = `http://localhost:5000/api/admin/reports/custom?${params}`;
+    
+    const response = await fetch(url, {
+      method: 'GET',
+      headers: { 
+        'Authorization': `Bearer ${token}`,
+        'Accept': 'application/octet-stream'
+      }
+    });
+
+    if (!response.ok) {
+      const errorData = await response.json().catch(() => ({}));
+      throw new Error(errorData.message || `Server error: ${response.status}`);
+    }
+
+    // Handle file download
+    const blob = await response.blob();
+    const downloadUrl = window.URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = downloadUrl;
+    
+    const timestamp = new Date().toISOString().split('T')[0];
+    const dateStr = reportForm.dateRange === 'custom' 
+      ? `${reportForm.startDate}-to-${reportForm.endDate}`
+      : reportForm.dateRange;
+    
+    const filename = `${reportForm.reportType}-report-${dateStr}-${timestamp}.${reportForm.format === 'pdf' ? 'pdf' : 'xlsx'}`;
+    
+    a.download = filename;
+    document.body.appendChild(a);
+    a.click();
+    
+    setTimeout(() => {
+      window.URL.revokeObjectURL(downloadUrl);
+      document.body.removeChild(a);
+    }, 100);
+    
+    Notify.success(`${reportForm.format.toUpperCase()} report generated successfully!`);
+    setShowReportModal(false);
+    
+    // Reset form
+    setReportForm({
+      reportType: 'users',
+      format: 'excel',
+      dateRange: 'month',
+      startDate: '',
+      endDate: '',
+      includeCharts: true,
+      filters: {}
+    });
+    
+  } catch (error) {
+    console.error('Custom report error:', error);
+    Notify.failure('Error generating custom report: ' + error.message);
+  } finally {
+    setReportLoading(false);
+  }
+};
+
+// Quick report generation functions
+const handleGenerateQuickReport = async (reportType, dateRange = 'month', format = 'excel') => {
+  try {
+    setReportLoading(true);
+    const token = localStorage.getItem('token');
+    
+    const params = new URLSearchParams({
+      format,
+      reportType,
+      dateRange,
+      includeCharts: 'true'
     });
 
     const response = await fetch(`http://localhost:5000/api/admin/reports/custom?${params}`, {
@@ -657,48 +834,199 @@ const handleGenerateCustomReport = async () => {
       const url = window.URL.createObjectURL(blob);
       const a = document.createElement('a');
       a.href = url;
-      
-      // Generate descriptive filename
-      const dateStr = reportForm.dateRange === 'custom' 
-        ? `${reportForm.startDate}-to-${reportForm.endDate}`
-        : reportForm.dateRange;
-      const filterStr = Object.keys(reportForm.filters).length > 0 ? '-filtered' : '';
-      
-      a.download = `custom-${reportForm.reportType}-report-${dateStr}${filterStr}-${new Date().toISOString().split('T')[0]}.${reportForm.format === 'pdf' ? 'pdf' : 'xlsx'}`;
-      document.body.appendChild(a);
+      a.download = `${reportType}-${dateRange}-report-${new Date().toISOString().split('T')[0]}.${format === 'pdf' ? 'pdf' : 'xlsx'}`;
       a.click();
       window.URL.revokeObjectURL(url);
-      document.body.removeChild(a);
       
-      Notify.success(`Custom ${reportForm.format.toUpperCase()} report generated successfully!`);
-      setShowReportModal(false);
-      
-      // Reset form
-      setReportForm({
-        reportType: 'users',
-        format: 'excel',
-        dateRange: 'month',
-        startDate: '',
-        endDate: '',
-        includeCharts: true,
-        filters: {}
-      });
+      Notify.success(`${reportType} report downloaded!`);
     } else {
-      const error = await response.json();
-      throw new Error(error.message || 'Failed to generate custom report');
+      throw new Error('Failed to generate report');
     }
   } catch (error) {
-    console.error('Custom report error:', error);
-    Notify.failure('Error generating custom report: ' + error.message);
+    Notify.failure('Error: ' + error.message);
   } finally {
     setReportLoading(false);
   }
 };
 
+// const handleGenerateCustomReport = async () => {
+//   try {
+//     // Validate custom date range
+//     if (reportForm.dateRange === 'custom') {
+//       if (!reportForm.startDate || !reportForm.endDate) {
+//         Notify.failure('Please select both start and end dates for custom range');
+//         return;
+//       }
+//       if (new Date(reportForm.startDate) > new Date(reportForm.endDate)) {
+//         Notify.failure('Start date cannot be after end date');
+//         return;
+//       }
+//     }
+
+//     setReportLoading(true);
+//     const token = localStorage.getItem('token');
+    
+//     if (!token) {
+//       Notify.failure('Authentication token missing. Please log in again.');
+//       return;
+//     }
+
+//     // Log the request data for debugging
+//     const requestData = {
+//       format: reportForm.format,
+//       reportType: reportForm.reportType,
+//       dateRange: reportForm.dateRange,
+//       startDate: reportForm.startDate,
+//       endDate: reportForm.endDate,
+//       filters: JSON.stringify(reportForm.filters)
+//     };
+    
+//     console.log('Sending request with data:', requestData);
+    
+//     const params = new URLSearchParams(requestData);
+//     const url = `http://localhost:5000/api/admin/reports/custom?${params}`;
+    
+//     console.log('Request URL:', url);
+
+//     const response = await fetch(url, {
+//       method: 'GET', // Explicitly set method
+//       headers: { 
+//         'Authorization': `Bearer ${token}`,
+//         'Accept': 'application/octet-stream' // Accept binary data
+//       }
+//     });
+
+//     console.log('Response status:', response.status);
+//     console.log('Response headers:', Object.fromEntries(response.headers.entries()));
+
+//     if (!response.ok) {
+//       const errorText = await response.text();
+//       console.error('Error response:', errorText);
+      
+//       let errorMessage = 'Failed to generate custom report';
+//       try {
+//         const errorJson = JSON.parse(errorText);
+//         errorMessage = errorJson.message || errorMessage;
+//       } catch (e) {
+//         errorMessage = `Server error: ${response.status} ${response.statusText}`;
+//       }
+      
+//       throw new Error(errorMessage);
+//     }
+
+//     // Check if response is actually a blob
+//     const contentType = response.headers.get('content-type');
+//     console.log('Content type:', contentType);
+    
+//     if (!contentType || (!contentType.includes('application/vnd.openxmlformats') && !contentType.includes('application/pdf'))) {
+//       console.warn('Unexpected content type:', contentType);
+//       const textResponse = await response.text();
+//       console.log('Text response:', textResponse);
+//       throw new Error('Server returned unexpected content type');
+//     }
+
+//     const blob = await response.blob();
+//     console.log('Blob size:', blob.size);
+    
+//     if (blob.size === 0) {
+//       throw new Error('Received empty file from server');
+//     }
+
+//     const url2 = window.URL.createObjectURL(blob);
+//     const a = document.createElement('a');
+//     a.href = url2;
+    
+//     // Generate descriptive filename
+//     const dateStr = reportForm.dateRange === 'custom' 
+//       ? `${reportForm.startDate}-to-${reportForm.endDate}`
+//       : reportForm.dateRange;
+//     const filterStr = Object.keys(reportForm.filters).length > 0 ? '-filtered' : '';
+    
+//     const filename = `custom-${reportForm.reportType}-report-${dateStr}${filterStr}-${new Date().toISOString().split('T')[0]}.${reportForm.format === 'pdf' ? 'pdf' : 'xlsx'}`;
+    
+//     a.download = filename;
+//     console.log('Download filename:', filename);
+    
+//     // Add to DOM, click, then remove
+//     document.body.appendChild(a);
+//     a.click();
+    
+//     // Clean up after a short delay
+//     setTimeout(() => {
+//       window.URL.revokeObjectURL(url2);
+//       document.body.removeChild(a);
+//     }, 100);
+    
+//     Notify.success(`Custom ${reportForm.format.toUpperCase()} report generated successfully!`);
+//     setShowReportModal(false);
+    
+//     // Reset form
+//     setReportForm({
+//       reportType: 'users',
+//       format: 'excel',
+//       dateRange: 'month',
+//       startDate: '',
+//       endDate: '',
+//       includeCharts: true,
+//       filters: {}
+//     });
+    
+//   } catch (error) {
+//     console.error('Custom report error:', error);
+//     Notify.failure('Error generating custom report: ' + error.message);
+//   } finally {
+//     setReportLoading(false);
+//   }
+// };
 
 
 
-// Generate User Report for selected users
+// const handleGenerateUserReport = async (format = 'excel') => {
+//   try {
+//     if (selectedUsers.length === 0) {
+//       Notify.warning('Please select users to include in the report');
+//       return;
+//     }
+
+//     setReportLoading(true);
+//     const token = localStorage.getItem('token');
+    
+//     const response = await fetch('http://localhost:5000/api/admin/reports/users', {
+//       method: 'POST',
+//       headers: {
+//         'Content-Type': 'application/json',
+//         'Authorization': `Bearer ${token}`
+//       },
+//       body: JSON.stringify({
+//         userIds: selectedUsers,
+//         format: format,
+//         includeProfiles: true,
+//         includeAssessments: true
+//       })
+//     });
+
+//     if (response.ok) {
+//       const blob = await response.blob();
+//       const url = window.URL.createObjectURL(blob);
+//       const a = document.createElement('a');
+//       a.href = url;
+//       a.download = `users-report-${selectedUsers.length}-users-${new Date().toISOString().split('T')[0]}.${format === 'pdf' ? 'pdf' : 'xlsx'}`;
+//       document.body.appendChild(a);
+//       a.click();
+//       window.URL.revokeObjectURL(url);
+//       document.body.removeChild(a);
+      
+//       Notify.success(`User ${format.toUpperCase()} report for ${selectedUsers.length} users downloaded successfully!`);
+//     } else {
+//       throw new Error('Failed to generate user report');
+//     }
+//   } catch (error) {
+//     Notify.failure('Error generating user report: ' + error.message);
+//   } finally {
+//     setReportLoading(false);
+//   }
+// };
+
 const handleGenerateUserReport = async (format = 'excel') => {
   try {
     if (selectedUsers.length === 0) {
@@ -719,7 +1047,8 @@ const handleGenerateUserReport = async (format = 'excel') => {
         userIds: selectedUsers,
         format: format,
         includeProfiles: true,
-        includeAssessments: true
+        includeAssessments: true,
+        includeActivity: true // Add activity data
       })
     });
 
@@ -728,7 +1057,10 @@ const handleGenerateUserReport = async (format = 'excel') => {
       const url = window.URL.createObjectURL(blob);
       const a = document.createElement('a');
       a.href = url;
-      a.download = `users-report-${selectedUsers.length}-users-${new Date().toISOString().split('T')[0]}.${format === 'pdf' ? 'pdf' : 'xlsx'}`;
+      
+      const timestamp = new Date().toISOString().split('T')[0];
+      a.download = `selected-users-report-${selectedUsers.length}-users-${timestamp}.${format === 'pdf' ? 'pdf' : 'xlsx'}`;
+      
       document.body.appendChild(a);
       a.click();
       window.URL.revokeObjectURL(url);
@@ -736,9 +1068,11 @@ const handleGenerateUserReport = async (format = 'excel') => {
       
       Notify.success(`User ${format.toUpperCase()} report for ${selectedUsers.length} users downloaded successfully!`);
     } else {
-      throw new Error('Failed to generate user report');
+      const errorData = await response.json().catch(() => ({}));
+      throw new Error(errorData.message || 'Failed to generate user report');
     }
   } catch (error) {
+    console.error('User report error:', error);
     Notify.failure('Error generating user report: ' + error.message);
   } finally {
     setReportLoading(false);
@@ -3986,10 +4320,9 @@ const handleLogoutBtn = () => {
               className="form-select"
               required
             >
-              <option value="week">Last Week</option>
-              <option value="month">Last Month</option>
-              <option value="quarter">Last Quarter (3 months)</option>
-              <option value="year">Last Year</option>
+              <option value="week"> Week</option>
+              <option value="month"> Month</option>
+              {/* <option value="quarter">Last Quarter (3 months)</option> */}
               <option value="custom">Custom Date Range</option>
             </select>
           </div>
