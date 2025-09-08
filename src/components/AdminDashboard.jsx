@@ -3213,62 +3213,7 @@ const handleLogoutBtn = () => {
         </button>
       </div>
     </div>
-{/* <div style={{
-  display: 'flex',
-  gap: '1rem',
-  marginBottom: '2rem',
-  padding: '1rem',
-  background:'#1B3058',
-  // background: '#1d4ed8',
-  borderRadius: '12px',
-  alignItems: 'center',
-  justifyContent: 'center'
-}}>
-  <h3 style={{ color: 'white', margin: 0, fontSize: '1.1rem' }}>
-    📊 Generate Analytics Reports
-  </h3>
-  <div style={{ display: 'flex', gap: '0.5rem' }}>
-    <button
-      onClick={() => handleGenerateAnalyticsReport('excel')}
-      disabled={reportLoading}
-      style={{
-        padding: '0.75rem 1.5rem',
-        background: '#059669',
-        color: 'white',
-        border: 'none',
-        borderRadius: '8px',
-        cursor: reportLoading ? 'not-allowed' : 'pointer',
-        display: 'flex',
-        alignItems: 'center',
-        gap: '0.5rem',
-        fontWeight: '500',
-        fontSize: '0.875rem'
-      }}
-    >
-      <FaFileExcel /> Excel Report
-    </button>
-    <button
-      onClick={() => handleGenerateAnalyticsReport('pdf')}
-      disabled={reportLoading}
-      style={{
-        padding: '0.75rem 1.5rem',
-         background: '#dc2626',
-        color: 'white',
-        border: 'none',
-        borderRadius: '8px',
-        cursor: reportLoading ? 'not-allowed' : 'pointer',
-        display: 'flex',
-        alignItems: 'center',
-        gap: '0.5rem',
-        fontWeight: '500',
-        fontSize: '0.875rem'
-      }}
-    >
-      <FaFilePdf /> PDF Report
-    </button>
-  </div>
-</div> */}
-{/* start */}
+
           {activeTab === 'analytics' && (
             
             <div className="tab-content">
