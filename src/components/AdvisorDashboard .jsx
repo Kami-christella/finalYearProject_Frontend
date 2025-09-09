@@ -820,7 +820,7 @@ useEffect(() => {
   
   try {
     const token = localStorage.getItem('token');
-    console.log('Token:', token); // Debug line
+    console.log('Token:', token); 
     
     if (!token) {
       Notify.failure('Please log in again');
@@ -943,7 +943,7 @@ useEffect(() => {
     }
   };
 
-  // Helpers
+  
   const filterStudents = () => {
     let filtered = students;
     if (searchTerm) {
@@ -1261,21 +1261,7 @@ const handleLogoutBtn = () => {
                 </div>
               </div>
 
-              {/* <div className="overview-charts">
-                <div className="chart-card">
-                  <h3>Approval Rate</h3>
-                  <div className="progress-circle">
-                    <div className="progress-text">{statistics.approvalRate || 0}%</div>
-                  </div>
-                </div>
-                <div className="chart-card">
-                  <h3>Recent Activity</h3>
-                  <div className="activity-summary">
-                    <p>Reviews processed this week</p>
-                    <div className="activity-number">{statistics.recent || 0}</div>
-                  </div>
-                </div>
-              </div> */}
+            
             </div>
           )}
 
@@ -1534,7 +1520,7 @@ const handleLogoutBtn = () => {
   </div>
     )}
 
-          {/* Activity Log Tab */}
+        
          {/* Activity Log Tab */}
           {activeTab === 'activity' && (
             <div className="tab-content">
@@ -1713,8 +1699,6 @@ const handleLogoutBtn = () => {
     </div>
   )}
 </div>
-
-                          {/* end */}
                         </div>
                       ))}
                     </div>
@@ -1852,7 +1836,6 @@ const handleLogoutBtn = () => {
   
   {appointment.status === 'booked' && (
     <>
-      {/* NEW: Add confirm button for pending appointments */}
       {!appointment.confirmed && (
         <button 
           onClick={() => handleConfirmAppointment(appointment._id)}
@@ -1877,7 +1860,6 @@ const handleLogoutBtn = () => {
       </button>
     </>
   )}
-{/* end */}
                             {appointment.status === 'completed' && (
                               <button 
                                 onClick={() => console.log('View details for:', appointment)}
@@ -1906,7 +1888,6 @@ const handleLogoutBtn = () => {
                 </div>
               )}
 
-              {/* Pagination for appointments */}
               {appointmentPagination.totalPages > 1 && (
                 <div className="pagination">
                   <button
@@ -1931,7 +1912,6 @@ const handleLogoutBtn = () => {
             </div>
           )}
 
-          {/* Enhanced Review Modal */}
           {showReviewModal && selectedStudent && (
             <div className="modal-overlay">
               <div className="modal-content large-modal">
@@ -2150,7 +2130,6 @@ const handleLogoutBtn = () => {
             </div>
           )}
 
-          {/* Document Viewing Modal */}
           {showDocumentModal && currentDocument && (
             <div className="modal-overlay">
               <div className="modal-content document-modal">

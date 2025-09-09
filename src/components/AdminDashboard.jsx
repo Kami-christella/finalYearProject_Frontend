@@ -2774,9 +2774,7 @@ const handleLogoutBtn = () => {
 
     <div className="table_header"><th style={{textAlign:'center'}}>STUDENTS WHO CREATED PROFILE</th> <br/></div> 
 
-    {/* Rest of your existing code continues here... */}
-
-
+   
     {/* Students Table */}
     {!loading && (
       <div className="students-table-container">
