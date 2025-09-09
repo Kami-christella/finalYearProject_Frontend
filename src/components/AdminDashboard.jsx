@@ -3372,16 +3372,7 @@ const handleLogoutBtn = () => {
                           onClick={() => handleCalendarDayClick(day.date)}
                         >
                           <span className="day-number">{day.date.getDate()}</span>
-                          {/* <div className="day-appointments">
-                            {getAppointmentsForDate(day.date).slice(0, 3).map((apt, i) => (
-                              <div key={i} className={`mini-appointment ${apt.status}`}>
-                                {apt.time} - {apt.status === 'booked' ? apt.studentName : 'Available'}
-                              </div>
-                            ))}
-                            {getAppointmentsForDate(day.date).length > 3 && (
-                              <div className="more-appointments">+{getAppointmentsForDate(day.date).length - 3} more</div>
-                            )}
-                          </div> */}
+                        
                           <div className="day-appointments">
   {getAppointmentsForDate(day.date).slice(0, 3).map((apt, i) => (
     <div key={i} className={`mini-appointment ${apt.status}`}>
@@ -4048,7 +4039,6 @@ const handleLogoutBtn = () => {
                       maxLength="500"
                     />
                   </div>
-                    {/* NEW: Add this recurring section */}
 <div className="recurring-section">
   <div className="recurring-checkbox">
     <input
