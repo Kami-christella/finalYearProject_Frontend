@@ -4,7 +4,6 @@ import translations from './translations';
 // Create context
 const LocalizationContext = createContext();
 
-// Custom hook to use localization (similar to PHP's __() function)
 export const useLocalization = () => {
   const context = useContext(LocalizationContext);
   if (!context) {
