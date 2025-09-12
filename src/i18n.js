@@ -13,7 +13,7 @@ i18n
     fallbackLng: 'en',
     debug: true,
     
-    // Critical: This makes en-US use en translations
+    
     load: 'languageOnly',
     
     interpolation: {
@@ -29,11 +29,11 @@ i18n
       caches: ['localStorage'],
     },
     
-    // Add these to help with language detection
+   
     supportedLngs: ['en', 'fr'],
     nonExplicitSupportedLngs: true,
     
-    // Add fallback for missing keys
+    
     returnEmptyString: false,
     returnNull: false,
     returnObjects: false,
