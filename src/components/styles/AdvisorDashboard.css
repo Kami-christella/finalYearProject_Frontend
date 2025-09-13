@@ -1363,7 +1363,7 @@
 
 .rec-label {
   font-weight: 500;
-  color: #374151;
+  /* color: #374151; */
   font-size: 0.875rem;
   display: block;
   margin-bottom: 0.25rem;
@@ -1371,7 +1371,7 @@
 
 .rec-value {
   font-size: 0.875rem;
-  color: #1e293b;
+  /* color: #1e293b; */
 }
 
 /* Approval Section */

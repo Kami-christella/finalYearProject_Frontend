@@ -920,7 +920,6 @@ const fetchStudentRecommendations = async (studentUserId) => {
   //   }
   // };
 
- // Remove the extra colon and check token format
 const handleReviewStudent = async (student) => {
   try {
     const token = localStorage.getItem('token');
@@ -987,12 +986,12 @@ const handleReviewStudent = async (student) => {
             console.log('✅ Added recommendations to student data');
           } else {
             console.log('ℹ️ No recommendations found for student');
-            studentData.aiRecommendations = null;
+            studentData.aiRecommendations = 'This student has not generated AI career recommendations yet.';
           }
         } else {
           const errorText = await recResponse.text();
           console.log('❌ Request failed:', recResponse.status, errorText);
-          studentData.aiRecommendations = null;
+          studentData.aiRecommendations = 'This student has not generated AI career recommendations yet.';
         }
       } catch (recError) {
         console.log('ℹ️ Error fetching recommendations:', recError.message);
@@ -2136,37 +2135,49 @@ const handleLogoutBtn = () => {
                       </div>
                     )}
 
-                    {(selectedStudent.aiRecommendations || selectedStudent.recommendedFaculty) && (
-                      <div className="ai-recommendations-section">
-                        <h4>AI Recommendations</h4>
-                        <div className="recommendations-grid">
-                          {(selectedStudent.recommendedFaculty || selectedStudent.aiRecommendations?.recommendedFaculty) && (
-                            <div className="recommendation-item">
-                              <span className="rec-label">Recommended Faculty:</span>
-                              <span className="rec-value ai-recommendation">
-                                {selectedStudent.recommendedFaculty || selectedStudent.aiRecommendations?.recommendedFaculty}
-                              </span>
-                            </div>
-                          )}
-                          {(selectedStudent.recommendedDepartment || selectedStudent.aiRecommendations?.recommendedDepartment) && (
-                            <div className="recommendation-item">
-                              <span className="rec-label">Recommended Department:</span>
-                              <span className="rec-value ai-recommendation">
-                                {selectedStudent.recommendedDepartment || selectedStudent.aiRecommendations?.recommendedDepartment}
-                              </span>
-                            </div>
-                          )}
-                          {(selectedStudent.careerAdvice || selectedStudent.aiRecommendations?.careerAdvice) && (
-                            <div className="recommendation-item full-width">
-                              <span className="rec-label">AI Career Advice:</span>
-                              <span className="rec-value ai-recommendation">
-                                {selectedStudent.careerAdvice || selectedStudent.aiRecommendations?.careerAdvice}
-                              </span>
-                            </div>
-                          )}
-                        </div>
-                      </div>
-                    )}
+                    {/* Always show AI Recommendations section */}
+<div className="ai-recommendations-section">
+  <h4>AI Recommendations</h4>
+  
+  {/* Show recommendations if they exist */}
+  {(selectedStudent.aiRecommendations || selectedStudent.recommendedFaculty) ? (
+    <div className="recommendations-grid">
+      {(selectedStudent.recommendedFaculty || selectedStudent.aiRecommendations?.recommendedFaculty) && (
+        <div className="recommendation-item">
+          <span className="rec-label">Recommended Faculty:</span>
+          <span className="rec-value ai-recommendation">
+            {selectedStudent.recommendedFaculty || selectedStudent.aiRecommendations?.recommendedFaculty}
+          </span>
+        </div>
+      )}
+      {(selectedStudent.recommendedDepartment || selectedStudent.aiRecommendations?.recommendedDepartment) && (
+        <div className="recommendation-item">
+          <span className="rec-label">Recommended Department:</span>
+          <span className="rec-value ai-recommendation">
+            {selectedStudent.recommendedDepartment || selectedStudent.aiRecommendations?.recommendedDepartment}
+          </span>
+        </div>
+      )}
+      {(selectedStudent.careerAdvice || selectedStudent.aiRecommendations?.careerAdvice) && (
+        <div className="recommendation-item full-width">
+          <span className="rec-label">AI Career Advice:</span>
+          <span className="rec-value ai-recommendation">
+            {selectedStudent.careerAdvice || selectedStudent.aiRecommendations?.careerAdvice}
+          </span>
+        </div>
+      )}
+    </div>
+  ) : (
+    /* Show No Recommendations message */
+    <div className="no-recommendations-message">
+      <div className="no-data-icon">🎯</div>
+      <p className="no-recommendations-text">No Recommendations</p>
+      <small className="no-recommendations-subtitle">
+        This student has not generated AI career recommendations yet.
+      </small>
+    </div>
+  )}
+</div>
                   </div>
 
                   <div className="review-section">
