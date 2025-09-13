@@ -41,7 +41,10 @@ const [showUserDropdown, setShowUserDropdown] = useState(false);
   const [selectedStudents, setSelectedStudents] = useState([]);
   const [activityLog, setActivityLog] = useState([]);
   const [currentDocument, setCurrentDocument] = useState(null);
+  const [showDocumentsModal, setShowDocumentsModal] = useState(false);
+const [selectedStudentDocuments, setSelectedStudentDocuments] = useState([]);
   const navigate = useNavigate();
+
   const [pagination, setPagination] = useState({
     currentPage: 1,
     totalPages: 1,
@@ -1029,6 +1032,16 @@ const handleReviewStudent = async (student) => {
     setShowDocumentModal(true);
   };
 
+  // Add this function to handle document modal opening
+const handleShowDocuments = (student) => {
+  setSelectedStudentDocuments({
+    studentId: student._id,
+    studentName: student.userId?.name || student.name || 'Unknown Student',
+    documents: student.documents || []
+  });
+  setShowDocumentsModal(true);
+};
+
   const downloadDocument = async (profileId, documentType, fileName) => {
     try {
       const token = localStorage.getItem('token');
@@ -1533,16 +1546,9 @@ const handleLogoutBtn = () => {
                       <span className="student-email-text">{student.email || 'N/A'}</span>
                     </td>
                   
-                    <td className="actions-column">
+                    {/* <td className="actions-column">
                       <div className="table-actions">
-                        {/* <button
-                          onClick={() => handleReviewStudent(student)}
-                          className="table-btn view-btn"
-                          title="View Full Details"
-                        >
-                          <span className="btn-icon">👁️</span>
-                          View
-                        </button> */}
+                      
                         <button
                           onClick={() => handleReviewStudent(student)}
                           className="table-btn review-btn"
@@ -1558,32 +1564,46 @@ const handleLogoutBtn = () => {
                               <span className="doc-count">({student.documents.length})</span>
                             </button>
                             <div className="document-dropdown-content">
-                              {student.documents.map((doc, index) => (
-                                <div key={index} className="document-item-small">
-                                  <span className="doc-name">{doc.originalName}</span>
-                                  <div className="doc-actions-small">
-                                    <button
-                                      onClick={() => viewDocument(student._id, 'document', doc.filename, doc.originalName)}
-                                      className="doc-action-btn view-doc-btn"
-                                      title="View Document"
-                                    >
-                                      👁️
-                                    </button>
-                                    <button
-                                      onClick={() => downloadDocument(student._id, 'document', doc.filename)}
-                                      className="doc-action-btn download-doc-btn"
-                                      title="Download Document"
-                                    >
-                                      ⬇️
-                                    </button>
-                                  </div>
-                                </div>
-                              ))}
+                            {student.documents && student.documents.length > 0 && (
+  <button 
+    onClick={() => handleShowDocuments(student)}
+    className="table-btn doc-btn" 
+    title={`View ${student.documents.length} document(s)`}
+  >
+    <span className="btn-icon">📄</span>
+    <span className="doc-count">({student.documents.length})</span>
+  </button>
+)}
+
                             </div>
                           </div>
                         )}
                       </div>
-                    </td>
+                    </td> */}
+
+                     {/* In your students table, replace the existing document dropdown with: */}
+<td className="actions-column">
+  <div className="table-actions">
+    <button
+      onClick={() => handleReviewStudent(student)}
+      className="table-btn review-btn"
+      title="Review Student"
+    >
+      <span className="btn-icon">📝</span>
+      Review
+    </button>
+    {student.documents && student.documents.length > 0 && (
+      <button 
+        onClick={() => handleShowDocuments(student)}
+        className="table-btn doc-btn" 
+        title={`View ${student.documents.length} document(s)`}
+      >
+        <span className="btn-icon">📄</span>
+        <span className="doc-count">({student.documents.length})</span>
+      </button>
+    )}
+  </div>
+</td>
                   </tr>
                 ))}
               </tbody>
@@ -1651,6 +1671,99 @@ const handleLogoutBtn = () => {
         </button>
       </div>
     )}
+    // Add this modal at the end of your component (before the closing tags):
+{/* Documents List Modal */}
+{showDocumentsModal && selectedStudentDocuments && (
+  <div className="modal-overlay">
+    <div className="modal-content large-modal">
+      <div className="modal-header">
+        <h2>Documents - {selectedStudentDocuments.studentName}</h2>
+        <button 
+          onClick={() => setShowDocumentsModal(false)} 
+          className="modal-close"
+        >
+          ✕
+        </button>
+      </div>
+
+      <div className="documents-modal-content">
+        {selectedStudentDocuments.documents.length > 0 ? (
+          <div className="documents-grid">
+            {selectedStudentDocuments.documents.map((doc, index) => (
+              <div key={index} className="document-card">
+                <div className="document-header">
+                  <div className="document-icon">
+                    {doc.mimeType?.includes('pdf') ? '📄' : 
+                     doc.mimeType?.includes('image') ? '🖼️' : 
+                     doc.mimeType?.includes('word') ? '📝' : '📎'}
+                  </div>
+                  <div className="document-info">
+                    <h4 className="document-name" title={doc.originalName}>
+                      {doc.originalName || doc.filename}
+                    </h4>
+                    <p className="document-details">
+                      {doc.mimeType} • {doc.size ? (doc.size / 1024).toFixed(1) + ' KB' : 'Size unknown'}
+                    </p>
+                    <p className="document-upload-date">
+                      Uploaded: {doc.uploadedAt ? new Date(doc.uploadedAt).toLocaleDateString() : 'Date unknown'}
+                    </p>
+                  </div>
+                </div>
+                
+                <div className="document-actions">
+                  <button
+                    onClick={() => {
+                      viewDocument(
+                        selectedStudentDocuments.studentId, 
+                        'document', 
+                        doc.filename, 
+                        doc.originalName
+                      );
+                    }}
+                    className="doc-action-btn primary-btn"
+                    title="View Document"
+                  >
+                    <span className="btn-icon">👁️</span>
+                    View
+                  </button>
+                  <button
+                    onClick={() => {
+                      downloadDocument(
+                        selectedStudentDocuments.studentId, 
+                        'document', 
+                        doc.filename
+                      );
+                    }}
+                    className="doc-action-btn secondary-btn"
+                    title="Download Document"
+                  >
+                    <span className="btn-icon">⬇️</span>
+                    Download
+                  </button>
+                </div>
+              </div>
+            ))}
+          </div>
+        ) : (
+          <div className="no-documents">
+            <div className="no-documents-icon">📄</div>
+            <p>No documents found for this student.</p>
+          </div>
+        )}
+      </div>
+
+      <div className="modal-actions">
+        <button 
+          onClick={() => setShowDocumentsModal(false)} 
+          className="btn-cancel"
+        >
+          Close
+        </button>
+      </div>
+    </div>
+  </div>
+)}
+
   </div>
     )}
 
