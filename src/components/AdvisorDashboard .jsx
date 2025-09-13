@@ -367,7 +367,44 @@ useEffect(() => {
       setLoading(false);
     }
   };
+const fetchStudentRecommendations = async (studentUserId) => {
+  try {
+    console.log('📡 Fetching recommendations for student:', studentUserId);
+    const token = localStorage.getItem('token');
+    
+    // Fetch recommendations for the specific student using their userId
+    const response = await fetch(`http://localhost:5000/api/recommendations/latest?userId=${studentUserId}`, {
+      method: 'GET',
+      headers: { 
+        'Authorization': `Bearer ${token}`,
+        'Content-Type': 'application/json'
+      }
+    });
 
+    if (response.ok) {
+      const data = await response.json();
+      console.log('✅ Student recommendations response:', data);
+      
+      // Handle the expected response structure
+      let recommendationsArray = [];
+      
+      if (data.success && data.data && data.data.recommendations) {
+        recommendationsArray = data.data.recommendations;
+      }
+
+      return recommendationsArray;
+    } else if (response.status === 404) {
+      console.log('ℹ️ No recommendations found for student');
+      return [];
+    } else {
+      console.warn('⚠️ Failed to fetch student recommendations:', response.status);
+      return [];
+    }
+  } catch (err) {
+    console.log('ℹ️ Error fetching student recommendations:', err.message);
+    return [];
+  }
+};
   // Fetch transfer students
   const fetchTransferStudents = async (page = 1) => {
     try {
@@ -852,36 +889,134 @@ useEffect(() => {
 };
 
   // Review handlers
-  const handleReviewStudent = async (student) => {
-    try {
-      const token = localStorage.getItem('token');
-      try {
-        const response = await fetch(`http://localhost:5000/api/advisor/profiles/${student._id}/detailed`, {
-          headers: { 'Authorization': `Bearer ${token}` }
-        });
-        if (response.ok) {
-          const data = await response.json();
-          setSelectedStudent(data.data.profile);
-        } else {
-          setSelectedStudent(student);
-        }
-      } catch {
-        setSelectedStudent(student);
-      }
-      setReviewForm({
-        advisorNotes: student.advisorNotes || '',
-        recommendedFaculty: student.recommendedFaculty || student.aiRecommendations?.recommendedFaculty || '',
-        recommendedDepartment: student.recommendedDepartment || student.aiRecommendations?.recommendedDepartment || '',
-        careerAdvice: student.careerAdvice || student.aiRecommendations?.careerAdvice || '',
-        nextSteps: student.nextSteps || '',
-        approved: student.isStudentApproved || false
-      });
-      setShowReviewModal(true);
-    } catch (error) {
-      setSelectedStudent(student);
-      setShowReviewModal(true);
+  // const handleReviewStudent = async (student) => {
+  //   try {
+  //     const token = localStorage.getItem('token');
+  //     try {
+  //       const response = await fetch(`http://localhost:5000/api/advisor/profiles/${student._id}/detailed`, {
+  //         headers: { 'Authorization': `Bearer ${token}` }
+  //       });
+  //       if (response.ok) {
+  //         const data = await response.json();
+  //         setSelectedStudent(data.data.profile);
+  //       } else {
+  //         setSelectedStudent(student);
+  //       }
+  //     } catch {
+  //       setSelectedStudent(student);
+  //     }
+  //     setReviewForm({
+  //       advisorNotes: student.advisorNotes || '',
+  //       recommendedFaculty: student.recommendedFaculty || student.aiRecommendations?.recommendedFaculty || '',
+  //       recommendedDepartment: student.recommendedDepartment || student.aiRecommendations?.recommendedDepartment || '',
+  //       careerAdvice: student.careerAdvice || student.aiRecommendations?.careerAdvice || '',
+  //       nextSteps: student.nextSteps || '',
+  //       approved: student.isStudentApproved || false
+  //     });
+  //     setShowReviewModal(true);
+  //   } catch (error) {
+  //     setSelectedStudent(student);
+  //     setShowReviewModal(true);
+  //   }
+  // };
+
+ // Remove the extra colon and check token format
+const handleReviewStudent = async (student) => {
+  try {
+    const token = localStorage.getItem('token');
+    
+    // Debug token
+    console.log('Token check:', {
+      hasToken: !!token,
+      tokenStart: token ? token.substring(0, 20) : 'No token',
+      tokenLength: token ? token.length : 0
+    });
+
+    if (!token) {
+      console.error('No token found');
+      return;
     }
-  };
+
+    let studentData = student;
+    
+    // Try to get detailed profile first
+    try {
+      const response = await fetch(`http://localhost:5000/api/advisor/profiles/${student._id}/detailed`, {
+        headers: { 'Authorization': `Bearer ${token}` }
+      });
+      if (response.ok) {
+        const data = await response.json();
+        studentData = data.data.profile;
+      }
+    } catch {
+      studentData = student;
+    }
+
+    // Fetch recommendations for this student
+    const studentUserId = studentData.userId?._id || studentData.userId;
+    if (studentUserId) {
+      console.log('📡 Fetching recommendations for student userId:', studentUserId);
+      
+      try {
+        // FIXED: Remove the colon from the URL
+        const recResponse = await fetch(`http://localhost:5000/api/recommendation/student/latest/${studentUserId}`, {
+          method: 'GET',
+          headers: { 
+            'Authorization': `Bearer ${token}`,
+            'Content-Type': 'application/json'
+          }
+        });
+
+        console.log('Response status:', recResponse.status);
+
+        if (recResponse.ok) {
+          const recData = await recResponse.json();
+          console.log('✅ Recommendations response:', recData);
+          
+          if (recData.success && recData.data.recommendations && recData.data.recommendations.length > 0) {
+            const latestRecommendation = recData.data.recommendations[0];
+            studentData.aiRecommendations = {
+              recommendedFaculty: latestRecommendation.faculty,
+              recommendedDepartment: latestRecommendation.department, 
+              careerAdvice: latestRecommendation.reasoning || latestRecommendation.description,
+              recommendations: recData.data.recommendations,
+              generatedAt: recData.data.generatedAt,
+              verificationStatus: recData.data.overallVerificationStatus,
+              matchPercentage: latestRecommendation.matchPercentage
+            };
+            console.log('✅ Added recommendations to student data');
+          } else {
+            console.log('ℹ️ No recommendations found for student');
+            studentData.aiRecommendations = null;
+          }
+        } else {
+          const errorText = await recResponse.text();
+          console.log('❌ Request failed:', recResponse.status, errorText);
+          studentData.aiRecommendations = null;
+        }
+      } catch (recError) {
+        console.log('ℹ️ Error fetching recommendations:', recError.message);
+        studentData.aiRecommendations = null;
+      }
+    }
+
+    setSelectedStudent(studentData);
+    setReviewForm({
+      advisorNotes: studentData.advisorNotes || '',
+      recommendedFaculty: studentData.recommendedFaculty || studentData.aiRecommendations?.recommendedFaculty || '',
+      recommendedDepartment: studentData.recommendedDepartment || studentData.aiRecommendations?.recommendedDepartment || '',
+      careerAdvice: studentData.careerAdvice || studentData.aiRecommendations?.careerAdvice || '',
+      nextSteps: studentData.nextSteps || '',
+      approved: studentData.isStudentApproved || false
+    });
+    setShowReviewModal(true);
+
+  } catch (error) {
+    console.error('Error in handleReviewStudent:', error);
+    setSelectedStudent(student);
+    setShowReviewModal(true);
+  }
+};
 
   // Document handlers
   const viewDocument = (profileId, documentType, fileName, originalName) => {
