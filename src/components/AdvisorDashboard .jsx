@@ -1021,16 +1021,37 @@ const handleReviewStudent = async (student) => {
 };
 
   // Document handlers
-  const viewDocument = (profileId, documentType, fileName, originalName) => {
-    const token = localStorage.getItem('token');
-    const viewUrl = `http://localhost:5000/api/advisor/profiles/${profileId}/view/${documentType}/${fileName}?token=${token}`;
-    setCurrentDocument({
-      url: viewUrl,
-      name: originalName || fileName,
-      type: documentType
-    });
-    setShowDocumentModal(true);
-  };
+  // const viewDocument = (profileId, documentType, fileName, originalName) => {
+  //   const token = localStorage.getItem('token');
+  //   const viewUrl = `http://localhost:5000/api/advisor/profiles/${profileId}/view/${documentType}/${fileName}?token=${token}`;
+  //   setCurrentDocument({
+  //     url: viewUrl,
+  //     name: originalName || fileName,
+  //     type: documentType
+  //   });
+  //   setShowDocumentModal(true);
+  // };
+
+const viewDocument = (profileId, documentType, fileName, originalName) => {
+  const token = localStorage.getItem('token');
+  const viewUrl = `http://localhost:5000/api/advisor/profiles/${profileId}/view/${documentType}/${fileName}?token=${token}`;
+  
+  // Debug logging
+  console.log('📄 Opening document:', {
+    profileId,
+    documentType, 
+    fileName,
+    originalName,
+    viewUrl
+  });
+  
+  setCurrentDocument({
+    url: viewUrl,
+    name: originalName || fileName,
+    type: documentType
+  });
+  setShowDocumentModal(true);
+};
 
   // Add this function to handle document modal opening
 const handleShowDocuments = (student) => {
@@ -1581,7 +1602,7 @@ const handleLogoutBtn = () => {
                       </div>
                     </td> */}
 
-                     {/* In your students table, replace the existing document dropdown with: */}
+                   
 <td className="actions-column">
   <div className="table-actions">
     <button
@@ -1671,7 +1692,7 @@ const handleLogoutBtn = () => {
         </button>
       </div>
     )}
-    // Add this modal at the end of your component (before the closing tags):
+ 
 {/* Documents List Modal */}
 {showDocumentsModal && selectedStudentDocuments && (
   <div className="modal-overlay">
@@ -1903,23 +1924,7 @@ const handleLogoutBtn = () => {
                           onClick={() => handleCalendarDayClick(day.date)}
                         >
                           <span className="day-number">{day.date.getDate()}</span>
-                        
-                          {/* <div className="day-appointments">
-  {getAppointmentsForDate(day.date).slice(0, 3).map((apt, i) => (
-    <div key={i} className={`mini-appointment ${apt.status}`}>
-      {apt.status === 'booked' ? (
-        <span className="booked-title">Booked</span>
-      ) : apt.status === 'available' ? (
-        <span className="available-title">Available</span>
-      ) : (
-        <span className="other-status">{apt.status}</span>
-      )}
-    </div>
-  ))}
-  {getAppointmentsForDate(day.date).length > 3 && (
-    <div className="more-appointments">+{getAppointmentsForDate(day.date).length - 3} more</div>
-  )}
-</div> */}
+                
 
 <div className="day-appointments">
   {getAppointmentsForDate(day.date).slice(0, 3).map((apt, i) => (
