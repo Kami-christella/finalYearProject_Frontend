@@ -681,32 +681,6 @@ const fetchStudentRecommendations = async (studentUserId) => {
   setShowEditAppointmentModal(true);
 };
 
-
-
-// ADD this function after your existing handleCreateAppointment function (around line 600-700)
-
-
-  // const handleEditAppointment = (appointment) => {
-  //   setSelectedAppointment(appointment);
-  //   setAppointmentForm({
-  //     date: appointment.date.split('T')[0],
-  //     startTime: appointment.startTime,
-  //     endTime: appointment.endTime,
-  //     duration: appointment.duration || 30,
-  //     isRecurring: false,
-  //     recurringPattern: 'weekly',
-  //     recurringEndDate: '',
-  //     notes: appointment.notes || '',
-  //     meetingType: appointment.type || 'physical',
-  //     meetingLink: appointment.location || ''
-  //   });
-  //   setShowEditAppointmentModal(true);
-  // };
-
-  // REPLACE your existing handleEditAppointment function with this improved version
-
-
-
   const handleDeleteAppointment = async (appointmentId) => {
     if (!window.confirm('Are you sure you want to delete this appointment slot?')) {
       return;
