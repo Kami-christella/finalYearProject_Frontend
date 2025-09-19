@@ -119,7 +119,7 @@
   transition: margin-left 0.25s ease;
 }
 
-/* Alternative approach using padding instead of margin */
+
 .main-content-alt {
   padding-left: 280px;
   width: 100%;
@@ -2551,7 +2551,7 @@
   100% { transform: rotate(360deg); }
 }
 
-/* Responsive Design */
+
 @media (max-width: 768px) {
   .appointments-header {
     flex-direction: column;
@@ -2667,7 +2667,6 @@
   text-overflow: ellipsis;
 }
 
-/* Header Styling */
 .students-table thead {
   background: #1B3058;
   position: sticky;
