@@ -865,37 +865,7 @@ const fetchStudentRecommendations = async (studentUserId) => {
   }
 };
 
-  // Review handlers
-  // const handleReviewStudent = async (student) => {
-  //   try {
-  //     const token = localStorage.getItem('token');
-  //     try {
-  //       const response = await fetch(`http://localhost:5000/api/advisor/profiles/${student._id}/detailed`, {
-  //         headers: { 'Authorization': `Bearer ${token}` }
-  //       });
-  //       if (response.ok) {
-  //         const data = await response.json();
-  //         setSelectedStudent(data.data.profile);
-  //       } else {
-  //         setSelectedStudent(student);
-  //       }
-  //     } catch {
-  //       setSelectedStudent(student);
-  //     }
-  //     setReviewForm({
-  //       advisorNotes: student.advisorNotes || '',
-  //       recommendedFaculty: student.recommendedFaculty || student.aiRecommendations?.recommendedFaculty || '',
-  //       recommendedDepartment: student.recommendedDepartment || student.aiRecommendations?.recommendedDepartment || '',
-  //       careerAdvice: student.careerAdvice || student.aiRecommendations?.careerAdvice || '',
-  //       nextSteps: student.nextSteps || '',
-  //       approved: student.isStudentApproved || false
-  //     });
-  //     setShowReviewModal(true);
-  //   } catch (error) {
-  //     setSelectedStudent(student);
-  //     setShowReviewModal(true);
-  //   }
-  // };
+  
 
 const handleReviewStudent = async (student) => {
   try {
