@@ -14,10 +14,10 @@
 }
 
 .sidebar {
-  position: fixed; /* Changed from sticky for better control */
-  left: 0; /* Remove negative margin, position properly */
+  position: fixed; 
+  left: 0; 
   top: 0;
-  width: 280px; /* Set explicit width */
+  width: 280px; 
   height: 100vh;
   background: #1B3058; 
   color: #e5edff;
@@ -90,7 +90,6 @@
   padding: 0.75rem;
 }
 
-/* Reuse existing button look for logout */
 .sidebar .logout-btn {
   width: 100%;
   display: inline-flex;
@@ -111,7 +110,7 @@
 
 /* Main content + top bar */
 .main-content {
-  margin-left: 280px; /* Same as sidebar width */
+  margin-left: 280px; 
   width: calc(100% - 280px);
   min-height: 100vh;
   background: #f8fafc;
