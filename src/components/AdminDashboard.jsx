@@ -2083,7 +2083,8 @@ const handleLogoutBtn = () => {
       
     </div>
 
-    {/* NEW: Add Report Generation Section */}
+{/* generate */}
+
     <div className="reports-section" style={{ 
       marginTop: '2rem', 
       padding: '1.5rem', 
@@ -2100,14 +2101,14 @@ const handleLogoutBtn = () => {
         gridTemplateColumns: 'repeat(auto-fit, minmax(250px, 1fr))', 
         gap: '1rem' 
       }}>
-        {/* System Reports */}
-        <div className="report-card" style={{ 
+
+        {/* <div className="report-card" style={{ 
           padding: '1rem', 
           border: '1px solid #e2e8f0', 
           borderRadius: '8px', 
           background: '#f8fafc' 
-        }}>
-          <h4 style={{ marginBottom: '0.5rem', color: '#374151' }}>📊 System Reports</h4>
+        }}> */}
+          {/* <h4 style={{ marginBottom: '0.5rem', color: '#374151' }}>📊 System Reports</h4>
           <p style={{ fontSize: '0.875rem', color: '#6b7280', marginBottom: '1rem' }}>
             Comprehensive system overview with statistics and analytics
           </p>
@@ -2148,11 +2149,11 @@ const handleLogoutBtn = () => {
             >
               <FaFilePdf /> PDF
             </button>
-          </div>
-        </div>
+          </div> */}
+        {/* </div> */}
 
         {/* Analytics Reports */}
-        <div className="report-card" style={{ 
+        {/* <div className="report-card" style={{ 
           padding: '1rem', 
           border: '1px solid #e2e8f0', 
           borderRadius: '8px', 
@@ -2161,8 +2162,8 @@ const handleLogoutBtn = () => {
           <h4 style={{ marginBottom: '0.5rem', color: '#374151' }}>📈 Analytics Reports</h4>
           <p style={{ fontSize: '0.875rem', color: '#6b7280', marginBottom: '1rem' }}>
             Detailed analytics with charts and trend analysis
-          </p>
-          <div style={{ display: 'flex', gap: '0.5rem' }}>
+          </p> */}
+          {/* <div style={{ display: 'flex', gap: '0.5rem' }}>
             <button
               onClick={() => handleGenerateAnalyticsReport('excel')}
               disabled={reportLoading}
@@ -2200,10 +2201,10 @@ const handleLogoutBtn = () => {
               <FaFilePdf /> PDF
             </button>
           </div>
-        </div>
+        </div> */}
 
         {/* Custom Reports */}
-        <div className="report-card" style={{ 
+        {/* <div className="report-card" style={{ 
           padding: '1rem', 
           border: '1px solid #e2e8f0', 
           borderRadius: '8px', 
@@ -2231,10 +2232,10 @@ const handleLogoutBtn = () => {
           >
             <FaDownload /> Configure Report
           </button>
-        </div>
+        </div> */}
       </div>
 
-      {reportLoading && (
+      {/* {reportLoading && (
         <div style={{ 
           marginTop: '1rem', 
           padding: '1rem', 
@@ -2252,10 +2253,12 @@ const handleLogoutBtn = () => {
             borderTop: '2px solid transparent', 
             borderRadius: '50%', 
             animation: 'spin 1s linear infinite' 
-          }}></div>
+          }}>
+
+          </div>
           <span style={{ color: '#92400e' }}>Generating report... Please wait.</span>
         </div>
-      )}
+      )} */}
     </div>
   </div>
 )}
