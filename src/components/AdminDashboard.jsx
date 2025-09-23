@@ -2102,13 +2102,13 @@ const handleLogoutBtn = () => {
         gap: '1rem' 
       }}>
 
-        {/* <div className="report-card" style={{ 
+        <div className="report-card" style={{ 
           padding: '1rem', 
           border: '1px solid #e2e8f0', 
           borderRadius: '8px', 
           background: '#f8fafc' 
-        }}> */}
-          {/* <h4 style={{ marginBottom: '0.5rem', color: '#374151' }}>📊 System Reports</h4>
+        }}>
+          <h4 style={{ marginBottom: '0.5rem', color: '#374151' }}>📊 System Reports</h4>
           <p style={{ fontSize: '0.875rem', color: '#6b7280', marginBottom: '1rem' }}>
             Comprehensive system overview with statistics and analytics
           </p>
@@ -2149,11 +2149,11 @@ const handleLogoutBtn = () => {
             >
               <FaFilePdf /> PDF
             </button>
-          </div> */}
-        {/* </div> */}
+          </div>
+        </div>
 
         {/* Analytics Reports */}
-        {/* <div className="report-card" style={{ 
+        <div className="report-card" style={{ 
           padding: '1rem', 
           border: '1px solid #e2e8f0', 
           borderRadius: '8px', 
@@ -2162,8 +2162,8 @@ const handleLogoutBtn = () => {
           <h4 style={{ marginBottom: '0.5rem', color: '#374151' }}>📈 Analytics Reports</h4>
           <p style={{ fontSize: '0.875rem', color: '#6b7280', marginBottom: '1rem' }}>
             Detailed analytics with charts and trend analysis
-          </p> */}
-          {/* <div style={{ display: 'flex', gap: '0.5rem' }}>
+          </p>
+          <div style={{ display: 'flex', gap: '0.5rem' }}>
             <button
               onClick={() => handleGenerateAnalyticsReport('excel')}
               disabled={reportLoading}
@@ -2201,10 +2201,10 @@ const handleLogoutBtn = () => {
               <FaFilePdf /> PDF
             </button>
           </div>
-        </div> */}
+        </div>
 
         {/* Custom Reports */}
-        {/* <div className="report-card" style={{ 
+        <div className="report-card" style={{ 
           padding: '1rem', 
           border: '1px solid #e2e8f0', 
           borderRadius: '8px', 
@@ -2232,10 +2232,10 @@ const handleLogoutBtn = () => {
           >
             <FaDownload /> Configure Report
           </button>
-        </div> */}
+        </div>
       </div>
 
-      {/* {reportLoading && (
+      {reportLoading && (
         <div style={{ 
           marginTop: '1rem', 
           padding: '1rem', 
@@ -2258,7 +2258,7 @@ const handleLogoutBtn = () => {
           </div>
           <span style={{ color: '#92400e' }}>Generating report... Please wait.</span>
         </div>
-      )} */}
+      )}
     </div>
   </div>
 )}
@@ -2353,7 +2353,7 @@ const handleLogoutBtn = () => {
                     </select>
                   </div>
 
-                  {/* <div className="filter-dropdown">
+                  <div className="filter-dropdown">
                     <select
                       value={filterStatus}
                       onChange={(e) => setFilterStatus(e.target.value)}
@@ -2363,7 +2363,7 @@ const handleLogoutBtn = () => {
                       <option value="true">Active</option>
                       <option value="false">Inactive</option>
                     </select>
-                  </div> */}
+                  </div>
                   
 
                  <button
@@ -2424,7 +2424,7 @@ const handleLogoutBtn = () => {
       </th>
       <th style={{ padding: '1rem', textAlign: 'left', fontWeight: '600' }}>User</th>
       <th style={{ padding: '1rem', textAlign: 'left', fontWeight: '600' }}>Role</th>
-      {/* <th style={{ padding: '1rem', textAlign: 'left', fontWeight: '600' }}>Status</th> */}
+      <th style={{ padding: '1rem', textAlign: 'left', fontWeight: '600' }}>Status</th>
       <th style={{ padding: '1rem', textAlign: 'left', fontWeight: '600' }}>Created</th>
       <th style={{ padding: '1rem', textAlign: 'left', fontWeight: '600' }}>Actions</th>
     </tr>
@@ -2451,9 +2451,9 @@ const handleLogoutBtn = () => {
         <td style={{ padding: '1rem', color: 'black', fontWeight: '500', fontSize: '0.75rem' }}>
           {user.userRole ? user.userRole.charAt(0).toUpperCase() + user.userRole.slice(1) : 'Unknown'}
         </td>
-        {/* <td style={{ padding: '1rem', color: 'black', fontWeight: '500', fontSize: '0.75rem' }}>
+        <td style={{ padding: '1rem', color: 'black', fontWeight: '500', fontSize: '0.75rem' }}>
           {user.isActive ? 'Active' : 'Inactive'}
-        </td> */}
+        </td>
         <td style={{ padding: '1rem', fontSize: '0.875rem', color: '#64748b' }}>
           {formatDate(user.createdAt)}
         </td>
@@ -2472,38 +2472,7 @@ const handleLogoutBtn = () => {
               }}
             >
               ✏️ Edit
-            </button>
-            {/* {user.userRole === 'user' && (
-              <button
-                onClick={() => handleAssignAdvisor(user._id)}
-                style={{
-                  padding: '0.25rem 0.5rem',
-                  background: '#059669',
-                  color: 'white',
-                  border: 'none',
-                  borderRadius: '4px',
-                  cursor: 'pointer',
-                  fontSize: '0.75rem'
-                }}
-              >
-                👨‍🏫 Advisor
-              </button>
-            )} */}
-            {/*
-            <button
-              onClick={() => handleDeleteUser(user._id)}
-              style={{
-                padding: '0.25rem 0.5rem',
-                background: '#dc2626',
-                color: 'white',
-                border: 'none',
-                borderRadius: '4px',
-                cursor: 'pointer',
-                fontSize: '0.75rem'
-              }}
-            >
-              🗑️ Delete
-            </button> */}
+            </button>        
           </div>
         </td>
       </tr>
