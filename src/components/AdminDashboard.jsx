@@ -421,35 +421,77 @@ const fetchDashboardData = async () => {
 
   // User Management Functions - Add these after your existing fetch functions
 
+  // const fetchUsers = async (page = 1) => {
+  //   try {
+  //     setLoading(true);
+  //     const token = localStorage.getItem('token');
+  //     const params = new URLSearchParams({
+  //       page: page.toString(),
+  //       limit: pagination.itemsPerPage.toString(),
+  //       userRole: filterRole,
+  //       searchTerm,
+  //       isActive: filterStatus
+  //     });
+
+  //     const response = await fetch(`http://localhost:5000/api/admin/users?${params}`, {
+  //       headers: { 'Authorization': `Bearer ${token}` }
+  //     });
+
+  //     if (response.ok) {
+  //       const data = await response.json();
+  //       setUsers(data.data.users);
+  //       setPagination(data.data.pagination);
+  //     } else {
+  //       Notify.failure('Failed to fetch users');
+  //     }
+  //   } catch (error) {
+  //     Notify.failure('Error loading users');
+  //   } finally {
+  //     setLoading(false);
+  //   }
+  // };
+
   const fetchUsers = async (page = 1) => {
-    try {
-      setLoading(true);
-      const token = localStorage.getItem('token');
-      const params = new URLSearchParams({
-        page: page.toString(),
-        limit: pagination.itemsPerPage.toString(),
-        userRole: filterRole,
-        searchTerm,
-        isActive: filterStatus
-      });
+  try {
+    setLoading(true);
+    const token = localStorage.getItem('token');
+    const params = new URLSearchParams({
+      page: page.toString(),
+      limit: pagination.itemsPerPage.toString(),
+    });
 
-      const response = await fetch(`http://localhost:5000/api/admin/users?${params}`, {
-        headers: { 'Authorization': `Bearer ${token}` }
-      });
-
-      if (response.ok) {
-        const data = await response.json();
-        setUsers(data.data.users);
-        setPagination(data.data.pagination);
-      } else {
-        Notify.failure('Failed to fetch users');
-      }
-    } catch (error) {
-      Notify.failure('Error loading users');
-    } finally {
-      setLoading(false);
+    // Add role filter if not "all"
+    if (filterRole && filterRole !== 'all') {
+      params.append('userRole', filterRole);
     }
-  };
+
+    // Add search term if exists
+    if (searchTerm) {
+      params.append('searchTerm', searchTerm);
+    }
+
+    // FIX: Add status filter properly - convert string to boolean or send as string
+    if (filterStatus && filterStatus !== 'all') {
+      params.append('isActive', filterStatus); // Backend should handle "true"/"false" strings
+    }
+
+    const response = await fetch(`http://localhost:5000/api/admin/users?${params}`, {
+      headers: { 'Authorization': `Bearer ${token}` }
+    });
+
+    if (response.ok) {
+      const data = await response.json();
+      setUsers(data.data.users);
+      setPagination(data.data.pagination);
+    } else {
+      Notify.failure('Failed to fetch users');
+    }
+  } catch (error) {
+    Notify.failure('Error loading users');
+  } finally {
+    setLoading(false);
+  }
+};
 
   const handleCreateUser = async (e) => {
     e.preventDefault();
@@ -995,12 +1037,61 @@ const handleGenerateUserReport = async (format = 'excel') => {
     return badges[role] || <span className="role-badge">{role}</span>;
   };
 
-  const getUserStatusBadge = (isActive) => {
-    return isActive 
-      ? <span className="status-badge active">Active</span>
-      : <span className="status-badge inactive">Inactive</span>;
-  };
+  // const getUserStatusBadge = (isActive) => {
+  //   return isActive 
+  //     ? <span className="status-badge active">Active</span>
+  //     : <span className="status-badge inactive">Inactive</span>;
+  // };
 
+  const getUserStatusBadge = (isActive) => {
+  return isActive ? (
+    <span className="status-badge active" style={{ 
+      background: '#dcfce7', 
+      color: '#16a34a', 
+      padding: '0.25rem 0.5rem', 
+      borderRadius: '4px',
+      fontSize: '0.75rem',
+      fontWeight: '500'
+    }}>
+      Active
+    </span>
+  ) : (
+    <span className="status-badge inactive" style={{ 
+      background: '#fef2f2', 
+      color: '#dc2626', 
+      padding: '0.25rem 0.5rem', 
+      borderRadius: '4px',
+      fontSize: '0.75rem',
+      fontWeight: '500'
+    }}>
+      Inactive
+    </span>
+  );
+};
+
+const StatusFilterDropdown = () => (
+  <div className="filter-dropdown">
+    <select
+      value={filterStatus}
+      onChange={(e) => {
+        setFilterStatus(e.target.value);
+        // Optional: Reset pagination when filter changes
+        setPagination(prev => ({ ...prev, currentPage: 1 }));
+      }}
+      className="filter-select"
+      style={{
+        padding: '0.5rem',
+        borderRadius: '6px',
+        border: '1px solid #d1d5db',
+        background: 'white'
+      }}
+    >
+      <option value="all">All Status</option>
+      <option value="true">Active Users</option>
+      <option value="false">Inactive Users</option>
+    </select>
+  </div>
+);
   // Filter users based on active tab
 const getFilteredUsers = () => {
   let filtered = [...users];
@@ -1027,6 +1118,15 @@ const getFilteredUsers = () => {
     );
   }
 
+  // FIX: Filter by status - properly handle boolean comparison
+  if (filterStatus && filterStatus !== 'all') {
+    const statusBoolean = filterStatus === 'true';
+    filtered = filtered.filter((user) => {
+      // Handle cases where isActive might be undefined/null
+      return user.isActive === statusBoolean;
+    });
+  }
+
   // Filter by search
   if (searchTerm) {
     filtered = filtered.filter((user) =>
@@ -1036,8 +1136,60 @@ const getFilteredUsers = () => {
     );
   }
 
-  return filtered; // just return the filtered array
+  return filtered;
 };
+
+const debugFilteredUsers = () => {
+  console.log('Filter Status:', filterStatus);
+  console.log('Users before filtering:', users.length);
+  console.log('Sample user isActive values:', users.slice(0, 3).map(u => ({ 
+    name: u.name, 
+    isActive: u.isActive, 
+    type: typeof u.isActive 
+  })));
+  
+  const filtered = getFilteredUsers();
+  console.log('Users after filtering:', filtered.length);
+  return filtered;
+};
+
+// const getFilteredUsers = () => {
+//   let filtered = [...users];
+
+//   // Filter by active tab
+//   switch (activeTab) {
+//     case 'users':
+//       // Show all users
+//       break;
+//     case 'roles':
+//       // Only advisors and admins
+//       filtered = filtered.filter(
+//         (user) => user.userRole?.toLowerCase() === 'advisor' || user.userRole?.toLowerCase() === 'admin'
+        
+//       );
+//       break;
+//     default:
+//       break;
+//   }
+
+//   // Filter by role dropdown
+//   if (filterRole && filterRole !== 'all') {
+//     filtered = filtered.filter(
+//       (user) => user.userRole?.toLowerCase() === filterRole.toLowerCase()
+//     );
+//   }
+
+//   // Filter by search
+//   if (searchTerm) {
+//     filtered = filtered.filter((user) =>
+//       [user.name, user.email]
+//         .filter(Boolean) // ignore nulls
+//         .some((field) => field.toLowerCase().includes(searchTerm.toLowerCase()))
+//     );
+//   }
+
+//   return filtered; // just return the filtered array
+// };
 
 
 const handleEditUser = async (e) => {
@@ -1140,6 +1292,12 @@ const handleEditUser = async (e) => {
       document.removeEventListener('mousedown', handleClickOutside);
     };
   }, []);
+
+  useEffect(() => {
+  if (activeTab === 'users' || activeTab === 'roles') {
+    fetchUsers(1); // Reset to page 1 when filters change
+  }
+}, [filterRole, filterStatus, searchTerm]); 
 
     // Add function to close dropdown when clicking outside
   // useEffect(() => {
