@@ -964,17 +964,7 @@ const handleReviewStudent = async (student) => {
   }
 };
 
-  // Document handlers
-  // const viewDocument = (profileId, documentType, fileName, originalName) => {
-  //   const token = localStorage.getItem('token');
-  //   const viewUrl = `http://localhost:5000/api/advisor/profiles/${profileId}/view/${documentType}/${fileName}?token=${token}`;
-  //   setCurrentDocument({
-  //     url: viewUrl,
-  //     name: originalName || fileName,
-  //     type: documentType
-  //   });
-  //   setShowDocumentModal(true);
-  // };
+  
 
 const viewDocument = (profileId, documentType, fileName, originalName) => {
   const token = localStorage.getItem('token');
