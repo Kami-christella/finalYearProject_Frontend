@@ -1,6 +1,5 @@
 //AdminDashboard.jsx
 import React, { useState, useEffect } from 'react';
-// Add these imports at the top of AdvisorDashboard.jsx
 import { PieChart, Pie, Cell, BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer, LineChart, Line } from "recharts";
 import { Notify } from 'notiflix';
 import './styles/AdvisorDashboard.css';
