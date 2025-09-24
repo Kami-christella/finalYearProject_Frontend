@@ -8,7 +8,7 @@ import { useNavigate } from 'react-router-dom';
 
 const StudentProfile = () => {
 
-    const navigate = useNavigate();
+  const navigate = useNavigate();
 
   useEffect(() => {
     const checkAuth = () => {
@@ -43,6 +43,7 @@ const StudentProfile = () => {
 
     checkAuth();
   }, [navigate]);
+  
   const [formData, setFormData] = useState({
     nationality: "",
     dateOfBirth: "",
