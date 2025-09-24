@@ -612,6 +612,7 @@ import { useNavigate } from 'react-router-dom';
 import './styles/BookAppointment.css';
 
 const BookAppointment = () => {
+  
   const navigate = useNavigate();
     
       useEffect(() => {

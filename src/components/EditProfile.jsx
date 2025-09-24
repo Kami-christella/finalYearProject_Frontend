@@ -2,8 +2,46 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { Notify } from 'notiflix';
 import './styles/EditProfile.css';
+import { useNavigate } from 'react-router-dom';
 
 const EditProfile = () => {
+
+  const navigate = useNavigate();
+      
+        useEffect(() => {
+          const checkAuth = () => {
+            const token = localStorage.getItem('token');
+            const user = localStorage.getItem('user');
+            
+            if (!token || !user) {
+              Notify.warning('Please log in to access this page');
+              navigate('/'); // Redirect to login page
+              return;
+            }
+            
+            // Optional: Verify token is not expired
+            try {
+              const tokenData = JSON.parse(atob(token.split('.')[1])); // Decode JWT payload
+              if (tokenData.exp * 1000 < Date.now()) {
+                localStorage.removeItem('token');
+                localStorage.removeItem('user');
+                Notify.failure('Session expired. Please log in again.');
+                navigate('/');
+                return;
+              }
+            } catch (error) {
+              // Invalid token format
+              localStorage.removeItem('token');
+              localStorage.removeItem('user');
+              Notify.failure('Invalid session. Please log in again.');
+              navigate('/');
+              return;
+            }
+          };
+      
+          checkAuth();
+        }, [navigate]);
+
   const [formData, setFormData] = useState({
     nationality: '',
     dateOfBirth: '',
