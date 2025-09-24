@@ -3,6 +3,8 @@ import React, { useState, useRef } from "react";
 import { Notify } from "notiflix";
 import "./styles/StudentProfile.css";
 
+
+
 const StudentProfile = () => {
   const [formData, setFormData] = useState({
     nationality: "",
@@ -115,14 +117,7 @@ const [showMappingResults, setShowMappingResults] = useState(false);
     ]);
   };
 
-  // const updatePreviousCourse = (index, field, value) => {
-  //   const updated = coursesStudiedPreviousUniversity.map((course, i) =>
-  //     i === index ? { ...course, [field]: value } : course
-  //   );
-  //   setCoursesStudiedPreviousUniversity(updated);
-  // };
-
-
+ 
   const updatePreviousCourse = (index, field, value) => {
   const updated = coursesStudiedPreviousUniversity.map((course, i) => {
     if (i === index) {
