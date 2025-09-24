@@ -101,43 +101,60 @@ const renderCustomizedLabel = ({ cx, cy, midAngle, innerRadius, outerRadius, per
 };
 
 const AdvisorDashboard = () => {
-  const navigate = useNavigate();
-  
-    useEffect(() => {
-      const checkAuth = () => {
-        const token = localStorage.getItem('token');
-        const user = localStorage.getItem('user');
-        
-        if (!token || !user) {
-          Notify.warning('Please log in to access this page');
-          navigate('/'); // Redirect to login page
-          return;
-        }
-        
-        // Optional: Verify token is not expired
-        try {
-          const tokenData = JSON.parse(atob(token.split('.')[1])); // Decode JWT payload
-          if (tokenData.exp * 1000 < Date.now()) {
-            localStorage.removeItem('token');
-            localStorage.removeItem('user');
-            Notify.failure('Session expired. Please log in again.');
-            navigate('/');
-            return;
-          }
-        } catch (error) {
-          // Invalid token format
-          localStorage.removeItem('token');
-          localStorage.removeItem('user');
-          Notify.failure('Invalid session. Please log in again.');
-          navigate('/');
-          return;
-        }
-      };
-  
-      checkAuth();
-    }, [navigate]);
 
+   const navigate = useNavigate();
+  
+  // Add this useEffect at the very beginning of your component
+  useEffect(() => {
+    const checkAdminAccess = () => {
+      const token = localStorage.getItem('token');
+      const user = JSON.parse(localStorage.getItem('user') || '{}');
+      
+      // Check if user is logged in
+      if (!token) {
+        Notify.failure('Please login to access the admin dashboard');
+        navigate('/login');
+        return;
+      }
+      
+      // Check if user has admin role
+      if (user.userRole !== 'admin' && user.role !== 'admin') {
+        Notify.failure('Access denied. Admin privileges required.');
+        navigate('/'); // Redirect to home or appropriate page
+        return;
+      }
+      
+      // Optional: Verify token is still valid by making a test API call
+      verifyAdminToken();
+    };
     
+    const verifyAdminToken = async () => {
+      try {
+        const token = localStorage.getItem('token');
+        const response = await fetch('http://localhost:5000/api/admin/verify', {
+          headers: { 'Authorization': `Bearer ${token}` }
+        });
+        
+        if (!response.ok) {
+          throw new Error('Token verification failed');
+        }
+        
+        const data = await response.json();
+        if (data.user?.userRole !== 'admin') {
+          throw new Error('Insufficient permissions');
+        }
+      } catch (error) {
+        console.error('Admin verification failed:', error);
+        Notify.failure('Session expired or insufficient permissions');
+        localStorage.removeItem('token');
+        localStorage.removeItem('user');
+        navigate('/login');
+      }
+    };
+    
+    checkAdminAccess();
+  }, []);
+  
   const [activeTab, setActiveTab] = useState('overview');
   const [showDropdown, setShowDropdown] = useState(false);
   const [sidebarOpen, setSidebarOpen] = useState(false);

@@ -19,7 +19,7 @@ import ComprehensiveDashboard from './components/ComprehensiveDashboard '
 import AdvisorDashboardLayout from './components/AdvisorDashboardLayout ';
 import AdminDashboard from './components/AdminDashboard';
 import Bookappointment from './components/Bookappointment';
-
+import ProtectedRoute from './components/ProtectedRoute';
 
 
 function App() {
@@ -62,15 +62,13 @@ function App() {
           <Route index element={<AdvisorDashboard />} />
          
         </Route>
+      
        <Route path='/admindashboard' element={<AdminDashboardLayout />}>
-          <Route index element={<AdminDashboard />} />
+          
+<Route index element={<AdminDashboard />} />
          
         </Route>
-       {/* <Route path='/admindashboard' element={<AdminDashboardLayout/>}>
-       <Route index element={<AdminPage />} />
-       <Route path='adminSettings' element={<AdminSettings />} />
-       
-       </Route> */}
+      
 
       </Routes>
     </BrowserRouter>
