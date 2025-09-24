@@ -44,26 +44,9 @@ const SECONDARY_COURSES = [
   // Core Subjects
   "Mathematics", "Physics", "Chemistry", "Biology", "English Language",
   "Kinyarwanda", "French", "History", "Geography", "Computer Science", "Economics",
-   "Literature","Softare Engineerin",
+  "Literature","Software Engineering","Networks and Communication","Computer Science",
+   "Music","Entrepreneurship", "Electronics and Telecommunication",
   
-  // Advanced/Specialized
-  "Advanced Mathematics", "Pure Mathematics", "Applied Mathematics",
-  "English Literature", "Economics", "Accounting", "Business Studies",
-  "Political Education", "Entrepreneurship", "Fine Art", "Music",
-  
-  // Technical/Vocational
-  "Technical Drawing", "Agriculture", "ICT", "Electronics",
-  "Construction", "Home Economics", "Physical Education",
-  
-  // Additional Languages
-  "Swahili", "German", "Spanish", "Arabic",
-  
-  // Sciences
-  "Environmental Science", "General Science", "Statistics",
-  
-  // Arts & Humanities
-  "Philosophy", "Psychology", "Religious Studies", "Drama",
-  "Creative Writing", "Photography"
 ];
 
 const StudentProfile = () => {
@@ -118,7 +101,7 @@ const StudentProfile = () => {
     yourReligion: "",
     sponsorshipDetails: "",
     highSchoolGrades: "",
-    coursesStudiedInSecondary: "",
+    // coursesStudiedInSecondary: "",
     haveTwoPrincipalPasses: false,
     // Transfer Student Fields
     transferStudent: false,
@@ -151,7 +134,7 @@ const StudentProfile = () => {
     setCoursesStudiedPreviousUniversity,
   ] = useState([]);
   const [equivalentCourses, setEquivalentCourses] = useState([]);
-
+const [coursesStudiedInSecondary, setCoursesStudiedInSecondary] = useState([]);
   const [profileImage, setProfileImage] = useState(null);
   const [documents, setDocuments] = useState([]);
   const [loading, setLoading] = useState(false);
@@ -565,6 +548,7 @@ const closeMappingResults = () => {
 
       // Add all basic form fields
       Object.keys(formData).forEach((key) => {
+        
         if (key === "emergencyContact") {
           formDataToSend.append(key, JSON.stringify(formData[key]));
         } else if (key === "interests") {
@@ -580,6 +564,8 @@ const closeMappingResults = () => {
           formDataToSend.append(key, formData[key]);
         }
       });
+      // Add this line after the formData loop
+formDataToSend.append("coursesStudiedInSecondary", JSON.stringify(coursesStudiedInSecondary));
 
       // Add properly structured complex arrays
       formDataToSend.append("skills", JSON.stringify(skills));
@@ -694,6 +680,152 @@ const closeMappingResults = () => {
 
   const nextStep = () => setStep(step + 1);
   const prevStep = () => setStep(step - 1);
+
+  const CoursesMultiSelect = ({ selectedCourses, onChange, disabled = false }) => {
+  const [isOpen, setIsOpen] = useState(false);
+  const [searchTerm, setSearchTerm] = useState('');
+
+  const filteredCourses = SECONDARY_COURSES.filter(course =>
+    course.toLowerCase().includes(searchTerm.toLowerCase()) &&
+    !selectedCourses.includes(course)
+  );
+
+  const handleCourseSelect = (course) => {
+    const newCourses = [...selectedCourses, course];
+    onChange(newCourses);
+    setSearchTerm('');
+  };
+
+  const removeCourse = (courseToRemove) => {
+    const newCourses = selectedCourses.filter(course => course !== courseToRemove);
+    onChange(newCourses);
+  };
+
+  return (
+    <div className="courses-multi-select" style={{ position: 'relative' }}>
+      <div className="selected-courses" style={{
+        border: '1px solid #d1d5db',
+        borderRadius: '6px',
+        padding: '8px',
+        backgroundColor: disabled ? '#f9fafb' : 'white',
+        minHeight: '42px',
+        display: 'flex',
+        flexWrap: 'wrap',
+        gap: '4px',
+        alignItems: 'center',
+        cursor: 'text'
+      }}>
+        {selectedCourses.map((course, index) => (
+          <span key={index} style={{
+            backgroundColor: '#1B3058',
+            color: 'white',
+            padding: '4px 8px',
+            borderRadius: '12px',
+            fontSize: '12px',
+            display: 'flex',
+            alignItems: 'center',
+            gap: '4px'
+          }}>
+            {course}
+            {!disabled && (
+              <button
+                type="button"
+                onClick={() => removeCourse(course)}
+                style={{
+                  background: 'none',
+                  border: 'none',
+                  color: 'white',
+                  cursor: 'pointer',
+                  padding: '0',
+                  fontSize: '14px',
+                  fontWeight: 'bold'
+                }}
+              >
+                ×
+              </button>
+            )}
+          </span>
+        ))}
+        
+        {!disabled && (
+          <input
+            type="text"
+            value={searchTerm}
+            onChange={(e) => {
+              setSearchTerm(e.target.value);
+              if (!isOpen) setIsOpen(true);
+            }}
+            onFocus={() => setIsOpen(true)}
+            placeholder={selectedCourses.length === 0 ? "Search and select courses..." : "Add more..."}
+            style={{
+              border: 'none',
+              outline: 'none',
+              backgroundColor: 'transparent',
+              flex: 1,
+              minWidth: '150px',
+              fontSize: '14px'
+            }}
+          />
+        )}
+      </div>
+
+      {isOpen && !disabled && (
+        <div style={{
+          position: 'absolute',
+          top: '100%',
+          left: 0,
+          right: 0,
+          maxHeight: '200px',
+          overflowY: 'auto',
+          backgroundColor: 'white',
+          border: '1px solid #d1d5db',
+          borderRadius: '6px',
+          zIndex: 1000,
+          boxShadow: '0 4px 6px rgba(0, 0, 0, 0.1)',
+          marginTop: '2px'
+        }}>
+          {filteredCourses.length > 0 ? (
+            filteredCourses.map((course) => (
+              <div
+                key={course}
+                onClick={() => handleCourseSelect(course)}
+                style={{
+                  padding: '8px 12px',
+                  cursor: 'pointer',
+                  borderBottom: '1px solid #f3f4f6',
+                  fontSize: '14px'
+                }}
+                onMouseEnter={(e) => e.target.style.backgroundColor = '#f9fafb'}
+                onMouseLeave={(e) => e.target.style.backgroundColor = 'white'}
+              >
+                {course}
+              </div>
+            ))
+          ) : (
+            <div style={{ padding: '8px 12px', color: '#6b7280', fontSize: '14px' }}>
+              {searchTerm ? 'No courses found' : 'All courses selected'}
+            </div>
+          )}
+        </div>
+      )}
+
+      {isOpen && (
+        <div 
+          style={{
+            position: 'fixed',
+            top: 0,
+            left: 0,
+            right: 0,
+            bottom: 0,
+            zIndex: 999
+          }}
+          onClick={() => setIsOpen(false)}
+        />
+      )}
+    </div>
+  );
+};
+  
 
   // Handle logout
   const handleLogout = () => {
@@ -1169,15 +1301,27 @@ const closeMappingResults = () => {
                     </div>
                   </div>
 
-                  <div className="form-group">
+
+<div className="form-group full-width">
+  <label className="form-label">
+    <span className="label-text">Courses Studied in Secondary School</span>
+    <span className="label-required">*</span>
+  </label>
+  <CoursesMultiSelect
+    selectedCourses={coursesStudiedInSecondary}
+    onChange={setCoursesStudiedInSecondary}
+    disabled={loading}
+  />
+  <p className="input-help" style={{ marginTop: '0.5rem', fontSize: '0.85rem', color: '#6b7280' }}>
+    Search and select all subjects you studied in secondary school. Click on a course to add it, click the × to remove it.
+  </p>
+</div>
+                  {/* <div className="form-group">
                     <label className="form-label">
                       <span className="label-text">
-                        {/* Courses Studied in Secondary */}
-                        {/* Faculty Studied In previous University */}
                       </span>
                     </label>
                     <div className="input-wrapper">
-                      {/* <span className="input-icon">📖</span> */}
                       <input
                         type="text"
                         name="coursesStudiedInSecondary"
@@ -1187,7 +1331,7 @@ const closeMappingResults = () => {
                         placeholder="Courses Studied in Secondary"
                       />
                     </div>
-                  </div>
+                  </div> */}
 
                   <div className="form-group">
                     <label className="form-label">
