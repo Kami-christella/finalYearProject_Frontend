@@ -22,10 +22,61 @@ const SIDEBAR_ITEMS = [
 ];
 
 const AdvisorDashboard = () => {
+
+  const navigate = useNavigate();
+  
+   useEffect(() => {
+    const checkAdvisorAccess = () => {
+      const token = localStorage.getItem('token');
+      const user = JSON.parse(localStorage.getItem('user') || '{}');
+      
+      // Check if user is logged in
+      if (!token) {
+        Notify.failure('Please login to access the advisor dashboard');
+        navigate('/login');
+        return;
+      }
+      
+      // Check if user has advisor role
+      if (user.userRole !== 'advisor' && user.role !== 'advisor') {
+        Notify.failure('Access denied. Advisor privileges required.');
+        navigate('/'); // Redirect to home or appropriate page
+        return;
+      }
+      verifyAdvisorToken();
+    };
+
+    const verifyAdvisorToken = async () => {
+      try {
+        const token = localStorage.getItem('token');
+        const response = await fetch('http://localhost:5000/api/advisor/verify', {
+          headers: { 'Authorization': `Bearer ${token}` }
+        });
+        
+        if (!response.ok) {
+          throw new Error('Token verification failed');
+        }
+        
+        const data = await response.json();
+        if (data.user?.userRole !== 'advisor') {
+          throw new Error('Insufficient permissions');
+        }
+      } catch (error) {
+        console.error('Admin verification failed:', error);
+        Notify.failure('Session expired or insufficient permissions');
+        localStorage.removeItem('token');
+        localStorage.removeItem('user');
+        navigate('/login');
+      }
+    };
+    
+    checkAdvisorAccess();
+  }, []);
+
   const [activeTab, setActiveTab] = useState('overview');
   const [showDropdown, setShowDropdown] = useState(false);
   const [sidebarOpen, setSidebarOpen] = useState(false);
-const [showUserDropdown, setShowUserDropdown] = useState(false); 
+  const [showUserDropdown, setShowUserDropdown] = useState(false); 
   const [students, setStudents] = useState([]);
   const [filteredStudents, setFilteredStudents] = useState([]);
   const [selectedStudent, setSelectedStudent] = useState(null);
@@ -42,8 +93,8 @@ const [showUserDropdown, setShowUserDropdown] = useState(false);
   const [activityLog, setActivityLog] = useState([]);
   const [currentDocument, setCurrentDocument] = useState(null);
   const [showDocumentsModal, setShowDocumentsModal] = useState(false);
-const [selectedStudentDocuments, setSelectedStudentDocuments] = useState([]);
-  const navigate = useNavigate();
+  const [selectedStudentDocuments, setSelectedStudentDocuments] = useState([]);
+  
 
   const [pagination, setPagination] = useState({
     currentPage: 1,

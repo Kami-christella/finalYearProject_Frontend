@@ -104,7 +104,6 @@ const AdvisorDashboard = () => {
 
    const navigate = useNavigate();
   
-  // Add this useEffect at the very beginning of your component
   useEffect(() => {
     const checkAdminAccess = () => {
       const token = localStorage.getItem('token');
