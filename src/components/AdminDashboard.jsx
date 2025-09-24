@@ -136,6 +136,8 @@ const AdvisorDashboard = () => {
   
       checkAuth();
     }, [navigate]);
+
+    
   const [activeTab, setActiveTab] = useState('overview');
   const [showDropdown, setShowDropdown] = useState(false);
   const [sidebarOpen, setSidebarOpen] = useState(false);

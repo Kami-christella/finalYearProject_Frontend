@@ -607,9 +607,47 @@ import { Notify } from 'notiflix';
 import { FaCalendarAlt, FaClock, FaMapMarkerAlt, FaUser, FaPhone, FaEnvelope } from 'react-icons/fa';
 import { MdVideoCall, MdLocationOn } from 'react-icons/md';
 import { IoCheckmarkCircle, IoCloseCircle } from 'react-icons/io5';
+import { useNavigate } from 'react-router-dom';
+
 import './styles/BookAppointment.css';
 
 const BookAppointment = () => {
+  const navigate = useNavigate();
+    
+      useEffect(() => {
+        const checkAuth = () => {
+          const token = localStorage.getItem('token');
+          const user = localStorage.getItem('user');
+          
+          if (!token || !user) {
+            Notify.warning('Please log in to access this page');
+            navigate('/'); // Redirect to login page
+            return;
+          }
+          
+          // Optional: Verify token is not expired
+          try {
+            const tokenData = JSON.parse(atob(token.split('.')[1])); // Decode JWT payload
+            if (tokenData.exp * 1000 < Date.now()) {
+              localStorage.removeItem('token');
+              localStorage.removeItem('user');
+              Notify.failure('Session expired. Please log in again.');
+              navigate('/');
+              return;
+            }
+          } catch (error) {
+            // Invalid token format
+            localStorage.removeItem('token');
+            localStorage.removeItem('user');
+            Notify.failure('Invalid session. Please log in again.');
+            navigate('/');
+            return;
+          }
+        };
+    
+        checkAuth();
+      }, [navigate]);
+
   const [availableSlots, setAvailableSlots] = useState([]);
   const [myAppointments, setMyAppointments] = useState([]);
   const [loading, setLoading] = useState(false);
