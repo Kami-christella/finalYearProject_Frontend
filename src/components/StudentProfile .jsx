@@ -1228,6 +1228,370 @@ const InterestsMultiSelect = ({ selectedInterests, onChange, disabled = false })
   );
 };
 
+const SkillsMultiSelect = ({ selectedSkills, onChange, disabled = false }) => {
+  const [isOpen, setIsOpen] = useState(false);
+  const [searchTerm, setSearchTerm] = useState('');
+
+  const filteredSkills = SKILLS_OPTIONS.filter(skill =>
+    skill.toLowerCase().includes(searchTerm.toLowerCase()) &&
+    !selectedSkills.some(selected => selected.skillName === skill)
+  );
+
+  const handleSkillSelect = (skill) => {
+    const newSkill = {
+      skillName: skill,
+      proficiencyLevel: "Beginner"
+    };
+    const newSkills = [...selectedSkills, newSkill];
+    onChange(newSkills);
+    setSearchTerm('');
+  };
+
+  const removeSkill = (skillToRemove) => {
+    const newSkills = selectedSkills.filter(skill => skill.skillName !== skillToRemove);
+    onChange(newSkills);
+  };
+
+  const updateProficiency = (skillName, proficiency) => {
+    const updatedSkills = selectedSkills.map(skill => 
+      skill.skillName === skillName 
+        ? { ...skill, proficiencyLevel: proficiency }
+        : skill
+    );
+    onChange(updatedSkills);
+  };
+
+  return (
+    <div style={{ position: 'relative' }}>
+      <div style={{
+        border: '1px solid #d1d5db',
+        borderRadius: '6px',
+        padding: '8px',
+        backgroundColor: disabled ? '#f9fafb' : 'white',
+        minHeight: '42px'
+      }}>
+        {/* Selected Skills */}
+        {selectedSkills.map((skill, index) => (
+          <div key={index} style={{
+            display: 'flex',
+            alignItems: 'center',
+            gap: '8px',
+            marginBottom: '8px',
+            padding: '6px',
+            backgroundColor: '#f3f4f6',
+            borderRadius: '6px'
+          }}>
+            <span style={{
+              backgroundColor: '#3b82f6',
+              color: 'white',
+              padding: '4px 8px',
+              borderRadius: '12px',
+              fontSize: '12px',
+              flex: 1
+            }}>
+              {skill.skillName}
+            </span>
+            
+            {!disabled && (
+              <>
+                <select
+                  value={skill.proficiencyLevel}
+                  onChange={(e) => updateProficiency(skill.skillName, e.target.value)}
+                  style={{
+                    padding: '2px 4px',
+                    fontSize: '11px',
+                    border: '1px solid #d1d5db',
+                    borderRadius: '4px'
+                  }}
+                >
+                  <option value="Beginner">Beginner</option>
+                  <option value="Intermediate">Intermediate</option>
+                  <option value="Advanced">Advanced</option>
+                  <option value="Expert">Expert</option>
+                </select>
+                
+                <button
+                  type="button"
+                  onClick={() => removeSkill(skill.skillName)}
+                  style={{
+                    background: '#ef4444',
+                    color: 'white',
+                    border: 'none',
+                    borderRadius: '50%',
+                    width: '20px',
+                    height: '20px',
+                    fontSize: '12px',
+                    cursor: 'pointer'
+                  }}
+                >
+                  ×
+                </button>
+              </>
+            )}
+          </div>
+        ))}
+        
+        {/* Search Input */}
+        {!disabled && (
+          <input
+            type="text"
+            value={searchTerm}
+            onChange={(e) => {
+              setSearchTerm(e.target.value);
+              if (!isOpen) setIsOpen(true);
+            }}
+            onFocus={() => setIsOpen(true)}
+            placeholder={selectedSkills.length === 0 ? "Search and select skills..." : "Add more skills..."}
+            style={{
+              border: 'none',
+              outline: 'none',
+              backgroundColor: 'transparent',
+              width: '100%',
+              fontSize: '14px'
+            }}
+          />
+        )}
+      </div>
+
+      {/* Dropdown */}
+      {isOpen && !disabled && (
+        <>
+          <div style={{
+            position: 'absolute',
+            top: '100%',
+            left: 0,
+            right: 0,
+            maxHeight: '200px',
+            overflowY: 'auto',
+            backgroundColor: 'white',
+            border: '1px solid #d1d5db',
+            borderRadius: '6px',
+            zIndex: 1000,
+            boxShadow: '0 4px 6px rgba(0, 0, 0, 0.1)',
+            marginTop: '2px'
+          }}>
+            {filteredSkills.length > 0 ? (
+              filteredSkills.map((skill) => (
+                <div
+                  key={skill}
+                  onClick={() => handleSkillSelect(skill)}
+                  style={{
+                    padding: '8px 12px',
+                    cursor: 'pointer',
+                    borderBottom: '1px solid #f3f4f6',
+                    fontSize: '14px'
+                  }}
+                  onMouseEnter={(e) => e.target.style.backgroundColor = '#f9fafb'}
+                  onMouseLeave={(e) => e.target.style.backgroundColor = 'white'}
+                >
+                  {skill}
+                </div>
+              ))
+            ) : (
+              <div style={{ padding: '8px 12px', color: '#6b7280', fontSize: '14px' }}>
+                {searchTerm ? 'No skills found' : 'All skills selected'}
+              </div>
+            )}
+          </div>
+          <div 
+            style={{
+              position: 'fixed',
+              top: 0,
+              left: 0,
+              right: 0,
+              bottom: 0,
+              zIndex: 999
+            }}
+            onClick={() => setIsOpen(false)}
+          />
+        </>
+      )}
+    </div>
+  );
+};
+
+const LanguagesMultiSelect = ({ selectedLanguages, onChange, disabled = false }) => {
+  const [isOpen, setIsOpen] = useState(false);
+  const [searchTerm, setSearchTerm] = useState('');
+
+  const filteredLanguages = LANGUAGES_OPTIONS.filter(language =>
+    language.toLowerCase().includes(searchTerm.toLowerCase()) &&
+    !selectedLanguages.some(selected => selected.language === language)
+  );
+
+  const handleLanguageSelect = (language) => {
+    const newLanguage = {
+      language: language,
+      proficiency: "Basic"
+    };
+    const newLanguages = [...selectedLanguages, newLanguage];
+    onChange(newLanguages);
+    setSearchTerm('');
+  };
+
+  const removeLanguage = (languageToRemove) => {
+    const newLanguages = selectedLanguages.filter(lang => lang.language !== languageToRemove);
+    onChange(newLanguages);
+  };
+
+  const updateProficiency = (languageName, proficiency) => {
+    const updatedLanguages = selectedLanguages.map(lang => 
+      lang.language === languageName 
+        ? { ...lang, proficiency: proficiency }
+        : lang
+    );
+    onChange(updatedLanguages);
+  };
+
+  return (
+    <div style={{ position: 'relative' }}>
+      <div style={{
+        border: '1px solid #d1d5db',
+        borderRadius: '6px',
+        padding: '8px',
+        backgroundColor: disabled ? '#f9fafb' : 'white',
+        minHeight: '42px'
+      }}>
+        {/* Selected Languages */}
+        {selectedLanguages.map((language, index) => (
+          <div key={index} style={{
+            display: 'flex',
+            alignItems: 'center',
+            gap: '8px',
+            marginBottom: '8px',
+            padding: '6px',
+            backgroundColor: '#f3f4f6',
+            borderRadius: '6px'
+          }}>
+            <span style={{
+              backgroundColor: '#8b5cf6',
+              color: 'white',
+              padding: '4px 8px',
+              borderRadius: '12px',
+              fontSize: '12px',
+              flex: 1
+            }}>
+              {language.language}
+            </span>
+            
+            {!disabled && (
+              <>
+                <select
+                  value={language.proficiency}
+                  onChange={(e) => updateProficiency(language.language, e.target.value)}
+                  style={{
+                    padding: '2px 4px',
+                    fontSize: '11px',
+                    border: '1px solid #d1d5db',
+                    borderRadius: '4px'
+                  }}
+                >
+                  <option value="Basic">Basic</option>
+                  <option value="Conversational">Conversational</option>
+                  <option value="Fluent">Fluent</option>
+                  <option value="Native">Native</option>
+                </select>
+                
+                <button
+                  type="button"
+                  onClick={() => removeLanguage(language.language)}
+                  style={{
+                    background: '#ef4444',
+                    color: 'white',
+                    border: 'none',
+                    borderRadius: '50%',
+                    width: '20px',
+                    height: '20px',
+                    fontSize: '12px',
+                    cursor: 'pointer'
+                  }}
+                >
+                  ×
+                </button>
+              </>
+            )}
+          </div>
+        ))}
+        
+        {/* Search Input */}
+        {!disabled && (
+          <input
+            type="text"
+            value={searchTerm}
+            onChange={(e) => {
+              setSearchTerm(e.target.value);
+              if (!isOpen) setIsOpen(true);
+            }}
+            onFocus={() => setIsOpen(true)}
+            placeholder={selectedLanguages.length === 0 ? "Search and select languages..." : "Add more languages..."}
+            style={{
+              border: 'none',
+              outline: 'none',
+              backgroundColor: 'transparent',
+              width: '100%',
+              fontSize: '14px'
+            }}
+          />
+        )}
+      </div>
+
+      {/* Dropdown */}
+      {isOpen && !disabled && (
+        <>
+          <div style={{
+            position: 'absolute',
+            top: '100%',
+            left: 0,
+            right: 0,
+            maxHeight: '200px',
+            overflowY: 'auto',
+            backgroundColor: 'white',
+            border: '1px solid #d1d5db',
+            borderRadius: '6px',
+            zIndex: 1000,
+            boxShadow: '0 4px 6px rgba(0, 0, 0, 0.1)',
+            marginTop: '2px'
+          }}>
+            {filteredLanguages.length > 0 ? (
+              filteredLanguages.map((language) => (
+                <div
+                  key={language}
+                  onClick={() => handleLanguageSelect(language)}
+                  style={{
+                    padding: '8px 12px',
+                    cursor: 'pointer',
+                    borderBottom: '1px solid #f3f4f6',
+                    fontSize: '14px'
+                  }}
+                  onMouseEnter={(e) => e.target.style.backgroundColor = '#f9fafb'}
+                  onMouseLeave={(e) => e.target.style.backgroundColor = 'white'}
+                >
+                  {language}
+                </div>
+              ))
+            ) : (
+              <div style={{ padding: '8px 12px', color: '#6b7280', fontSize: '14px' }}>
+                {searchTerm ? 'No languages found' : 'All languages selected'}
+              </div>
+            )}
+          </div>
+          <div 
+            style={{
+              position: 'fixed',
+              top: 0,
+              left: 0,
+              right: 0,
+              bottom: 0,
+              zIndex: 999
+            }}
+            onClick={() => setIsOpen(false)}
+          />
+        </>
+      )}
+    </div>
+  );
+};
+
   // Handle logout
   const handleLogout = () => {
     if (
@@ -2702,7 +3066,22 @@ The more detailed you are, the better our System can match your courses!"
 </div>
 
                   {/* Skills Section */}
+
                   <div className="form-group">
+  <label className="form-label">
+    <span className="label-text">Skills</span>
+    <span className="label-required">*</span>
+  </label>
+  <SkillsMultiSelect
+    selectedSkills={skills}
+    onChange={setSkills}
+    disabled={loading}
+  />
+  <p className="input-help" style={{ marginTop: '0.5rem', fontSize: '0.85rem', color: '#6b7280' }}>
+    Search and select your skills. You can set proficiency levels for each skill.
+  </p>
+</div>
+                  {/* <div className="form-group">
                     <div className="section-header">
                       <span className="section-titles">Skills</span>
                       <button
@@ -2752,10 +3131,25 @@ The more detailed you are, the better our System can match your courses!"
                       </div>
                     ))}
 
-                  </div>
+                  </div> */}
 
                   {/* Languages Section */}
+
                   <div className="form-group">
+  <label className="form-label">
+    <span className="label-text">Languages Spoken</span>
+    <span className="label-required">*</span>
+  </label>
+  <LanguagesMultiSelect
+    selectedLanguages={languagesSpoken}
+    onChange={setLanguagesSpoken}
+    disabled={loading}
+  />
+  <p className="input-help" style={{ marginTop: '0.5rem', fontSize: '0.85rem', color: '#6b7280' }}>
+    Search and select languages you speak. You can set proficiency levels for each language.
+  </p>
+</div>
+                  {/* <div className="form-group">
                     <div className="section-header">
                       <h3 className="section-titles">Languages Spoken</h3>
                       <button
@@ -2818,7 +3212,7 @@ The more detailed you are, the better our System can match your courses!"
                         </button>
                       </div>
                     ))}
-                  </div>
+                  </div> */}
 
                   {/* Work Experience Section */}
                   <div className="form-group">
