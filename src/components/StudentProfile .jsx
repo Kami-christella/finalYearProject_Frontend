@@ -632,7 +632,9 @@ const closeMappingResults = () => {
         }
       });
       // Add this line after the formData loop
-formDataToSend.append("coursesStudiedInSecondary", JSON.stringify(coursesStudiedInSecondary));
+      formDataToSend.append("hobbies", JSON.stringify(selectedHobbies));
+      formDataToSend.append("interests", JSON.stringify(selectedInterests));
+      formDataToSend.append("coursesStudiedInSecondary", JSON.stringify(coursesStudiedInSecondary));
 
       // Add properly structured complex arrays
       formDataToSend.append("skills", JSON.stringify(skills));
@@ -892,7 +894,294 @@ formDataToSend.append("coursesStudiedInSecondary", JSON.stringify(coursesStudied
     </div>
   );
 };
-  
+  // Add this component after your CoursesMultiSelect component
+const HobbiesMultiSelect = ({ selectedHobbies, onChange, disabled = false }) => {
+  const [isOpen, setIsOpen] = useState(false);
+  const [searchTerm, setSearchTerm] = useState('');
+
+  const filteredHobbies = HOBBIES_OPTIONS.filter(hobby =>
+    hobby.toLowerCase().includes(searchTerm.toLowerCase()) &&
+    !selectedHobbies.includes(hobby)
+  );
+
+  const handleHobbySelect = (hobby) => {
+    const newHobbies = [...selectedHobbies, hobby];
+    onChange(newHobbies);
+    setSearchTerm('');
+  };
+
+  const removeHobby = (hobbyToRemove) => {
+    const newHobbies = selectedHobbies.filter(hobby => hobby !== hobbyToRemove);
+    onChange(newHobbies);
+  };
+
+  return (
+    <div style={{ position: 'relative' }}>
+      <div style={{
+        border: '1px solid #d1d5db',
+        borderRadius: '6px',
+        padding: '8px',
+        backgroundColor: disabled ? '#f9fafb' : 'white',
+        minHeight: '42px',
+        display: 'flex',
+        flexWrap: 'wrap',
+        gap: '4px',
+        alignItems: 'center',
+        cursor: 'text'
+      }}>
+        {selectedHobbies.map((hobby, index) => (
+          <span key={index} style={{
+            backgroundColor: '#16a34a',
+            color: 'white',
+            padding: '4px 8px',
+            borderRadius: '12px',
+            fontSize: '12px',
+            display: 'flex',
+            alignItems: 'center',
+            gap: '4px'
+          }}>
+            {hobby}
+            {!disabled && (
+              <button
+                type="button"
+                onClick={() => removeHobby(hobby)}
+                style={{
+                  background: 'none',
+                  border: 'none',
+                  color: 'white',
+                  cursor: 'pointer',
+                  padding: '0',
+                  fontSize: '14px',
+                  fontWeight: 'bold'
+                }}
+              >
+                ×
+              </button>
+            )}
+          </span>
+        ))}
+        
+        {!disabled && (
+          <input
+            type="text"
+            value={searchTerm}
+            onChange={(e) => {
+              setSearchTerm(e.target.value);
+              if (!isOpen) setIsOpen(true);
+            }}
+            onFocus={() => setIsOpen(true)}
+            placeholder={selectedHobbies.length === 0 ? "Search and select hobbies..." : "Add more..."}
+            style={{
+              border: 'none',
+              outline: 'none',
+              backgroundColor: 'transparent',
+              flex: 1,
+              minWidth: '150px',
+              fontSize: '14px'
+            }}
+          />
+        )}
+      </div>
+
+      {isOpen && !disabled && (
+        <>
+          <div style={{
+            position: 'absolute',
+            top: '100%',
+            left: 0,
+            right: 0,
+            maxHeight: '200px',
+            overflowY: 'auto',
+            backgroundColor: 'white',
+            border: '1px solid #d1d5db',
+            borderRadius: '6px',
+            zIndex: 1000,
+            boxShadow: '0 4px 6px rgba(0, 0, 0, 0.1)',
+            marginTop: '2px'
+          }}>
+            {filteredHobbies.length > 0 ? (
+              filteredHobbies.map((hobby) => (
+                <div
+                  key={hobby}
+                  onClick={() => handleHobbySelect(hobby)}
+                  style={{
+                    padding: '8px 12px',
+                    cursor: 'pointer',
+                    borderBottom: '1px solid #f3f4f6',
+                    fontSize: '14px'
+                  }}
+                  onMouseEnter={(e) => e.target.style.backgroundColor = '#f9fafb'}
+                  onMouseLeave={(e) => e.target.style.backgroundColor = 'white'}
+                >
+                  {hobby}
+                </div>
+              ))
+            ) : (
+              <div style={{ padding: '8px 12px', color: '#6b7280', fontSize: '14px' }}>
+                {searchTerm ? 'No hobbies found' : 'All hobbies selected'}
+              </div>
+            )}
+          </div>
+          <div 
+            style={{
+              position: 'fixed',
+              top: 0,
+              left: 0,
+              right: 0,
+              bottom: 0,
+              zIndex: 999
+            }}
+            onClick={() => setIsOpen(false)}
+          />
+        </>
+      )}
+    </div>
+  );
+};
+
+const InterestsMultiSelect = ({ selectedInterests, onChange, disabled = false }) => {
+  const [isOpen, setIsOpen] = useState(false);
+  const [searchTerm, setSearchTerm] = useState('');
+
+  const filteredInterests = INTERESTS_OPTIONS.filter(interest =>
+    interest.toLowerCase().includes(searchTerm.toLowerCase()) &&
+    !selectedInterests.includes(interest)
+  );
+
+  const handleInterestSelect = (interest) => {
+    const newInterests = [...selectedInterests, interest];
+    onChange(newInterests);
+    setSearchTerm('');
+  };
+
+  const removeInterest = (interestToRemove) => {
+    const newInterests = selectedInterests.filter(interest => interest !== interestToRemove);
+    onChange(newInterests);
+  };
+
+  return (
+    <div style={{ position: 'relative' }}>
+      <div style={{
+        border: '1px solid #d1d5db',
+        borderRadius: '6px',
+        padding: '8px',
+        backgroundColor: disabled ? '#f9fafb' : 'white',
+        minHeight: '42px',
+        display: 'flex',
+        flexWrap: 'wrap',
+        gap: '4px',
+        alignItems: 'center',
+        cursor: 'text'
+      }}>
+        {selectedInterests.map((interest, index) => (
+          <span key={index} style={{
+            backgroundColor: '#dc2626',
+            color: 'white',
+            padding: '4px 8px',
+            borderRadius: '12px',
+            fontSize: '12px',
+            display: 'flex',
+            alignItems: 'center',
+            gap: '4px'
+          }}>
+            {interest}
+            {!disabled && (
+              <button
+                type="button"
+                onClick={() => removeInterest(interest)}
+                style={{
+                  background: 'none',
+                  border: 'none',
+                  color: 'white',
+                  cursor: 'pointer',
+                  padding: '0',
+                  fontSize: '14px',
+                  fontWeight: 'bold'
+                }}
+              >
+                ×
+              </button>
+            )}
+          </span>
+        ))}
+        
+        {!disabled && (
+          <input
+            type="text"
+            value={searchTerm}
+            onChange={(e) => {
+              setSearchTerm(e.target.value);
+              if (!isOpen) setIsOpen(true);
+            }}
+            onFocus={() => setIsOpen(true)}
+            placeholder={selectedInterests.length === 0 ? "Search and select interests..." : "Add more..."}
+            style={{
+              border: 'none',
+              outline: 'none',
+              backgroundColor: 'transparent',
+              flex: 1,
+              minWidth: '150px',
+              fontSize: '14px'
+            }}
+          />
+        )}
+      </div>
+
+      {isOpen && !disabled && (
+        <>
+          <div style={{
+            position: 'absolute',
+            top: '100%',
+            left: 0,
+            right: 0,
+            maxHeight: '200px',
+            overflowY: 'auto',
+            backgroundColor: 'white',
+            border: '1px solid #d1d5db',
+            borderRadius: '6px',
+            zIndex: 1000,
+            boxShadow: '0 4px 6px rgba(0, 0, 0, 0.1)',
+            marginTop: '2px'
+          }}>
+            {filteredInterests.length > 0 ? (
+              filteredInterests.map((interest) => (
+                <div
+                  key={interest}
+                  onClick={() => handleInterestSelect(interest)}
+                  style={{
+                    padding: '8px 12px',
+                    cursor: 'pointer',
+                    borderBottom: '1px solid #f3f4f6',
+                    fontSize: '14px'
+                  }}
+                  onMouseEnter={(e) => e.target.style.backgroundColor = '#f9fafb'}
+                  onMouseLeave={(e) => e.target.style.backgroundColor = 'white'}
+                >
+                  {interest}
+                </div>
+              ))
+            ) : (
+              <div style={{ padding: '8px 12px', color: '#6b7280', fontSize: '14px' }}>
+                {searchTerm ? 'No interests found' : 'All interests selected'}
+              </div>
+            )}
+          </div>
+          <div 
+            style={{
+              position: 'fixed',
+              top: 0,
+              left: 0,
+              right: 0,
+              bottom: 0,
+              zIndex: 999
+            }}
+            onClick={() => setIsOpen(false)}
+          />
+        </>
+      )}
+    </div>
+  );
+};
 
   // Handle logout
   const handleLogout = () => {
@@ -2295,7 +2584,8 @@ The more detailed you are, the better our System can match your courses!"
                 </div>
 
                 <div className="form-grid single-column">
-                  <div className="form-group">
+
+                  {/* <div className="form-group">
                     <label className="form-label">
                       <span className="label-text">Hobbies</span>
                       <span className="label-required">*</span>
@@ -2312,9 +2602,24 @@ The more detailed you are, the better our System can match your courses!"
                         placeholder="e.g., Reading, Sports, Music"
                       />
                     </div>
-                  </div>
-
-                  <div className="form-group">
+                  </div> */}
+                   
+                   <div className="form-group">
+  <label className="form-label">
+    <span className="label-text">Hobbies</span>
+    <span className="label-required">*</span>
+  </label>
+  <HobbiesMultiSelect
+    selectedHobbies={selectedHobbies}
+    onChange={setSelectedHobbies}
+    disabled={loading}
+  />
+  <p className="input-help" style={{ marginTop: '0.5rem', fontSize: '0.85rem', color: '#6b7280' }}>
+    Search and select your hobbies. You can select multiple options.
+  </p>
+</div>
+                   
+                  {/* <div className="form-group">
                     <label className="form-label">
                       <span className="label-text">Interests</span>
                       <span className="label-required">*</span>
@@ -2334,7 +2639,22 @@ The more detailed you are, the better our System can match your courses!"
                     <p className="input-help">
                       Separate multiple interests with commas
                     </p>
-                  </div>
+                  </div> */}
+
+                  <div className="form-group">
+  <label className="form-label">
+    <span className="label-text">Interests</span>
+    <span className="label-required">*</span>
+  </label>
+  <InterestsMultiSelect
+    selectedInterests={selectedInterests}
+    onChange={setSelectedInterests}
+    disabled={loading}
+  />
+  <p className="input-help" style={{ marginTop: '0.5rem', fontSize: '0.85rem', color: '#6b7280' }}>
+    Search and select your areas of interest. You can select multiple options.
+  </p>
+</div>
 
                   {/* Skills Section */}
                   <div className="form-group">
