@@ -44,10 +44,74 @@ const SECONDARY_COURSES = [
   // Core Subjects
   "Mathematics", "Physics", "Chemistry", "Biology", "English Language",
   "Kinyarwanda", "French", "History", "Geography", "Computer Science", "Economics",
-  "Literature","Software Engineering","Networks and Communication","Computer Science",
+  "Literature","Software Engineering","Networks and Communication",
    "Music","Entrepreneurship", "Electronics and Telecommunication",
   
 ];
+
+const HOBBIES_OPTIONS = [
+  // Creative Arts
+  "Reading", "Writing", "Poetry", "Drawing", "Painting", "Photography", 
+  "Graphic Design", "Digital Art", "Sculpture", "Crafts", "Jewelry Making",
+  
+  // Music & Performance
+  "Playing Musical Instruments", "Singing", "Dancing", "Theater", "Acting",
+  "Stand-up Comedy", "DJ-ing", "Music Production",
+  
+  // Sports & Fitness
+  "Football", "Basketball", "Tennis", "Swimming", "Running", "Cycling",
+  "Gym/Fitness", "Yoga", "Martial Arts", "Boxing", "Hiking", "Rock Climbing",
+  "Skateboarding", "Volleyball", "Baseball", "Cricket",
+  
+  // Technology
+  "Programming", "Web Development", "Gaming", "Video Editing", "3D Modeling",
+  "Robotics", "Electronics", "App Development",
+  
+  // Outdoor Activities
+  "Camping", "Fishing", "Gardening", "Bird Watching", "Nature Photography",
+  "Traveling", "Adventure Sports",
+  
+  // Social & Community
+  "Volunteering", "Community Service", "Mentoring", "Public Speaking",
+  "Event Planning", "Networking",
+  
+  // Learning & Skills
+  "Learning Languages", "Cooking", "Baking", "Fashion Design", "Interior Design",
+  "Collecting", "Board Games", "Chess", "Puzzles", "Meditation"
+];
+
+const INTERESTS_OPTIONS = [
+  // Technology & Science
+  "Artificial Intelligence", "Machine Learning", "Data Science", "Cybersecurity",
+  "Web Development", "Mobile Development", "Blockchain", "Internet of Things",
+  "Biotechnology", "Environmental Science", "Space Technology", "Renewable Energy",
+  
+  // Business & Finance
+  "Entrepreneurship", "Business Management", "Marketing", "Digital Marketing",
+  "E-commerce", "Investment", "Banking", "Economics", "International Trade",
+  "Project Management", "Human Resources",
+  
+  // Healthcare & Medicine
+  "Public Health", "Nursing", "Medical Research", "Mental Health", "Nutrition",
+  "Physical Therapy", "Pharmaceutical Sciences", "Healthcare Technology",
+  
+  // Education & Social Sciences
+  "Education Technology", "Child Development", "Psychology", "Sociology",
+  "Political Science", "International Relations", "Social Work", "Philosophy",
+  
+  // Arts & Media
+  "Journalism", "Content Creation", "Film Making", "Animation", "Game Design",
+  "Creative Writing", "Fashion", "Architecture", "Museum Studies",
+  
+  // Environment & Sustainability
+  "Climate Change", "Sustainable Development", "Conservation", "Green Technology",
+  "Urban Planning", "Agriculture", "Food Security",
+  
+  // Culture & Languages
+  "Cultural Studies", "Language Learning", "Translation", "Travel", "History",
+  "Anthropology", "Religious Studies"
+];
+
 
 const StudentProfile = () => {
 
@@ -109,8 +173,8 @@ const StudentProfile = () => {
     overallGradePreviousUniversity: "",
     disability: "None",
     haveJob: "",
-    hobbies: "",
-    interests: "",
+    // hobbies: "",
+    // interests: "",
     desiredFaculty: "",
     desiredDepartment: "",
     careerGoals: "",
@@ -129,6 +193,9 @@ const StudentProfile = () => {
   );
   const [skills, setSkills] = useState([]);
   const [languagesSpoken, setLanguagesSpoken] = useState([]);
+  // Add these state variables with your other useState declarations
+const [selectedHobbies, setSelectedHobbies] = useState([]);
+const [selectedInterests, setSelectedInterests] = useState([]);
   const [
     coursesStudiedPreviousUniversity,
     setCoursesStudiedPreviousUniversity,
@@ -1025,7 +1092,7 @@ formDataToSend.append("coursesStudiedInSecondary", JSON.stringify(coursesStudied
       required
       className="form-input"
     >
-      <option value="">Select Country</option>
+      <option value="">Select your Country</option>
       {COUNTRIES.map((country) => (
         <option key={country} value={country}>
           {country}
