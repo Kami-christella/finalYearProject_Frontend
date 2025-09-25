@@ -536,48 +536,48 @@ const closeMappingResults = () => {
   };
 
   // Skills functions
-  const addSkill = () => {
-    setSkills([
-      ...skills,
-      {
-        skillName: "",
-        proficiencyLevel: "Beginner",
-      },
-    ]);
-  };
+  // const addSkill = () => {
+  //   setSkills([
+  //     ...skills,
+  //     {
+  //       skillName: "",
+  //       proficiencyLevel: "Beginner",
+  //     },
+  //   ]);
+  // };
 
-  const updateSkill = (index, field, value) => {
-    const updated = skills.map((skill, i) =>
-      i === index ? { ...skill, [field]: value } : skill
-    );
-    setSkills(updated);
-  };
+  // const updateSkill = (index, field, value) => {
+  //   const updated = skills.map((skill, i) =>
+  //     i === index ? { ...skill, [field]: value } : skill
+  //   );
+  //   setSkills(updated);
+  // };
 
-  const removeSkill = (index) => {
-    setSkills(skills.filter((_, i) => i !== index));
-  };
+  // const removeSkill = (index) => {
+  //   setSkills(skills.filter((_, i) => i !== index));
+  // };
 
-  // Language functions
-  const addLanguage = () => {
-    setLanguagesSpoken([
-      ...languagesSpoken,
-      {
-        language: "",
-        proficiency: "Basic",
-      },
-    ]);
-  };
+  // // Language functions
+  // const addLanguage = () => {
+  //   setLanguagesSpoken([
+  //     ...languagesSpoken,
+  //     {
+  //       language: "",
+  //       proficiency: "Basic",
+  //     },
+  //   ]);
+  // };
 
-  const updateLanguage = (index, field, value) => {
-    const updated = languagesSpoken.map((lang, i) =>
-      i === index ? { ...lang, [field]: value } : lang
-    );
-    setLanguagesSpoken(updated);
-  };
+  // const updateLanguage = (index, field, value) => {
+  //   const updated = languagesSpoken.map((lang, i) =>
+  //     i === index ? { ...lang, [field]: value } : lang
+  //   );
+  //   setLanguagesSpoken(updated);
+  // };
 
-  const removeLanguage = (index) => {
-    setLanguagesSpoken(languagesSpoken.filter((_, i) => i !== index));
-  };
+  // const removeLanguage = (index) => {
+  //   setLanguagesSpoken(languagesSpoken.filter((_, i) => i !== index));
+  // };
 
   // Handle profile image upload
   const handleImageUpload = (e) => {
@@ -1920,6 +1920,7 @@ const LanguagesMultiSelect = ({ selectedLanguages, onChange, disabled = false })
                           {/* <span className="label-required">*</span> */}
                         </label>
                         <div className="input-wrapper">
+
                           {/* <span className="input-icon">🏫</span> */}
                           <input
                             type="text"
@@ -3495,7 +3496,7 @@ The more detailed you are, the better our System can match your courses!"
                         <span className="label-text">Desired Faculty</span>
                       </label>
                       <div className="input-wrapper">
-                        <span className="input-icon">🏫</span>
+                        {/* <span className="input-icon">🏫</span> */}
                         <select
                           name="desiredFaculty"
                           value={formData.desiredFaculty}
@@ -3517,7 +3518,7 @@ The more detailed you are, the better our System can match your courses!"
                         <span className="label-text">Desired Department</span>
                       </label>
                       <div className="input-wrapper">
-                        <span className="input-icon">🎯</span>
+                        {/* <span className="input-icon">🎯</span> */}
                         <select
                           name="desiredDepartment"
                           value={formData.desiredDepartment}
@@ -3717,7 +3718,7 @@ The more detailed you are, the better our System can match your courses!"
                           <span className="label-required">*</span>
                         </label>
                         <div className="input-wrapper">
-                          <span className="input-icon">👤</span>
+                          {/* <span className="input-icon">👤</span> */}
                           <input
                             type="text"
                             name="emergencyContact.name"
@@ -3736,7 +3737,7 @@ The more detailed you are, the better our System can match your courses!"
                           <span className="label-required">*</span>
                         </label>
                         <div className="input-wrapper">
-                          <span className="input-icon">👥</span>
+                          {/* <span className="input-icon">👥</span> */}
                           <select
                             name="emergencyContact.relationship"
                             value={formData.emergencyContact.relationship}
@@ -3762,7 +3763,7 @@ The more detailed you are, the better our System can match your courses!"
                           <span className="label-required">*</span>
                         </label>
                         <div className="input-wrapper">
-                          <span className="input-icon">📱</span>
+                          {/* <span className="input-icon">📱</span> */}
                           <input
                             type="tel"
                             name="emergencyContact.phoneNumber"
@@ -3780,7 +3781,7 @@ The more detailed you are, the better our System can match your courses!"
                           <span className="label-text">Email Address</span>
                         </label>
                         <div className="input-wrapper">
-                          <span className="input-icon">📧</span>
+                          {/* <span className="input-icon">📧</span> */}
                           <input
                             type="email"
                             name="emergencyContact.email"
@@ -3802,7 +3803,7 @@ The more detailed you are, the better our System can match your courses!"
                         <span className="label-text">Disability Status</span>
                       </label>
                       <div className="input-wrapper">
-                        <span className="input-icon">♿</span>
+                        {/* <span className="input-icon">♿</span> */}
                         <select
                           name="disability"
                           value={formData.disability}
