@@ -80,6 +80,51 @@ const HOBBIES_OPTIONS = [
   "Collecting", "Board Games", "Chess", "Puzzles", "Meditation"
 ];
 
+const SKILLS_OPTIONS = [
+  // Programming & Technology
+  "JavaScript", "Python", "Java", "C++", "C#", "PHP", "Ruby", "Swift", "Kotlin",
+  "React", "Angular", "Vue.js", "Node.js", "Django", "Spring", "Laravel",
+  "HTML/CSS", "SQL", "MongoDB", "PostgreSQL", "MySQL", "Git", "Docker",
+  "AWS", "Azure", "Google Cloud", "Linux", "Windows Server",
+  
+  // Design & Creative
+  "Adobe Photoshop", "Adobe Illustrator", "Figma", "Sketch", "InDesign",
+  "Video Editing", "3D Modeling", "Animation", "UI/UX Design", "Graphic Design",
+  "Web Design", "Logo Design", "Typography", "Color Theory",
+  
+  // Business & Management
+  "Project Management", "Leadership", "Team Management", "Strategic Planning",
+  "Business Analysis", "Data Analysis", "Financial Analysis", "Marketing",
+  "Sales", "Customer Service", "Negotiation", "Presentation Skills",
+  "Microsoft Excel", "PowerBI", "Tableau", "CRM Software",
+  
+  // Communication & Languages
+  "Public Speaking", "Writing", "Content Creation", "Social Media Management",
+  "SEO", "Digital Marketing", "Email Marketing", "Copywriting",
+  "Technical Writing", "Translation", "Interpretation",
+  
+  // Healthcare & Sciences
+  "Patient Care", "Medical Research", "Laboratory Skills", "Data Collection",
+  "Statistical Analysis", "Research Methods", "Clinical Skills",
+  
+  // Other Professional Skills
+  "Accounting", "Bookkeeping", "Legal Research", "Teaching", "Training",
+  "Event Planning", "Time Management", "Problem Solving", "Critical Thinking",
+  "Attention to Detail", "Multitasking", "Organization"
+];
+
+const LANGUAGES_OPTIONS = [
+  "English", "French", "Kinyarwanda", "Swahili", "Spanish", "Portuguese",
+  "German", "Italian", "Dutch", "Russian", "Chinese (Mandarin)", "Japanese",
+  "Korean", "Arabic", "Hindi", "Urdu", "Bengali", "Tamil", "Telugu",
+  "Gujarati", "Marathi", "Punjabi", "Thai", "Vietnamese", "Indonesian",
+  "Malay", "Filipino", "Turkish", "Hebrew", "Persian", "Greek",
+  "Polish", "Czech", "Hungarian", "Romanian", "Bulgarian", "Croatian",
+  "Serbian", "Slovak", "Slovenian", "Estonian", "Latvian", "Lithuanian",
+  "Finnish", "Swedish", "Norwegian", "Danish", "Icelandic", "Irish",
+  "Welsh", "Scottish Gaelic", "Catalan", "Basque", "Galician"
+];
+
 const INTERESTS_OPTIONS = [
   // Technology & Science
   "Artificial Intelligence", "Machine Learning", "Data Science", "Cybersecurity",
