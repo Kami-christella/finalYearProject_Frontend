@@ -1,6 +1,6 @@
 // components/NewDash.jsx
 import { useState, useEffect } from "react";
-import { IoPersonCircle, IoHomeOutline, IoSettings } from "react-icons/io5";
+import { IoPersonCircle} from "react-icons/io5";
 import { MdOutlinePersonAddAlt } from "react-icons/md";
 import { LuNotebookPen } from "react-icons/lu";
 import { useNavigate, useLocation } from "react-router-dom";
