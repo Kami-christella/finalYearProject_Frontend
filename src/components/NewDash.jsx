@@ -1,15 +1,12 @@
 // components/NewDash.jsx
 import { useState, useEffect } from "react";
 import { IoPersonCircle, IoHomeOutline, IoSettings } from "react-icons/io5";
-import { BsPersonFillAdd } from "react-icons/bs";
 import { MdOutlinePersonAddAlt } from "react-icons/md";
 import { LuNotebookPen } from "react-icons/lu";
 import { useNavigate, useLocation } from "react-router-dom";
 import { Notify } from "notiflix";
 import { LuNotebookTabs } from "react-icons/lu";
-import { FaRegUserCircle } from "react-icons/fa";
 import { FaCalendarAlt } from "react-icons/fa";
-import { IoIosSettings } from "react-icons/io";
 import { IoIosLogOut } from "react-icons/io";
 import { MdQuiz } from "react-icons/md";
 
