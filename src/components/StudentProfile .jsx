@@ -3737,7 +3737,7 @@ The more detailed you are, the better our System can match your courses!"
                           <span className="label-required">*</span>
                         </label>
                         <div className="input-wrapper">
-                          {/* <span className="input-icon">👥</span> */}
+                        
                           <select
                             name="emergencyContact.relationship"
                             value={formData.emergencyContact.relationship}
@@ -3763,7 +3763,7 @@ The more detailed you are, the better our System can match your courses!"
                           <span className="label-required">*</span>
                         </label>
                         <div className="input-wrapper">
-                          {/* <span className="input-icon">📱</span> */}
+                         
                           <input
                             type="tel"
                             name="emergencyContact.phoneNumber"
@@ -3781,7 +3781,7 @@ The more detailed you are, the better our System can match your courses!"
                           <span className="label-text">Email Address</span>
                         </label>
                         <div className="input-wrapper">
-                          {/* <span className="input-icon">📧</span> */}
+                         
                           <input
                             type="email"
                             name="emergencyContact.email"
