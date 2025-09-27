@@ -3803,7 +3803,7 @@ The more detailed you are, the better our System can match your courses!"
                         <span className="label-text">Disability Status</span>
                       </label>
                       <div className="input-wrapper">
-                        {/* <span className="input-icon">♿</span> */}
+                     
                         <select
                           name="disability"
                           value={formData.disability}

@@ -35,7 +35,7 @@ function QuestionManager() {
   const fileInputRef = useRef(null);
   const formRef = useRef(null);
 
-  // IMPROVED: Centralized token getter with better error handling
+  
   const getToken = () => {
     try {
       // Check multiple possible token storage locations
@@ -54,11 +54,11 @@ function QuestionManager() {
             if (parsed.token) return parsed.token;
             if (parsed.accessToken) return parsed.accessToken;
             if (parsed.authToken) return parsed.authToken;
-            return token; // If parsing doesn't reveal a nested token, use the original
+            return token; 
           } catch {
-            // If parsing fails, it's probably a plain string token
+           
             if (token.startsWith('Bearer ')) {
-              return token.substring(7); // Remove 'Bearer ' prefix
+              return token.substring(7); 
             }
             return token;
           }
