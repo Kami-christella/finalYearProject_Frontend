@@ -303,34 +303,7 @@ const LandingPage = () => {
                
               </div>
               
-              {/* <div className="about-features">
-                <div className="about-feature">
-                  <div className="about-feature-icon">🎯</div>
-                  <div className="about-feature-content">
-                    <h3>Personalized Approach</h3>
-                    <p>Every assessment is tailored to your unique profile and academic background.</p>
-                  </div>
-                </div>
-                
-                <div className="about-feature">
-                  <div className="about-feature-icon">📈</div>
-                  <div className="about-feature-content">
-                    <h3>Data-Driven Results</h3>
-                    <p>Our recommendations are based on comprehensive data analysis and industry trends.</p>
-                  </div>
-                </div>
-                
-                <div className="about-feature">
-                  <div className="about-feature-icon">🤝</div>
-                  <div className="about-feature-content">
-                    <h3>Expert Support</h3>
-                    <p>Get guidance from experienced career counselors and industry professionals.</p>
-                  </div>
-                </div>
-              </div> */}
             </div>
-            
-            
           </div>
         </div>
       </section>
