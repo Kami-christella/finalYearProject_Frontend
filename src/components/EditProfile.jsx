@@ -363,7 +363,7 @@ const EditProfile = () => {
         }
       });
       
-      // Add complex arrays (clean them first to remove any _id fields from existing data)
+      
       const cleanSkills = skills.map(skill => ({
         skillName: skill.skillName,
         proficiencyLevel: skill.proficiencyLevel
