@@ -10,7 +10,6 @@ function DashboardLayout() {
       {/* <Sidebar /> */}
       {/* <NewDash/> */}
       <div className="dashboard-content">
-       {/* This ensures nested routes (CareerTest, Content2) are displayed */}
 
         <Outlet />
 

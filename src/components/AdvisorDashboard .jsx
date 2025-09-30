@@ -207,7 +207,6 @@ const [appointmentForm, setAppointmentForm] = useState({
     }
   };
 
-  // Enhanced function to get appointments with time sorting for a specific date
   const getAppointmentsForDateSorted = (date) => {
     return appointments
       .filter(appointment => {
@@ -373,7 +372,7 @@ useEffect(() => {
         let studentsArray = [];
         let paginationData = {};
         
-        // Handle different response structures
+        
         if (data.data && Array.isArray(data.data.profiles)) {
           studentsArray = data.data.profiles;
           paginationData = data.data.pagination || {};
