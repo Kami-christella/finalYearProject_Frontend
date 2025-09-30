@@ -178,7 +178,6 @@ const [appointmentForm, setAppointmentForm] = useState({
     filterAppointments();
   }, [appointments, appointmentFilter, dateFilter]);
 
-  // Add useEffect to get user name from localStorage or API
   useEffect(() => {
     const user = JSON.parse(localStorage.getItem('user'));
     if (user && user.name) {
@@ -187,7 +186,7 @@ const [appointmentForm, setAppointmentForm] = useState({
       // Fallback: try to get from token or make API call
       const token = localStorage.getItem('token');
       if (token) {
-        // You can make an API call here to get user details if needed
+      
         fetchUserDetails();
       }
     }
