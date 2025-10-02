@@ -450,7 +450,7 @@ const fetchDashboardData = async () => {
 
     // FIX: Add status filter properly - convert string to boolean or send as string
     if (filterStatus && filterStatus !== 'all') {
-      params.append('isActive', filterStatus); // Backend should handle "true"/"false" strings
+      params.append('isActive', filterStatus); 
     }
 
     const response = await fetch(`http://localhost:5000/api/admin/users?${params}`, {
@@ -1230,32 +1230,6 @@ const handleEditUser = async (e) => {
     Notify.failure('Error updating user: ' + error.message);
   }
 };
-
-  // const handleEditUser = async (e) => {
-  //   e.preventDefault();
-  //   try {
-  //     const token = localStorage.getItem('token');
-  //     const response = await fetch(`http://localhost:5000/api/admin/users/${selectedUser._id}/update`, {
-  //       method: 'PUT',
-  //       headers: {
-  //         'Content-Type': 'application/json',
-  //         'Authorization': `Bearer ${token}`
-  //       },
-  //       body: JSON.stringify(editUserForm)
-  //     });
-
-  //     if (response.ok) {
-  //       Notify.success('User updated successfully!');
-  //       setShowEditUserModal(false);
-  //       fetchUsers();
-  //     } else {
-  //       const error = await response.json();
-  //       Notify.failure(error.message || 'Failed to update user');
-  //     }
-  //   } catch (error) {
-  //     Notify.failure('Error updating user');
-  //   }
-  // };
 
   // Add function to close dropdown when clicking outside
   useEffect(() => {
