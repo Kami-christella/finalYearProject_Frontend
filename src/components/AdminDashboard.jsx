@@ -429,38 +429,6 @@ const fetchDashboardData = async () => {
     }
   };
 
-  // User Management Functions - Add these after your existing fetch functions
-
-  // const fetchUsers = async (page = 1) => {
-  //   try {
-  //     setLoading(true);
-  //     const token = localStorage.getItem('token');
-  //     const params = new URLSearchParams({
-  //       page: page.toString(),
-  //       limit: pagination.itemsPerPage.toString(),
-  //       userRole: filterRole,
-  //       searchTerm,
-  //       isActive: filterStatus
-  //     });
-
-  //     const response = await fetch(`http://localhost:5000/api/admin/users?${params}`, {
-  //       headers: { 'Authorization': `Bearer ${token}` }
-  //     });
-
-  //     if (response.ok) {
-  //       const data = await response.json();
-  //       setUsers(data.data.users);
-  //       setPagination(data.data.pagination);
-  //     } else {
-  //       Notify.failure('Failed to fetch users');
-  //     }
-  //   } catch (error) {
-  //     Notify.failure('Error loading users');
-  //   } finally {
-  //     setLoading(false);
-  //   }
-  // };
-
   const fetchUsers = async (page = 1) => {
   try {
     setLoading(true);
