@@ -365,49 +365,7 @@ useEffect(() => {
     document.removeEventListener('mousedown', handleClickOutside);
   };
 }, []);
-// const fetchDashboardData = async () => {
-//   try {
-//     setLoading(true);
-//     const token = localStorage.getItem('token');
-    
-//     // Fetch from both endpoints simultaneously
-//     const [adminResponse, studentResponse] = await Promise.all([
-//       fetch('http://localhost:5000/api/admin/dashboard', {
-//         headers: { 'Authorization': `Bearer ${token}` }
-//       }).catch(() => ({ ok: false })),
-      
-//       fetch('http://localhost:5000/api/student/profiles/statistics', {
-//         headers: { 'Authorization': `Bearer ${token}` }
-//       }).catch(() => ({ ok: false }))
-//     ]);
 
-//     let combinedData = {};
-
-//     // Process admin dashboard data
-//     if (adminResponse.ok) {
-//       const adminData = await adminResponse.json();
-//       console.log('Admin data:', adminData); // Debug log
-//       combinedData.timeTracking = adminData.data?.timeTracking || {};
-//       combinedData.userManagement = adminData.data?.userManagement || {};
-//     }
-
-//     // Process student statistics data
-//     if (studentResponse.ok) {
-//       const studentData = await studentResponse.json();
-//       console.log('Student data:', studentData); // Debug log
-//       combinedData = { ...combinedData, ...studentData.statistics };
-//     }
-
-//     console.log('Final combined data:', combinedData); // Debug log
-//     setStatistics(combinedData);
-
-//   } catch (error) {
-//     console.error('Error loading dashboard:', error);
-//     Notify.failure('Error loading dashboard');
-//   } finally {
-//     setLoading(false);
-//   }
-// };
 
 const fetchDashboardData = async () => {
   try {
