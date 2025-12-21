@@ -94,6 +94,7 @@ const AdvisorDashboard = () => {
   const [currentDocument, setCurrentDocument] = useState(null);
   const [showDocumentsModal, setShowDocumentsModal] = useState(false);
   const [selectedStudentDocuments, setSelectedStudentDocuments] = useState([]);
+  const [availableSlots, setAvailableSlots] = useState([]); // Add this
   
 
   const [pagination, setPagination] = useState({
@@ -527,75 +528,187 @@ const fetchStudentRecommendations = async (studentUserId) => {
   };
 
   // Appointment Management Functions
-  const fetchAppointments = async (page = 1) => {
-    try {
-      setLoading(true);
-      const token = localStorage.getItem('token');
+  // const fetchAppointments = async (page = 1) => {
+  //   try {
+  //     setLoading(true);
+  //     const token = localStorage.getItem('token');
       
-      // Fetch both appointments and available slots
-      const [appointmentsRes, slotsRes] = await Promise.all([
-        fetch(`http://localhost:5000/api/appointments/manage?page=${page}&limit=10`, {
-          headers: { 'Authorization': `Bearer ${token}` }
-        }),
-        fetch(`http://localhost:5000/api/appointments/slots/my-slots`, {
-          headers: { 'Authorization': `Bearer ${token}` }
-        })
-      ]);
+  //     // Fetch both appointments and available slots
+  //     const [appointmentsRes, slotsRes] = await Promise.all([
+  //       fetch(`http://localhost:5000/api/appointments/manage?page=${page}&limit=10`, {
+  //         headers: { 'Authorization': `Bearer ${token}` }
+  //       }),
+  //       fetch(`http://localhost:5000/api/appointments/slots/my-slots`, {
+  //         headers: { 'Authorization': `Bearer ${token}` }
+  //       })
+  //     ]);
       
-      const appointmentsData = appointmentsRes.ok ? await appointmentsRes.json() : { data: { appointments: [] } };
-      const slotsData = slotsRes.ok ? await slotsRes.json() : { data: { slots: [] } };
+  //     const appointmentsData = appointmentsRes.ok ? await appointmentsRes.json() : { data: { appointments: [] } };
+  //     const slotsData = slotsRes.ok ? await slotsRes.json() : { data: { slots: [] } };
       
-      // Combine appointments and available slots
-      const allAppointments = [
-        ...(appointmentsData.data.appointments || []),
-        ...(slotsData.data.slots || []).map(slot => ({
-          ...slot,
-          status: slot.available ? 'available' : 'booked',
-          _id: slot._id,
-          date: slot.date,
-          startTime: slot.time,
-          endTime: slot.time,
-          duration: slot.duration || 30,
-          meetingType: slot.type,
-          location: slot.location,
-          notes: ''
-        }))
-      ];
+  //     // Combine appointments and available slots
+  //     const allAppointments = [
+  //       ...(appointmentsData.data.appointments || []),
+  //       ...(slotsData.data.slots || []).map(slot => ({
+  //         ...slot,
+  //         status: slot.available ? 'available' : 'booked',
+  //         _id: slot._id,
+  //         date: slot.date,
+  //         startTime: slot.time,
+  //         endTime: slot.time,
+  //         duration: slot.duration || 30,
+  //         meetingType: slot.type,
+  //         location: slot.location,
+  //         notes: ''
+  //       }))
+  //     ];
       
-      setAppointments(allAppointments);
-      setAppointmentPagination(appointmentsData.data.pagination || appointmentPagination);
+  //     setAppointments(allAppointments);
+  //     setAppointmentPagination(appointmentsData.data.pagination || appointmentPagination);
       
-    } catch (error) {
-      setAppointments([]);
-      Notify.failure('Error loading appointments');
-    } finally {
-      setLoading(false);
-    }
-  };
+  //   } catch (error) {
+  //     setAppointments([]);
+  //     Notify.failure('Error loading appointments');
+  //   } finally {
+  //     setLoading(false);
+  //   }
+  // };
 
-  const filterAppointments = () => {
-    let filtered = appointments;
+// Appointment Management Functions
+// const fetchAppointments = async (page = 1) => {
+//   try {
+//     setLoading(true);
+//     const token = localStorage.getItem('token');
     
-    // Filter by status
-    if (appointmentFilter !== 'all') {
-      filtered = filtered.filter(appointment => appointment.status === appointmentFilter);
-    }
+//     // Fetch both appointments and available slots
+//     const [appointmentsRes, slotsRes] = await Promise.all([
+//       fetch(`http://localhost:5000/api/appointments/manage?page=${page}&limit=10`, {
+//         headers: { 'Authorization': `Bearer ${token}` }
+//       }),
+//       fetch(`http://localhost:5000/api/appointments/slots/my-slots`, {
+//         headers: { 'Authorization': `Bearer ${token}` }
+//       })
+//     ]);
     
-    // Filter by date range
-    if (dateFilter.start || dateFilter.end) {
-      filtered = filtered.filter(appointment => {
-        const appointmentDate = new Date(appointment.date);
-        const startDate = dateFilter.start ? new Date(dateFilter.start) : null;
-        const endDate = dateFilter.end ? new Date(dateFilter.end) : null;
+//     const appointmentsData = appointmentsRes.ok ? await appointmentsRes.json() : { data: { appointments: [] } };
+//     const slotsData = slotsRes.ok ? await slotsRes.json() : { data: { slots: [] } };
+    
+//     // DON'T mix appointments with slots - keep them separate!
+//     setAppointments(appointmentsData.data.appointments || []);
+//     setAvailableSlots(slotsData.data.slots || []); // Store slots separately
+//     setAppointmentPagination(appointmentsData.data.pagination || appointmentPagination);
+    
+//   } catch (error) {
+//     setAppointments([]);
+//     Notify.failure('Error loading appointments');
+//   } finally {
+//     setLoading(false);
+//   }
+// };
+
+const fetchAppointments = async (page = 1) => {
+  try {
+    setLoading(true);
+    const token = localStorage.getItem('token');
+    
+    // Fetch both appointments and available slots
+    const [appointmentsRes, slotsRes] = await Promise.all([
+      fetch(`http://localhost:5000/api/appointments/manage?page=${page}&limit=10`, {
+        headers: { 'Authorization': `Bearer ${token}` }
+      }),
+      fetch(`http://localhost:5000/api/appointments/slots/my-slots`, {
+        headers: { 'Authorization': `Bearer ${token}` }
+      })
+    ]);
+    
+    const appointmentsData = appointmentsRes.ok ? await appointmentsRes.json() : { data: { appointments: [] } };
+    const slotsData = slotsRes.ok ? await slotsRes.json() : { data: { slots: [] } };
+    
+    // ✅ DON'T mix appointments with slots - keep them separate!
+    setAppointments(appointmentsData.data.appointments || []);
+    setAvailableSlots(slotsData.data.slots || []); // Store slots separately
+    setAppointmentPagination(appointmentsData.data.pagination || appointmentPagination);
+    
+  } catch (error) {
+    setAppointments([]);
+    Notify.failure('Error loading appointments');
+  } finally {
+    setLoading(false);
+  }
+};
+
+
+// const filterAppointments = () => {
+//   let filtered = appointments; // Only filter actual appointments, not slots
+  
+//   // Filter by status
+//   if (appointmentFilter !== 'all') {
+//     filtered = filtered.filter(appointment => appointment.status === appointmentFilter);
+//   }
+  
+//   // Filter by date range
+//   if (dateFilter.start || dateFilter.end) {
+//     filtered = filtered.filter(appointment => {
+//       const appointmentDate = new Date(appointment.date);
+//       const startDate = dateFilter.start ? new Date(dateFilter.start) : null;
+//       const endDate = dateFilter.end ? new Date(dateFilter.end) : null;
+      
+//       if (startDate && appointmentDate < startDate) return false;
+//       if (endDate && appointmentDate > endDate) return false;
+//       return true;
+//     });
+//   }
+  
+//   setFilteredAppointments(filtered);
+// };
+
+const filterAppointments = () => {
+  let filtered = appointments; // Only filter actual appointments, not slots
+  
+  // Filter by status
+  if (appointmentFilter !== 'all') {
+    filtered = filtered.filter(appointment => appointment.status === appointmentFilter);
+  }
+  
+  // Filter by date range
+  if (dateFilter.start || dateFilter.end) {
+    filtered = filtered.filter(appointment => {
+      const appointmentDate = new Date(appointment.date);
+      const startDate = dateFilter.start ? new Date(dateFilter.start) : null;
+      const endDate = dateFilter.end ? new Date(dateFilter.end) : null;
+      
+      if (startDate && appointmentDate < startDate) return false;
+      if (endDate && appointmentDate > endDate) return false;
+      return true;
+    });
+  }
+  
+  setFilteredAppointments(filtered);
+};
+
+  // const filterAppointments = () => {
+  //   let filtered = appointments;
+    
+  //   // Filter by status
+  //   if (appointmentFilter !== 'all') {
+  //     filtered = filtered.filter(appointment => appointment.status === appointmentFilter);
+  //   }
+    
+  //   // Filter by date range
+  //   if (dateFilter.start || dateFilter.end) {
+  //     filtered = filtered.filter(appointment => {
+  //       const appointmentDate = new Date(appointment.date);
+  //       const startDate = dateFilter.start ? new Date(dateFilter.start) : null;
+  //       const endDate = dateFilter.end ? new Date(dateFilter.end) : null;
         
-        if (startDate && appointmentDate < startDate) return false;
-        if (endDate && appointmentDate > endDate) return false;
-        return true;
-      });
-    }
+  //       if (startDate && appointmentDate < startDate) return false;
+  //       if (endDate && appointmentDate > endDate) return false;
+  //       return true;
+  //     });
+  //   }
     
-    setFilteredAppointments(filtered);
-  };
+  //   setFilteredAppointments(filtered);
+  // };
     
 
   const handleCreateAppointment = async (e) => {
@@ -876,20 +989,20 @@ const fetchStudentRecommendations = async (studentUserId) => {
     return timeDiff <= 15 * 60 * 1000 && timeDiff >= -appointment.duration * 60 * 1000;
   };
 
-  const handleConfirmAppointment = async (appointmentId) => {
+const handleConfirmAppointment = async (appointmentId) => {
   if (!window.confirm('Are you sure you want to confirm this appointment?')) {
     return;
   }
   
   try {
     const token = localStorage.getItem('token');
-    console.log('Token:', token); 
     
     if (!token) {
       Notify.failure('Please log in again');
       return;
     }
     
+    // ✅ IMPORTANT: Only send what the backend expects
     const response = await fetch(`http://localhost:5000/api/appointments/confirm/${appointmentId}`, {
       method: 'PUT',
       headers: { 
@@ -897,14 +1010,13 @@ const fetchStudentRecommendations = async (studentUserId) => {
         'Authorization': `Bearer ${token}` 
       },
       body: JSON.stringify({ 
-        appointmentId: appointmentId,
-        confirmed: true
+        confirmed: true  // Backend expects this
       })
     });
     
     if (response.ok) {
       Notify.success('Appointment confirmed successfully');
-      fetchAppointments();
+      fetchAppointments(); // Refresh the list
     } else {
       const error = await response.json();
       throw new Error(error.message || 'Failed to confirm appointment');
@@ -913,6 +1025,46 @@ const fetchStudentRecommendations = async (studentUserId) => {
     Notify.failure('Failed to confirm appointment: ' + error.message);
   }
 };
+
+//   const handleConfirmAppointment = async (appointmentId) => {
+//   if (!window.confirm('Are you sure you want to confirm this appointment?')) {
+//     return;
+//   }
+  
+//   try {
+//     const token = localStorage.getItem('token');
+//     console.log('Token:', token); 
+    
+//     if (!token) {
+//       Notify.failure('Please log in again');
+//       return;
+//     }
+    
+//     const response = await fetch(`http://localhost:5000/api/appointments/confirm/${appointmentId}`, {
+//       method: 'PUT',
+//       headers: { 
+//         'Content-Type': 'application/json',
+//         'Authorization': `Bearer ${token}` 
+//       },
+//       body: JSON.stringify({ 
+//         appointmentId: appointmentId,
+//         confirmed: true
+//       })
+//     });
+//      console.log('Confirming appointment:', appointment); // Add this
+//   console.log('Appointment ID:',appointmentId); // Add this
+    
+//     if (response.ok) {
+//       Notify.success('Appointment confirmed successfully');
+//       fetchAppointments();
+//     } else {
+//       const error = await response.json();
+//       throw new Error(error.message || 'Failed to confirm appointment');
+//     }
+//   } catch (error) {
+//     Notify.failure('Failed to confirm appointment: ' + error.message);
+//   }
+// };
 
   
 
@@ -2051,7 +2203,7 @@ const handleLogoutBtn = () => {
                               </>
                             )} */}
 
-                            <div className="appointment-actions">
+                            {/* <div className="appointment-actions">
   {appointment.status === 'available' && (
     <>
       <button 
@@ -2103,7 +2255,83 @@ const handleLogoutBtn = () => {
                                 👁️ View Details
                               </button>
                             )}
-                          </div>
+                          </div> */}
+
+                          <div className="appointment-actions">
+  {appointment.status === 'available' && (
+    <>
+      <button 
+        onClick={() => handleEditAppointment(appointment)}
+        className="action-btn edit-btn"
+      >
+        ✏️ Edit
+      </button>
+      <button 
+        onClick={() => handleDeleteAppointment(appointment._id)}
+        className="action-btn delete-btn"
+      >
+        🗑️ Delete
+      </button>
+    </>
+  )}
+  
+  {/* ✅ FIXED: Only show confirm for PENDING appointments */}
+  {(appointment.status === 'pending' || appointment.status === 'booked') && (
+    <>
+      {appointment.status === 'pending' && (
+        <button 
+          onClick={() => handleConfirmAppointment(appointment._id)}
+          className="action-btn confirm-btn"
+        >
+          ✅ Confirm
+        </button>
+      )}
+      
+      <button 
+        onClick={() => handleStartAppointment(appointment)}
+        className="action-btn start-btn"
+        disabled={!isAppointmentTime(appointment)}
+      >
+        🎯 Start
+      </button>
+      <button 
+        onClick={() => handleCancelAppointment(appointment._id)}
+        className="action-btn cancel-btn"
+      >
+        ❌ Cancel
+      </button>
+    </>
+  )}
+  
+  {appointment.status === 'confirmed' && (
+    <>
+      <button 
+        onClick={() => handleStartAppointment(appointment)}
+        className="action-btn start-btn"
+        disabled={!isAppointmentTime(appointment)}
+      >
+        🎯 Start
+      </button>
+      <button 
+        onClick={() => handleCancelAppointment(appointment._id)}
+        className="action-btn cancel-btn"
+      >
+        ❌ Cancel
+      </button>
+    </>
+  )}
+  
+  {appointment.status === 'completed' && (
+    <button 
+      onClick={() => console.log('View details for:', appointment)}
+      className="action-btn view-btn"
+    >
+      👁️ View Details
+    </button>
+  )}
+</div>
+
+
                         </div>
                       ))}
                     </div>

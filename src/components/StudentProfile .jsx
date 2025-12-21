@@ -643,108 +643,130 @@ const closeMappingResults = () => {
 
   // Handle form submission
   const handleSubmit = async (e) => {
-    e.preventDefault();
-    setLoading(true);
-    setError("");
-    setSuccess("");
+  e.preventDefault();
+  setLoading(true);
+  setError("");
+  setSuccess("");
 
-    try {
-      const token = localStorage.getItem("token");
-      if (!token) {
-        setError("Please log in to continue");
-        return;
-      }
-
-      // Create FormData for file uploads
-      const formDataToSend = new FormData();
-
-      // Add all basic form fields
-      Object.keys(formData).forEach((key) => {
-        
-        if (key === "emergencyContact") {
-          formDataToSend.append(key, JSON.stringify(formData[key]));
-        } else if (key === "interests") {
-          // Convert comma-separated string to array
-          const interestsArray = formData[key]
-            .split(",")
-            .map((item) => item.trim())
-            .filter((item) => item);
-          formDataToSend.append(key, JSON.stringify(interestsArray));
-        } else if (key === "coursesStudiedInSecondary") {
-          formDataToSend.append(key, formData[key]);
-        } else {
-          formDataToSend.append(key, formData[key]);
-        }
-      });
-      // Add this line after the formData loop
-      formDataToSend.append("hobbies", JSON.stringify(selectedHobbies));
-      formDataToSend.append("interests", JSON.stringify(selectedInterests));
-      formDataToSend.append("coursesStudiedInSecondary", JSON.stringify(coursesStudiedInSecondary));
-
-      // Add properly structured complex arrays
-      formDataToSend.append("skills", JSON.stringify(skills));
-      formDataToSend.append("languagesSpoken", JSON.stringify(languagesSpoken));
-      formDataToSend.append("workExperience", JSON.stringify(workExperience));
-      formDataToSend.append(
-        "extracurricularActivities",
-        JSON.stringify(extracurricularActivities)
-      );
-      formDataToSend.append(
-        "coursesStudiedPreviousUniversity",
-        JSON.stringify(coursesStudiedPreviousUniversity)
-      );
-      formDataToSend.append(
-        "equivalentCourses",
-        JSON.stringify(equivalentCourses)
-      );
-
-      // Add profile image
-      if (profileImage) {
-        formDataToSend.append("images", profileImage);
-      }
-
-      // Add documents
-      documents.forEach((doc) => {
-        formDataToSend.append("documents", doc);
-      });
-
-      const response = await fetch(
-        "http://localhost:5000/api/student/createprofile",
-        {
-          method: "POST",
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-          body: formDataToSend,
-        }
-      );
-
-      const data = await response.json();
-
-      if (response.ok) {
-        setSuccess(
-          "🎉 Profile created successfully! Redirecting to assessment..."
-        );
-        Notify.success(
-          "Profile created successfully! Redirecting to assessment..."
-        );
-        console.log("Profile created:", data);
-
-        // Redirect to assessment
-        setTimeout(() => {
-          window.location.href = "/assessment";
-        }, 2000);
-      } else {
-        setError(data.message || "Failed to create profile");
-        Notify.failure("Failed to create profile");
-      }
-    } catch (err) {
-      setError("Network error. Please try again.");
-      Notify.failure("Network error. Please try again.");
-    } finally {
+  try {
+    const token = localStorage.getItem("token");
+    if (!token) {
+      setError("Please log in to continue");
       setLoading(false);
+      return;
     }
-  };
+
+    // Create FormData for file uploads
+    const formDataToSend = new FormData();
+
+    // Add all basic form fields
+    Object.keys(formData).forEach((key) => {
+      if (key === "emergencyContact") {
+        formDataToSend.append(key, JSON.stringify(formData[key]));
+      } 
+      else if (key === "interests") {
+        const interestsArray = formData[key]
+          .split(",")
+          .map((item) => item.trim())
+          .filter((item) => item);
+        formDataToSend.append(key, JSON.stringify(interestsArray));
+      } 
+      else if (key === "coursesStudiedInSecondary") {
+        formDataToSend.append(key, formData[key]);
+      } 
+      // ✅ FIX: Convert boolean fields properly - handle both checked and unchecked
+      else if (key === "transferStudent" || key === "haveTwoPrincipalPasses") {
+        // Explicitly convert to boolean, then to string
+        const boolValue = formData[key] === true || formData[key] === 'true';
+        formDataToSend.append(key, boolValue ? 'true' : 'false'); // Always send 'true' or 'false'
+        console.log(`📝 ${key}:`, boolValue ? 'true' : 'false'); // Debug log
+      } 
+      else {
+        formDataToSend.append(key, formData[key] || '');
+      }
+    });
+
+    // ✅ IMPORTANT: Explicitly set transferStudent if not already set
+    if (!formDataToSend.has('transferStudent')) {
+      formDataToSend.append('transferStudent', 'false');
+      console.log('📝 transferStudent (default):', 'false');
+    }
+
+    // ✅ IMPORTANT: Explicitly set haveTwoPrincipalPasses if not already set
+    if (!formDataToSend.has('haveTwoPrincipalPasses')) {
+      formDataToSend.append('haveTwoPrincipalPasses', 'false');
+      console.log('📝 haveTwoPrincipalPasses (default):', 'false');
+    }
+
+    // Add hobbies, interests, and courses
+    formDataToSend.append("hobbies", JSON.stringify(selectedHobbies));
+    formDataToSend.append("interests", JSON.stringify(selectedInterests));
+    formDataToSend.append("coursesStudiedInSecondary", JSON.stringify(coursesStudiedInSecondary));
+
+    // Add complex arrays
+    formDataToSend.append("skills", JSON.stringify(skills));
+    formDataToSend.append("languagesSpoken", JSON.stringify(languagesSpoken));
+    formDataToSend.append("workExperience", JSON.stringify(workExperience));
+    formDataToSend.append("extracurricularActivities", JSON.stringify(extracurricularActivities));
+    formDataToSend.append("coursesStudiedPreviousUniversity", JSON.stringify(coursesStudiedPreviousUniversity));
+    formDataToSend.append("equivalentCourses", JSON.stringify(equivalentCourses));
+
+    // Add profile image
+    if (profileImage) {
+      formDataToSend.append("images", profileImage);
+    }
+
+    // Add documents
+    documents.forEach((doc) => {
+      formDataToSend.append("documents", doc);
+    });
+
+    // ✅ DEBUG: Log what we're sending
+    console.log('📤 Sending FormData:');
+    for (let [key, value] of formDataToSend.entries()) {
+      if (key === 'transferStudent' || key === 'haveTwoPrincipalPasses') {
+        console.log(`  ${key}:`, value);
+      }
+    }
+
+    const response = await fetch(
+      "http://localhost:5000/api/student/createprofile",
+      {
+        method: "POST",
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+        body: formDataToSend,
+      }
+    );
+
+    const data = await response.json();
+
+    if (response.ok) {
+      setSuccess(
+        "🎉 Profile created successfully! Redirecting to assessment..."
+      );
+      Notify.success(
+        "Profile created successfully! Redirecting to assessment..."
+      );
+      console.log("Profile created:", data);
+
+      setTimeout(() => {
+        window.location.href = "/dashboard/assessment";
+      }, 2000);
+    } else {
+      setError(data.message || "Failed to create profile");
+      Notify.failure(data.message || "Failed to create profile");
+      console.error("Profile creation failed:", data);
+    }
+  } catch (err) {
+    console.error("Submit error:", err);
+    setError("Network error. Please try again.");
+    Notify.failure("Network error. Please try again.");
+  } finally {
+    setLoading(false);
+  }
+};
 
   // Faculty and department options
   const facultyOptions = [
@@ -3621,7 +3643,7 @@ The more detailed you are, the better our System can match your courses!"
                             </button> */}
                           </div>
                           <p className="upload-info">JPG, PNG up to 5MB</p>
-                          <p className="upload-info">Upload High School Transcripts for 3 years, University Transcript (For Transfer Students), Diploma, Other Certificates</p>
+                          
                         </div>
                       )}
 
@@ -3653,7 +3675,7 @@ The more detailed you are, the better our System can match your courses!"
                         onClick={() => documentInputRef.current?.click()}
                         className="upload-btn primary"
                       >
-                        Upload Documents
+                        <p className="upload-info">Upload High School Transcripts for 3 years, University Transcript (For Transfer Students), Diploma, Other Certificates</p>
                       </button>
                       <p className="upload-info">
                         PDF, DOC, DOCX, JPG, PNG up to 5MB each (Maximum 5

@@ -157,7 +157,7 @@ const BookAppointment = () => {
       const token = getAuthToken();
       if (!token) return;
 
-      const response = await fetch('http://localhost:5000/api/appointments/my-appointments', {
+      const response = await fetch('http://localhost:5000/api/appointments', {
         headers: {
           'Authorization': `Bearer ${token}`,
           'Content-Type': 'application/json'
