@@ -6,7 +6,7 @@ import aiRecommendationService from '../utils/aiRecommendationService';
 import './styles/ComprehensiveDashboard.css';
 
 const ComprehensiveDashboard = () => {
-   const navigate = useNavigate();
+   const navigate = useNavigate(); 
     
       useEffect(() => {
         const checkAuth = () => {
@@ -15,7 +15,7 @@ const ComprehensiveDashboard = () => {
           
           if (!token || !user) {
             Notify.warning('Please log in to access this page');
-            navigate('/'); // Redirect to login page
+            navigate('/'); 
             return;
           }
           
