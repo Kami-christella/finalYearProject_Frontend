@@ -1166,15 +1166,13 @@ const handleReviewStudent = async (student) => {
 };
 
   
-
 const viewDocument = (profileId, documentType, fileName, originalName) => {
-  const token = localStorage.getItem('token');
-  const viewUrl = `http://localhost:5000/api/advisor/profiles/${profileId}/view/${documentType}/${fileName}?token=${token}`;
+  // Construct the direct file URL (not a route)
+  const viewUrl = `http://localhost:5000/uploads/${fileName}`;
   
-  // Debug logging
   console.log('📄 Opening document:', {
     profileId,
-    documentType, 
+    documentType,
     fileName,
     originalName,
     viewUrl
@@ -1187,6 +1185,27 @@ const viewDocument = (profileId, documentType, fileName, originalName) => {
   });
   setShowDocumentModal(true);
 };
+
+// const viewDocument = (profileId, documentType, fileName, originalName) => {
+//   const token = localStorage.getItem('token');
+//   const viewUrl = `http://localhost:5000/api/advisor/profiles/${profileId}/view/${documentType}/${fileName}?token=${token}`;
+  
+//   // Debug logging
+//   console.log('📄 Opening document:', {
+//     profileId,
+//     documentType, 
+//     fileName,
+//     originalName,
+//     viewUrl
+//   });
+  
+//   setCurrentDocument({
+//     url: viewUrl,
+//     name: originalName || fileName,
+//     type: documentType
+//   });
+//   setShowDocumentModal(true);
+// };
 
   // Add this function to handle document modal opening
 const handleShowDocuments = (student) => {
