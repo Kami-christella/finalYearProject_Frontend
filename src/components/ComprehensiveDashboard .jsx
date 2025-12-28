@@ -1,46 +1,46 @@
 // comphrensiveDashboard.jsx
-import React, { useState, useEffect } from 'react';
-import { Notify } from 'notiflix';
-import { useNavigate} from "react-router-dom";
-import aiRecommendationService from '../utils/aiRecommendationService';
-import './styles/ComprehensiveDashboard.css';
+import React, { useState, useEffect } from "react";
+import { Notify } from "notiflix";
+import { useNavigate } from "react-router-dom";
+import aiRecommendationService from "../utils/aiRecommendationService";
+import "./styles/ComprehensiveDashboard.css";
 
 const ComprehensiveDashboard = () => {
-   const navigate = useNavigate(); 
-    
-      useEffect(() => {
-        const checkAuth = () => {
-          const token = localStorage.getItem('token');
-          const user = localStorage.getItem('user');
-          
-          if (!token || !user) {
-            Notify.warning('Please log in to access this page');
-            navigate('/'); 
-            return;
-          }
-          
-          // Optional: Verify token is not expired
-          try {
-            const tokenData = JSON.parse(atob(token.split('.')[1])); // Decode JWT payload
-            if (tokenData.exp * 1000 < Date.now()) {
-              localStorage.removeItem('token');
-              localStorage.removeItem('user');
-              Notify.failure('Session expired. Please log in again.');
-              navigate('/');
-              return;
-            }
-          } catch (error) {
-            // Invalid token format
-            localStorage.removeItem('token');
-            localStorage.removeItem('user');
-            Notify.failure('Invalid session. Please log in again.');
-            navigate('/');
-            return;
-          }
-        };
-    
-        checkAuth();
-      }, [navigate]);
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    const checkAuth = () => {
+      const token = localStorage.getItem("token");
+      const user = localStorage.getItem("user");
+
+      if (!token || !user) {
+        Notify.warning("Please log in to access this page");
+        navigate("/");
+        return;
+      }
+
+      // Optional: Verify token is not expired
+      try {
+        const tokenData = JSON.parse(atob(token.split(".")[1])); // Decode JWT payload
+        if (tokenData.exp * 1000 < Date.now()) {
+          localStorage.removeItem("token");
+          localStorage.removeItem("user");
+          Notify.failure("Session expired. Please log in again.");
+          navigate("/");
+          return;
+        }
+      } catch (error) {
+        // Invalid token format
+        localStorage.removeItem("token");
+        localStorage.removeItem("user");
+        Notify.failure("Invalid session. Please log in again.");
+        navigate("/");
+        return;
+      }
+    };
+
+    checkAuth();
+  }, [navigate]);
 
   // Data states
   const [profile, setProfile] = useState(null);
@@ -50,12 +50,18 @@ const ComprehensiveDashboard = () => {
   const [personalityQuestions, setPersonalityQuestions] = useState([]);
   const [recommendations, setRecommendations] = useState([]);
 
+  //state for displaying error or success
+  const [message, setMessage] = useState("");
+
+
   // UI states
   const [loading, setLoading] = useState(true);
-  const [error, setError] = useState('');
-  const [activeSection, setActiveSection] = useState('overview');
-  const [selectedAssessmentType, setSelectedAssessmentType] = useState('career');
-  const [generatingRecommendations, setGeneratingRecommendations] = useState(false);
+  const [error, setError] = useState("");
+  const [activeSection, setActiveSection] = useState("overview");
+  const [selectedAssessmentType, setSelectedAssessmentType] =
+    useState("career");
+  const [generatingRecommendations, setGeneratingRecommendations] =
+    useState(false);
 
   // Assessment completion status
   const [hasProfile, setHasProfile] = useState(false);
@@ -71,11 +77,11 @@ const ComprehensiveDashboard = () => {
         fetchProfile(),
         fetchAssessments(),
         fetchQuestions(),
-        fetchRecommendations()
+        fetchRecommendations(),
       ]);
     } catch (err) {
-      console.error('Error fetching dashboard data:', err);
-      setError('Failed to load dashboard data');
+      console.error("Error fetching dashboard data:", err);
+      setError("Failed to load dashboard data");
     } finally {
       setLoading(false);
     }
@@ -83,62 +89,74 @@ const ComprehensiveDashboard = () => {
 
   const fetchProfile = async () => {
     try {
-      const token = localStorage.getItem('token');
-      const response = await fetch('http://localhost:5000/api/student/profile', {
-        headers: { 'Authorization': `Bearer ${token}` }
-      });
+      const token = localStorage.getItem("token");
+      const response = await fetch(
+        "http://localhost:5000/api/student/profile",
+        {
+          headers: { Authorization: `Bearer ${token}` },
+        }
+      );
 
       if (response.ok) {
         const data = await response.json();
         setProfile(data.profile);
         setHasProfile(true);
-        console.log('✅ Profile loaded:', data.profile?.userId?.name);
+        console.log("✅ Profile loaded:", data.profile?.userId?.name);
       } else {
         setHasProfile(false);
       }
     } catch (err) {
-      console.error('Error fetching profile:', err);
+      console.error("Error fetching profile:", err);
       setHasProfile(false);
     }
   };
 
   const fetchAssessments = async () => {
     try {
-      const token = localStorage.getItem('token');
-      const response = await fetch('http://localhost:5000/api/assessments/user', {
-        headers: { 'Authorization': `Bearer ${token}` }
-      });
+      const token = localStorage.getItem("token");
+      const response = await fetch(
+        "http://localhost:5000/api/assessments/user",
+        {
+          headers: { Authorization: `Bearer ${token}` },
+        }
+      );
 
       if (response.ok) {
         const data = await response.json();
         setAssessments(data.assessments || []);
         setHasAssessment(data.assessments && data.assessments.length > 0);
-        console.log('✅ Assessments loaded:', data.assessments?.length || 0);
+        console.log("✅ Assessments loaded:", data.assessments?.length || 0);
       } else {
         setHasAssessment(false);
       }
     } catch (err) {
-      console.error('Error fetching assessments:', err);
+      console.error("Error fetching assessments:", err);
       setHasAssessment(false);
     }
   };
 
   const fetchQuestions = async () => {
     try {
-      const token = localStorage.getItem('token');
-      
+      const token = localStorage.getItem("token");
+
       const fetchQuestionCategory = async (category) => {
         try {
-          const response = await fetch(`http://localhost:5000/api/questions/${category}`, {
-            headers: { 'Authorization': `Bearer ${token}` }
-          });
-          
+          const response = await fetch(
+            `http://localhost:5000/api/questions/${category}`,
+            {
+              headers: { Authorization: `Bearer ${token}` },
+            }
+          );
+
           if (response.ok) {
             const data = await response.json();
             console.log(`✅ ${category} questions loaded:`, data.length);
             return data || [];
           } else {
-            console.warn(`⚠️ Failed to fetch ${category} questions:`, response.status);
+            console.warn(
+              `⚠️ Failed to fetch ${category} questions:`,
+              response.status
+            );
             return [];
           }
         } catch (err) {
@@ -148,139 +166,158 @@ const ComprehensiveDashboard = () => {
       };
 
       const [careerData, skillsData, personalityData] = await Promise.all([
-        fetchQuestionCategory('career'),
-        fetchQuestionCategory('skills'),
-        fetchQuestionCategory('personality')
+        fetchQuestionCategory("career"),
+        fetchQuestionCategory("skills"),
+        fetchQuestionCategory("personality"),
       ]);
 
       setCareerQuestions(careerData);
       setSkillsQuestions(skillsData);
       setPersonalityQuestions(personalityData);
 
-      console.log('📊 Questions loaded:', {
+      console.log("📊 Questions loaded:", {
         career: careerData.length,
         skills: skillsData.length,
-        personality: personalityData.length
+        personality: personalityData.length,
       });
-
     } catch (err) {
-      console.error('Error fetching questions:', err);
+      console.error("Error fetching questions:", err);
     }
   };
 
   const fetchRecommendations = async () => {
     try {
-      console.log('📡 Fetching existing recommendations...');
-      const token = localStorage.getItem('token');
-      
+      console.log("📡 Fetching existing recommendations...");
+      const token = localStorage.getItem("token");
+
       // Try the latest recommendations endpoint first
-      const response = await fetch('http://localhost:5000/api/recommendations/latest', {
-        method: 'GET',
-        headers: { 
-          'Authorization': `Bearer ${token}`,
-          'Content-Type': 'application/json'
+      const response = await fetch(
+        "http://localhost:5000/api/recommendations/latest",
+        {
+          method: "GET",
+          headers: {
+            Authorization: `Bearer ${token}`,
+            "Content-Type": "application/json",
+          },
         }
-      });
+      );
 
       if (response.ok) {
         const data = await response.json();
-        console.log('✅ Recommendations response:', data);
-        
+        console.log("✅ Recommendations response:", data);
+
         // Handle the expected response structure from getLatestRecommendations
         let recommendationsArray = [];
-        
+
         if (data.success && data.data && data.data.recommendations) {
           recommendationsArray = data.data.recommendations;
         }
 
         setRecommendations(recommendationsArray);
-        console.log('✅ Recommendations loaded:', recommendationsArray.length);
-        
+        console.log("✅ Recommendations loaded:", recommendationsArray.length);
+
         if (recommendationsArray.length > 0) {
-          console.log('📋 Sample recommendation:', recommendationsArray[0]);
+          console.log("📋 Sample recommendation:", recommendationsArray[0]);
         }
       } else if (response.status === 404) {
-        console.log('ℹ️ No existing recommendations found');
+        console.log("ℹ️ No existing recommendations found");
         setRecommendations([]);
       } else {
-        console.warn('⚠️ Failed to fetch recommendations:', response.status);
+        console.warn("⚠️ Failed to fetch recommendations:", response.status);
         setRecommendations([]);
       }
     } catch (err) {
-      console.log('ℹ️ Error fetching recommendations (likely none exist):', err.message);
+      console.log(
+        "ℹ️ Error fetching recommendations (likely none exist):",
+        err.message
+      );
       setRecommendations([]);
     }
   };
 
   const handleLogout = () => {
-    if (window.confirm('Are you sure you want to logout?')) {
-      localStorage.removeItem('token');
-      localStorage.removeItem('user');
-      localStorage.removeItem('profileCompleted');
-      localStorage.removeItem('profileId');
-      localStorage.removeItem('assessmentCompleted');
-      localStorage.removeItem('hasRecommendations');
-      
-      Notify.success('Logged out successfully!');
-      
+    if (window.confirm("Are you sure you want to logout?")) {
+      localStorage.removeItem("token");
+      localStorage.removeItem("user");
+      localStorage.removeItem("profileCompleted");
+      localStorage.removeItem("profileId");
+      localStorage.removeItem("assessmentCompleted");
+      localStorage.removeItem("hasRecommendations");
+
+      Notify.success("Logged out successfully!");
+
       setTimeout(() => {
-        window.location.href = '/';
+        window.location.href = "/";
       }, 1000);
     }
   };
 
   const generateNewRecommendations = async () => {
     if (!hasAssessment) {
-      Notify.warning('Please complete the assessment first');
+      Notify.warning("Please complete the assessment first");
       return;
     }
 
     setGeneratingRecommendations(true);
     try {
-      console.log('🎯 Generating new recommendations...');
-      Notify.info('🤖 AI is analyzing your profile and assessment data...');
-      
-      const token = localStorage.getItem('token');
-      const response = await fetch('http://localhost:5000/api/generate-recommendations', {
-        method: 'POST',
-        headers: { 
-          'Authorization': `Bearer ${token}`,
-          'Content-Type': 'application/json'
+      console.log("🎯 Generating new recommendations...");
+      Notify.info("🤖 AI is analyzing your profile and assessment data...");
+
+      const token = localStorage.getItem("token");
+      const response = await fetch(
+        "http://localhost:5000/api/generate-recommendations",
+        {
+          method: "POST",
+          headers: {
+            Authorization: `Bearer ${token}`,
+            "Content-Type": "application/json",
+          },
         }
-      });
+      );
 
       if (response.ok) {
         const result = await response.json();
-        console.log('✅ Generation response:', result);
-        
+        console.log("✅ Generation response:", result);
+
         // Handle different response structures
         let newRecommendations = [];
-        
+
         if (result.success && result.data) {
-          if (result.data.recommendations && Array.isArray(result.data.recommendations)) {
+          if (
+            result.data.recommendations &&
+            Array.isArray(result.data.recommendations)
+          ) {
             newRecommendations = result.data.recommendations;
           } else if (Array.isArray(result.data)) {
             newRecommendations = result.data;
           }
-        } else if (result.recommendations && Array.isArray(result.recommendations)) {
+        } else if (
+          result.recommendations &&
+          Array.isArray(result.recommendations)
+        ) {
           newRecommendations = result.recommendations;
         }
 
         if (newRecommendations.length > 0) {
           setRecommendations(newRecommendations);
-          Notify.success('🎉 New AI recommendations generated and saved successfully!');
-          setActiveSection('recommendations');
-          console.log('✅ New recommendations set:', newRecommendations.length);
+          Notify.success(
+            "🎉 New AI recommendations generated and saved successfully!"
+          );
+          setActiveSection("recommendations");
+          console.log("✅ New recommendations set:", newRecommendations.length);
         } else {
-          throw new Error('No recommendations received from server');
+          throw new Error("No recommendations received from server");
         }
       } else {
         const errorData = await response.json();
-        throw new Error(errorData.message || `Server responded with status: ${response.status}`);
+        throw new Error(
+          errorData.message ||
+            `Server responded with status: ${response.status}`
+        );
       }
     } catch (err) {
-      console.error('❌ Failed to generate recommendations:', err);
-      Notify.failure('Failed to generate recommendations: ' + err.message);
+      console.error("❌ Failed to generate recommendations:", err);
+      Notify.failure("Failed to generate recommendations: " + err.message);
     } finally {
       setGeneratingRecommendations(false);
     }
@@ -289,29 +326,29 @@ const ComprehensiveDashboard = () => {
   const getQuestionById = (questionId, type) => {
     let questions = [];
     switch (type) {
-      case 'career':
+      case "career":
         questions = careerQuestions;
         break;
-      case 'skills':
+      case "skills":
         questions = skillsQuestions;
         break;
-      case 'personality':
+      case "personality":
         questions = personalityQuestions;
         break;
       default:
         return null;
     }
-    
+
     // Handle both string and ObjectId formats
-    const question = questions.find(q => {
-      if (typeof q._id === 'string') {
+    const question = questions.find((q) => {
+      if (typeof q._id === "string") {
         return q._id === questionId;
-      } else if (q._id && typeof q._id === 'object') {
+      } else if (q._id && typeof q._id === "object") {
         return q._id.toString() === questionId;
       }
       return false;
     });
-    
+
     return question;
   };
 
@@ -320,8 +357,8 @@ const ComprehensiveDashboard = () => {
       return (
         <div className="no-data">
           <p>No {type} assessment data available</p>
-          <button 
-            onClick={() => window.location.href = '/assessment'}
+          <button
+            onClick={() => (window.location.href = "/assessment")}
             className="take-assessment-btn"
           >
             Take {type.charAt(0).toUpperCase() + type.slice(1)} Assessment
@@ -331,7 +368,7 @@ const ComprehensiveDashboard = () => {
     }
 
     const answersArray = Object.entries(assessmentData);
-    
+
     if (answersArray.length === 0) {
       return (
         <div className="no-data">
@@ -343,26 +380,37 @@ const ComprehensiveDashboard = () => {
     return (
       <div className="assessment-answers">
         <div className="answers-header">
-          <h4>Your {type.charAt(0).toUpperCase() + type.slice(1)} Assessment Responses</h4>
-          <span className="answers-count">{answersArray.length} questions answered</span>
+          <h4>
+            Your {type.charAt(0).toUpperCase() + type.slice(1)} Assessment
+            Responses
+          </h4>
+          <span className="answers-count">
+            {answersArray.length} questions answered
+          </span>
         </div>
-        
+
         {answersArray.map(([questionId, answer], index) => {
           const question = getQuestionById(questionId, type);
-          
+
           return (
             <div key={`${questionId}-${index}`} className="answer-item">
               <div className="question-number">Question {index + 1}</div>
               <div className="question-text">
-                {question ? question.question : `Question ID: ${questionId} (Question not found)`}
+                {question
+                  ? question.question
+                  : `Question ID: ${questionId} (Question not found)`}
               </div>
               <div className="answer-text">
                 <span className="answer-label">Your Answer:</span>
-                <span className="answer-value">{answer || 'No answer provided'}</span>
+                <span className="answer-value">
+                  {answer || "No answer provided"}
+                </span>
               </div>
               {question && question.options && (
                 <div className="question-options">
-                  <small>Available options: {question.options.join(', ')}</small>
+                  <small>
+                    Available options: {question.options.join(", ")}
+                  </small>
                 </div>
               )}
             </div>
@@ -374,14 +422,16 @@ const ComprehensiveDashboard = () => {
 
   const getAssessmentTypeData = (assessment, type) => {
     if (!assessment) return null;
-    
+
     switch (type) {
-      case 'career':
+      case "career":
         return assessment.careerTest || assessment.careerInterests || null;
-      case 'skills':
+      case "skills":
         return assessment.skillsAssessment || assessment.skills || null;
-      case 'personality':
-        return assessment.personalityAssessment || assessment.personality || null;
+      case "personality":
+        return (
+          assessment.personalityAssessment || assessment.personality || null
+        );
       default:
         return null;
     }
@@ -389,22 +439,38 @@ const ComprehensiveDashboard = () => {
 
   const getCompletionStatus = () => {
     if (hasProfile && hasAssessment) {
-      return { status: 'complete', message: 'Profile and Assessment Complete', color: '#28a745' };
+      return {
+        status: "complete",
+        message: "Profile and Assessment Complete",
+        color: "#28a745",
+      };
     } else if (hasProfile && !hasAssessment) {
-      return { status: 'partial', message: 'Profile Complete - Assessment Pending', color: '#ffc107' };
+      return {
+        status: "partial",
+        message: "Profile Complete - Assessment Pending",
+        color: "#ffc107",
+      };
     } else if (!hasProfile && hasAssessment) {
-      return { status: 'partial', message: 'Assessment Complete - Profile Pending', color: '#ffc107' };
+      return {
+        status: "partial",
+        message: "Assessment Complete - Profile Pending",
+        color: "#ffc107",
+      };
     } else {
-      return { status: 'incomplete', message: 'Profile and Assessment Incomplete', color: '#dc3545' };
+      return {
+        status: "incomplete",
+        message: "Profile and Assessment Incomplete",
+        color: "#dc3545",
+      };
     }
   };
 
   const formatDate = (dateString) => {
-    if (!dateString) return 'Not provided';
-    return new Date(dateString).toLocaleDateString('en-US', {
-      year: 'numeric',
-      month: 'long',
-      day: 'numeric'
+    if (!dateString) return "Not provided";
+    return new Date(dateString).toLocaleDateString("en-US", {
+      year: "numeric",
+      month: "long",
+      day: "numeric",
     });
   };
 
@@ -430,40 +496,45 @@ const ComprehensiveDashboard = () => {
           <div className="header-main">
             <div className="profile-avatar">
               {profile?.images && profile.images.length > 0 ? (
-                <img 
-                  src={`http://localhost:5000${profile.images[0].url}`} 
-                  alt="Profile" 
+                <img
+                  src={`http://localhost:5000${profile.images[0].url}`}
+                  alt="Profile"
                   className="avatar-image"
                   onError={(e) => {
-                    e.target.style.display = 'none';
-                    e.target.nextSibling.style.display = 'flex';
+                    e.target.style.display = "none";
+                    e.target.nextSibling.style.display = "flex";
                   }}
                 />
               ) : null}
             </div>
             <div className="profile-info">
-              <div className="status-badge" style={{ background: completionStatus.color }}>
+              <div
+                className="status-badge"
+                style={{ background: completionStatus.color }}
+              >
                 {completionStatus.message}
               </div>
             </div>
           </div>
-          
+
           <div className="header-actions">
-            <button 
-              onClick={() => window.location.href = '/EditProfile'} 
+            <button
+              onClick={() => (window.location.href = "/dashboard/EditProfile")}
               className="action-btn edit-btn"
               disabled={!hasProfile}
             >
               <span className="btn-icon">✏️</span>
               Edit Profile
             </button>
-            <button 
+            <button
               onClick={generateNewRecommendations}
               className="action-btn recommend-btn"
               disabled={!hasAssessment || generatingRecommendations}
             >
               <span className="btn-icon">🎯</span>
-              {generatingRecommendations ? 'Generating...' : 'Generate Recommendations'}
+              {generatingRecommendations
+                ? "Generating..."
+                : "Generate Recommendations"}
             </button>
           </div>
         </div>
@@ -472,7 +543,9 @@ const ComprehensiveDashboard = () => {
         <div className="stats-grid">
           <div className="stat-card">
             <div className="stat-content">
-              <div className="stat-value">{hasProfile ? 'Complete' : 'Incomplete'}</div>
+              <div className="stat-value">
+                {hasProfile ? "Complete" : "Incomplete"}
+              </div>
               <div className="stat-label">Profile Status</div>
             </div>
           </div>
@@ -502,15 +575,21 @@ const ComprehensiveDashboard = () => {
         {/* Navigation */}
         <div className="section-navigation">
           {[
-            { id: 'overview', label: 'Overview', icon: '🏠' },
-            { id: 'profile', label: 'My Profile', icon: '👤' },
-            { id: 'assessment', label: 'Assessment Results', icon: '📊' },
-            { id: 'recommendations', label: 'Career Recommendations', icon: '🎯' }
-          ].map(section => (
+            { id: "overview", label: "Overview", icon: "🏠" },
+            { id: "profile", label: "My Profile", icon: "👤" },
+            { id: "assessment", label: "Assessment Results", icon: "📊" },
+            {
+              id: "recommendations",
+              label: "Career Recommendations",
+              icon: "🎯",
+            },
+          ].map((section) => (
             <button
               key={section.id}
               onClick={() => setActiveSection(section.id)}
-              className={`nav-btn ${activeSection === section.id ? 'active' : ''}`}
+              className={`nav-btn ${
+                activeSection === section.id ? "active" : ""
+              }`}
             >
               <span className="nav-icon">{section.icon}</span>
               <span className="nav-label">{section.label}</span>
@@ -521,32 +600,51 @@ const ComprehensiveDashboard = () => {
         {/* Section Content */}
         <div className="section-content">
           {/* Overview Section */}
-          {activeSection === 'overview' && (
+          {activeSection === "overview" && (
             <div className="overview-section">
               <h2 className="section-title">Dashboard Overview</h2>
-              
+
               <div className="overview-grid">
                 {/* Completion Status */}
                 <div className="overview-card">
                   <h3 className="card-title">Completion Status</h3>
                   <div className="completion-status">
                     <div className="status-item">
-                      <span className={`status-indicator ${hasProfile ? 'complete' : 'incomplete'}`}>
-                        {hasProfile ? '✅' : '❌'}
+                      <span
+                        className={`status-indicator ${
+                          hasProfile ? "complete" : "incomplete"
+                        }`}
+                      >
+                        {hasProfile ? "✅" : "❌"}
                       </span>
-                      <span className="status-text">Profile {hasProfile ? 'Complete' : 'Incomplete'}</span>
+                      <span className="status-text">
+                        Profile {hasProfile ? "Complete" : "Incomplete"}
+                      </span>
                     </div>
                     <div className="status-item">
-                      <span className={`status-indicator ${hasAssessment ? 'complete' : 'incomplete'}`}>
-                        {hasAssessment ? '✅' : '❌'}
+                      <span
+                        className={`status-indicator ${
+                          hasAssessment ? "complete" : "incomplete"
+                        }`}
+                      >
+                        {hasAssessment ? "✅" : "❌"}
                       </span>
-                      <span className="status-text">Assessment {hasAssessment ? 'Complete' : 'Incomplete'}</span>
+                      <span className="status-text">
+                        Assessment {hasAssessment ? "Complete" : "Incomplete"}
+                      </span>
                     </div>
                     <div className="status-item">
-                      <span className={`status-indicator ${recommendations.length > 0 ? 'complete' : 'incomplete'}`}>
-                        {recommendations.length > 0 ? '✅' : '❌'}
+                      <span
+                        className={`status-indicator ${
+                          recommendations.length > 0 ? "complete" : "incomplete"
+                        }`}
+                      >
+                        {recommendations.length > 0 ? "✅" : "❌"}
                       </span>
-                      <span className="status-text">Recommendations {recommendations.length > 0 ? 'Available' : 'Pending'}</span>
+                      <span className="status-text">
+                        Recommendations{" "}
+                        {recommendations.length > 0 ? "Available" : "Pending"}
+                      </span>
                     </div>
                   </div>
                 </div>
@@ -558,19 +656,28 @@ const ComprehensiveDashboard = () => {
                     {profile && (
                       <div className="activity-item">
                         <span className="activity-icon">👤</span>
-                        <span className="activity-text">Profile last updated: {formatDate(profile.lastUpdated)}</span>
+                        <span className="activity-text">
+                          Profile last updated:{" "}
+                          {formatDate(profile.lastUpdated)}
+                        </span>
                       </div>
                     )}
                     {assessments.length > 0 && (
                       <div className="activity-item">
                         <span className="activity-icon">📋</span>
-                        <span className="activity-text">Last assessment: {formatDate(assessments[0].createdAt)}</span>
+                        <span className="activity-text">
+                          Last assessment:{" "}
+                          {formatDate(assessments[0].createdAt)}
+                        </span>
                       </div>
                     )}
                     {recommendations.length > 0 && (
                       <div className="activity-item">
                         <span className="activity-icon">🎯</span>
-                        <span className="activity-text">{recommendations.length} career recommendations available</span>
+                        <span className="activity-text">
+                          {recommendations.length} career recommendations
+                          available
+                        </span>
                       </div>
                     )}
                   </div>
@@ -581,8 +688,8 @@ const ComprehensiveDashboard = () => {
                   <h3 className="card-title">Quick Actions</h3>
                   <div className="quick-actions">
                     {!hasProfile && (
-                      <button 
-                        onClick={() => window.location.href = '/dashboard'}
+                      <button
+                        onClick={() => (window.location.href = "/dashboard")}
                         className="quick-action-btn"
                       >
                         <span className="btn-icon">📝</span>
@@ -590,8 +697,8 @@ const ComprehensiveDashboard = () => {
                       </button>
                     )}
                     {!hasAssessment && (
-                      <button 
-                        onClick={() => window.location.href = '/assessment'}
+                      <button
+                        onClick={() => (window.location.href = "/assessment")}
                         className="quick-action-btn"
                       >
                         <span className="btn-icon">🧠</span>
@@ -599,13 +706,15 @@ const ComprehensiveDashboard = () => {
                       </button>
                     )}
                     {hasProfile && hasAssessment && (
-                      <button 
+                      <button
                         onClick={generateNewRecommendations}
                         className="quick-action-btn"
                         disabled={generatingRecommendations}
                       >
                         <span className="btn-icon">🔄</span>
-                        {generatingRecommendations ? 'Generating...' : 'Refresh Recommendations'}
+                        {generatingRecommendations
+                          ? "Generating..."
+                          : "Refresh Recommendations"}
                       </button>
                     )}
                   </div>
@@ -615,7 +724,7 @@ const ComprehensiveDashboard = () => {
           )}
 
           {/* Profile Section */}
-          {activeSection === 'profile' && (
+          {activeSection === "profile" && (
             <div className="profile-section">
               <h2 className="section-title">My Profile</h2>
               {hasProfile ? (
@@ -626,7 +735,9 @@ const ComprehensiveDashboard = () => {
                     <div className="info-grid">
                       <div className="info-item">
                         <span className="info-label">Full Name:</span>
-                        <span className="info-value">{profile.userId?.name || 'N/A'}</span>
+                        <span className="info-value">
+                          {profile.userId?.name || "N/A"}
+                        </span>
                       </div>
                       <div className="info-item">
                         <span className="info-label">Email:</span>
@@ -634,19 +745,27 @@ const ComprehensiveDashboard = () => {
                       </div>
                       <div className="info-item">
                         <span className="info-label">Age:</span>
-                        <span className="info-value">{profile.age || 'N/A'}</span>
+                        <span className="info-value">
+                          {profile.age || "N/A"}
+                        </span>
                       </div>
                       <div className="info-item">
                         <span className="info-label">Gender:</span>
-                        <span className="info-value">{profile.gender || 'N/A'}</span>
+                        <span className="info-value">
+                          {profile.gender || "N/A"}
+                        </span>
                       </div>
                       <div className="info-item">
                         <span className="info-label">Nationality:</span>
-                        <span className="info-value">{profile.nationality || 'N/A'}</span>
+                        <span className="info-value">
+                          {profile.nationality || "N/A"}
+                        </span>
                       </div>
                       <div className="info-item">
                         <span className="info-label">Country:</span>
-                        <span className="info-value">{profile.country || 'N/A'}</span>
+                        <span className="info-value">
+                          {profile.country || "N/A"}
+                        </span>
                       </div>
                     </div>
                   </div>
@@ -657,27 +776,41 @@ const ComprehensiveDashboard = () => {
                     <div className="info-grid">
                       <div className="info-item">
                         <span className="info-label">Desired Faculty:</span>
-                        <span className="info-value">{profile.desiredFaculty || 'Not specified'}</span>
+                        <span className="info-value">
+                          {profile.desiredFaculty || "Not specified"}
+                        </span>
                       </div>
                       <div className="info-item">
                         <span className="info-label">Desired Department:</span>
-                        <span className="info-value">{profile.desiredDepartment || 'Not specified'}</span>
+                        <span className="info-value">
+                          {profile.desiredDepartment || "Not specified"}
+                        </span>
                       </div>
                       <div className="info-item">
                         <span className="info-label">Current Level:</span>
-                        <span className="info-value">{profile.currentAcademicLevel || 'N/A'}</span>
+                        <span className="info-value">
+                          {profile.currentAcademicLevel || "N/A"}
+                        </span>
                       </div>
                       <div className="info-item">
                         <span className="info-label">Program:</span>
-                        <span className="info-value">{profile.studentProgram || 'N/A'}</span>
+                        <span className="info-value">
+                          {profile.studentProgram || "N/A"}
+                        </span>
                       </div>
                       <div className="info-item">
                         <span className="info-label">High School Grades:</span>
-                        <span className="info-value">{profile.highSchoolGrades ? `${profile.highSchoolGrades}%` : 'N/A'}</span>
+                        <span className="info-value">
+                          {profile.highSchoolGrades
+                            ? `${profile.highSchoolGrades}%`
+                            : "N/A"}
+                        </span>
                       </div>
                       <div className="info-item">
                         <span className="info-label">Secondary Courses:</span>
-                        <span className="info-value">{profile.coursesStudiedInSecondary || 'N/A'}</span>
+                        <span className="info-value">
+                          {profile.coursesStudiedInSecondary || "N/A"}
+                        </span>
                       </div>
                     </div>
                   </div>
@@ -685,12 +818,18 @@ const ComprehensiveDashboard = () => {
                   {/* Skills */}
                   {profile.skills && profile.skills.length > 0 && (
                     <div className="info-card">
-                      <h3 className="card-title">Skills ({profile.skills.length})</h3>
+                      <h3 className="card-title">
+                        Skills ({profile.skills.length})
+                      </h3>
                       <div className="skills-grid">
                         {profile.skills.map((skill, index) => (
                           <div key={index} className="skill-item">
-                            <span className="skill-name">{skill.skillName}</span>
-                            <span className={`skill-level ${skill.proficiencyLevel.toLowerCase()}`}>
+                            <span className="skill-name">
+                              {skill.skillName}
+                            </span>
+                            <span
+                              className={`skill-level ${skill.proficiencyLevel.toLowerCase()}`}
+                            >
                               {skill.proficiencyLevel}
                             </span>
                           </div>
@@ -700,42 +839,58 @@ const ComprehensiveDashboard = () => {
                   )}
 
                   {/* Languages */}
-                  {profile.languagesSpoken && profile.languagesSpoken.length > 0 && (
-                    <div className="info-card">
-                      <h3 className="card-title">Languages ({profile.languagesSpoken.length})</h3>
-                      <div className="languages-grid">
-                        {profile.languagesSpoken.map((lang, index) => (
-                          <div key={index} className="language-item">
-                            <span className="language-name">{lang.language}</span>
-                            <span className={`language-level ${lang.proficiency.toLowerCase()}`}>
-                              {lang.proficiency}
-                            </span>
-                          </div>
-                        ))}
+                  {profile.languagesSpoken &&
+                    profile.languagesSpoken.length > 0 && (
+                      <div className="info-card">
+                        <h3 className="card-title">
+                          Languages ({profile.languagesSpoken.length})
+                        </h3>
+                        <div className="languages-grid">
+                          {profile.languagesSpoken.map((lang, index) => (
+                            <div key={index} className="language-item">
+                              <span className="language-name">
+                                {lang.language}
+                              </span>
+                              <span
+                                className={`language-level ${lang.proficiency.toLowerCase()}`}
+                              >
+                                {lang.proficiency}
+                              </span>
+                            </div>
+                          ))}
+                        </div>
                       </div>
-                    </div>
-                  )}
+                    )}
 
                   {/* Work Experience */}
-                  {profile.workExperience && profile.workExperience.length > 0 && (
-                    <div className="info-card">
-                      <h3 className="card-title">Work Experience ({profile.workExperience.length})</h3>
-                      <div className="work-experience-list">
-                        {profile.workExperience.map((exp, index) => (
-                          <div key={index} className="experience-item">
-                            <h4 className="job-title">{exp.jobTitle}</h4>
-                            <div className="company-duration">
-                              <span className="company">{exp.company}</span>
-                              {exp.duration && <span className="duration">({exp.duration})</span>}
+                  {profile.workExperience &&
+                    profile.workExperience.length > 0 && (
+                      <div className="info-card">
+                        <h3 className="card-title">
+                          Work Experience ({profile.workExperience.length})
+                        </h3>
+                        <div className="work-experience-list">
+                          {profile.workExperience.map((exp, index) => (
+                            <div key={index} className="experience-item">
+                              <h4 className="job-title">{exp.jobTitle}</h4>
+                              <div className="company-duration">
+                                <span className="company">{exp.company}</span>
+                                {exp.duration && (
+                                  <span className="duration">
+                                    ({exp.duration})
+                                  </span>
+                                )}
+                              </div>
+                              {exp.description && (
+                                <p className="job-description">
+                                  {exp.description}
+                                </p>
+                              )}
                             </div>
-                            {exp.description && (
-                              <p className="job-description">{exp.description}</p>
-                            )}
-                          </div>
-                        ))}
+                          ))}
+                        </div>
                       </div>
-                    </div>
-                  )}
+                    )}
 
                   {/* Career Goals */}
                   {profile.careerGoals && (
@@ -750,10 +905,9 @@ const ComprehensiveDashboard = () => {
                     <div className="info-card">
                       <h3 className="card-title">Interests</h3>
                       <div className="interests-text">
-                        {Array.isArray(profile.interests) 
-                          ? profile.interests.join(', ') 
-                          : profile.interests
-                        }
+                        {Array.isArray(profile.interests)
+                          ? profile.interests.join(", ")
+                          : profile.interests}
                       </div>
                     </div>
                   )}
@@ -762,9 +916,12 @@ const ComprehensiveDashboard = () => {
                 <div className="no-data-card">
                   <div className="no-data-icon">📝</div>
                   <h3>No Profile Found</h3>
-                  <p>You haven't created your profile yet. Create one to get started!</p>
-                  <button 
-                    onClick={() => window.location.href = '/dashboard'}
+                  <p>
+                    You haven't created your profile yet. Create one to get
+                    started!
+                  </p>
+                  <button
+                    onClick={() => (window.location.href = "/dashboard")}
                     className="create-btn"
                   >
                     Create Profile
@@ -775,25 +932,36 @@ const ComprehensiveDashboard = () => {
           )}
 
           {/* Assessment Section */}
-          {activeSection === 'assessment' && (
+          {activeSection === "assessment" && (
             <div className="assessment-section">
               <h2 className="section-title">Assessment Results</h2>
               {hasAssessment && assessments.length > 0 ? (
                 <div className="assessment-content">
                   {/* Assessment Type Selector */}
                   <div className="assessment-type-selector">
-                    {['career', 'skills', 'personality'].map(type => {
-                      const assessmentData = getAssessmentTypeData(assessments[0], type);
-                      const hasData = assessmentData && Object.keys(assessmentData).length > 0;
-                      
+                    {["career", "skills", "personality"].map((type) => {
+                      const assessmentData = getAssessmentTypeData(
+                        assessments[0],
+                        type
+                      );
+                      const hasData =
+                        assessmentData &&
+                        Object.keys(assessmentData).length > 0;
+
                       return (
                         <button
                           key={type}
                           onClick={() => setSelectedAssessmentType(type)}
-                          className={`type-btn ${selectedAssessmentType === type ? 'active' : ''} ${!hasData ? 'no-data' : ''}`}
+                          className={`type-btn ${
+                            selectedAssessmentType === type ? "active" : ""
+                          } ${!hasData ? "no-data" : ""}`}
                         >
                           <span className="type-icon">
-                            {type === 'career' ? '💼' : type === 'skills' ? '⚡' : '🧠'}
+                            {type === "career"
+                              ? "💼"
+                              : type === "skills"
+                              ? "⚡"
+                              : "🧠"}
                           </span>
                           <span className="type-label">
                             {type.charAt(0).toUpperCase() + type.slice(1)}
@@ -811,13 +979,18 @@ const ComprehensiveDashboard = () => {
                   {/* Assessment Results */}
                   <div className="assessment-results">
                     <h3 className="results-title">
-                      {selectedAssessmentType.charAt(0).toUpperCase() + selectedAssessmentType.slice(1)} Assessment Results
+                      {selectedAssessmentType.charAt(0).toUpperCase() +
+                        selectedAssessmentType.slice(1)}{" "}
+                      Assessment Results
                     </h3>
-                    
+
                     {assessments.length > 0 && (
                       <div className="results-content">
                         {renderAssessmentAnswers(
-                          getAssessmentTypeData(assessments[0], selectedAssessmentType), 
+                          getAssessmentTypeData(
+                            assessments[0],
+                            selectedAssessmentType
+                          ),
                           selectedAssessmentType
                         )}
                       </div>
@@ -828,9 +1001,12 @@ const ComprehensiveDashboard = () => {
                 <div className="no-data-card">
                   <div className="no-data-icon">📊</div>
                   <h3>No Assessment Results</h3>
-                  <p>You haven't taken the career assessment yet. Take it to see your results!</p>
-                  <button 
-                    onClick={() => window.location.href = '/assessment'}
+                  <p>
+                    You haven't taken the career assessment yet. Take it to see
+                    your results!
+                  </p>
+                  <button
+                    onClick={() => (window.location.href = "/assessment")}
                     className="create-btn"
                   >
                     Take Assessment
@@ -841,7 +1017,7 @@ const ComprehensiveDashboard = () => {
           )}
 
           {/* Recommendations Section */}
-          {activeSection === 'recommendations' && (
+          {activeSection === "recommendations" && (
             <div className="recommendations-section">
               <h2 className="section-title">Career Recommendations</h2>
               {recommendations.length > 0 ? (
@@ -850,42 +1026,54 @@ const ComprehensiveDashboard = () => {
                     <div key={index} className="recommendation-card">
                       <div className="rec-header">
                         <h3 className="rec-title">
-                          {rec.faculty || rec.careerTitle || rec.title || 'Career Recommendation'}
+                          {rec.faculty ||
+                            rec.careerTitle ||
+                            rec.title ||
+                            "Career Recommendation"}
                         </h3>
                         <div className="match-percentage">
-                          {rec.matchPercentage || rec.match || '85'}% Match
+                          {rec.matchPercentage || rec.match || "85"}% Match
                         </div>
                       </div>
                       <h4 className="rec-department">
-                        {rec.department || rec.field || ''}
+                        {rec.department || rec.field || ""}
                       </h4>
                       <p className="rec-description">
-                        {rec.reasoning || rec.description || rec.summary || 'No description available'}
+                        {rec.reasoning ||
+                          rec.description ||
+                          rec.summary ||
+                          "No description available"}
                       </p>
-                      
+
                       {/* Strengths */}
                       {rec.strengths && rec.strengths.length > 0 && (
                         <div className="rec-skills">
                           <h4>Your Strengths:</h4>
                           <div className="skills-tags">
                             {rec.strengths.map((strength, idx) => (
-                              <span key={idx} className="skill-tag">{strength}</span>
+                              <span key={idx} className="skill-tag">
+                                {strength}
+                              </span>
                             ))}
                           </div>
                         </div>
                       )}
 
                       {/* Skills (fallback for older format) */}
-                      {rec.skills && rec.skills.length > 0 && !rec.strengths && (
-                        <div className="rec-skills">
-                          <h4>Required Skills:</h4>
-                          <div className="skills-tags">
-                            {rec.skills.map((skill, idx) => (
-                              <span key={idx} className="skill-tag">{skill}</span>
-                            ))}
+                      {rec.skills &&
+                        rec.skills.length > 0 &&
+                        !rec.strengths && (
+                          <div className="rec-skills">
+                            <h4>Required Skills:</h4>
+                            <div className="skills-tags">
+                              {rec.skills.map((skill, idx) => (
+                                <span key={idx} className="skill-tag">
+                                  {skill}
+                                </span>
+                              ))}
+                            </div>
                           </div>
-                        </div>
-                      )}
+                        )}
 
                       {/* Considerations */}
                       {rec.considerations && rec.considerations.length > 0 && (
@@ -923,7 +1111,9 @@ const ComprehensiveDashboard = () => {
                       {rec.averageSalary && (
                         <div className="rec-salary">
                           <span className="salary-label">Average Salary:</span>
-                          <span className="salary-value">{rec.averageSalary}</span>
+                          <span className="salary-value">
+                            {rec.averageSalary}
+                          </span>
                         </div>
                       )}
 
@@ -942,7 +1132,9 @@ const ComprehensiveDashboard = () => {
                       {/* Duration */}
                       {rec.duration && (
                         <div className="rec-duration">
-                          <span className="duration-label">Program Duration:</span>
+                          <span className="duration-label">
+                            Program Duration:
+                          </span>
                           <span className="duration-value">{rec.duration}</span>
                         </div>
                       )}
@@ -951,7 +1143,9 @@ const ComprehensiveDashboard = () => {
                       {rec.createdAt && (
                         <div className="rec-date">
                           <span className="date-label">Generated:</span>
-                          <span className="date-value">{formatDate(rec.createdAt)}</span>
+                          <span className="date-value">
+                            {formatDate(rec.createdAt)}
+                          </span>
                         </div>
                       )}
                     </div>
@@ -961,31 +1155,36 @@ const ComprehensiveDashboard = () => {
                 <div className="no-data-card">
                   <div className="no-data-icon">🎯</div>
                   <h3>No Recommendations Available</h3>
-                  <p>Complete your profile and assessment to get personalized career recommendations!</p>
+                  <p>
+                    Complete your profile and assessment to get personalized
+                    career recommendations!
+                  </p>
                   <div className="recommendation-actions">
                     {!hasProfile && (
-                      <button 
-                        onClick={() => window.location.href = '/dashboard'}
+                      <button
+                        onClick={() => (window.location.href = "/dashboard")}
                         className="create-btn"
                       >
                         Create Profile
                       </button>
                     )}
                     {!hasAssessment && (
-                      <button 
-                        onClick={() => window.location.href = '/assessment'}
+                      <button
+                        onClick={() => (window.location.href = "/assessment")}
                         className="create-btn"
                       >
                         Take Assessment
                       </button>
                     )}
                     {hasProfile && hasAssessment && (
-                      <button 
+                      <button
                         onClick={generateNewRecommendations}
                         className="create-btn"
                         disabled={generatingRecommendations}
                       >
-                        {generatingRecommendations ? 'Generating...' : 'Generate Recommendations'}
+                        {generatingRecommendations
+                          ? "Generating..."
+                          : "Generate Recommendations"}
                       </button>
                     )}
                   </div>
@@ -1000,10 +1199,7 @@ const ComprehensiveDashboard = () => {
               <div className="error-icon">⚠️</div>
               <h3>Something went wrong</h3>
               <p>{error}</p>
-              <button 
-                onClick={fetchAllData}
-                className="retry-btn"
-              >
+              <button onClick={fetchAllData} className="retry-btn">
                 Retry
               </button>
             </div>
