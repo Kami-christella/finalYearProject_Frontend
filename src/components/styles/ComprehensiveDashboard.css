@@ -183,6 +183,13 @@
   background: #1B3059;
   transform: translateY(-2px);
 }
+.message {
+  padding: 10px;
+  margin-bottom: 10px;
+  background-color: #fdecea;
+  color: #b71c1c;
+  border-radius: 5px;
+}
 
 .action-btn:disabled {
   background: #e9ecef;

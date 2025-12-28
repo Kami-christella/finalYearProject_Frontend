@@ -34,6 +34,7 @@ const ComprehensiveDashboard = () => {
         localStorage.removeItem("token");
         localStorage.removeItem("user");
         Notify.failure("Invalid session. Please log in again.");
+        setMessage("Invalid session. Please log in again.");
         navigate("/");
         return;
       }
@@ -81,6 +82,7 @@ const ComprehensiveDashboard = () => {
       ]);
     } catch (err) {
       console.error("Error fetching dashboard data:", err);
+      setMessage("Error fetching dashboard data:", err)
       setError("Failed to load dashboard data");
     } finally {
       setLoading(false);
@@ -107,6 +109,7 @@ const ComprehensiveDashboard = () => {
       }
     } catch (err) {
       console.error("Error fetching profile:", err);
+      setMessage("Error fetching profile:", err)
       setHasProfile(false);
     }
   };
@@ -125,13 +128,14 @@ const ComprehensiveDashboard = () => {
         const data = await response.json();
         setAssessments(data.assessments || []);
         setHasAssessment(data.assessments && data.assessments.length > 0);
-        console.log("✅ Assessments loaded:", data.assessments?.length || 0);
+        // console.log("✅ Assessments loaded:", data.assessments?.length || 0);
       } else {
         setHasAssessment(false);
       }
     } catch (err) {
       console.error("Error fetching assessments:", err);
       setHasAssessment(false);
+      setMessage("Error fetching assessments:", err);
     }
   };
 
@@ -157,10 +161,12 @@ const ComprehensiveDashboard = () => {
               `⚠️ Failed to fetch ${category} questions:`,
               response.status
             );
+             setMessage(`⚠️ Failed to fetch ${category} questions:`);
             return [];
           }
         } catch (err) {
           console.error(`Error fetching ${category} questions:`, err);
+           setMessage(`Error fetching ${category} questions:`, err);
           return [];
         }
       };
@@ -182,6 +188,7 @@ const ComprehensiveDashboard = () => {
       });
     } catch (err) {
       console.error("Error fetching questions:", err);
+      setMessage("Error fetching questions:", err);
     }
   };
 
@@ -318,6 +325,7 @@ const ComprehensiveDashboard = () => {
     } catch (err) {
       console.error("❌ Failed to generate recommendations:", err);
       Notify.failure("Failed to generate recommendations: " + err.message);
+      setMessage("Failed to generate recommendations: " + err.message);
     } finally {
       setGeneratingRecommendations(false);
     }
@@ -492,6 +500,11 @@ const ComprehensiveDashboard = () => {
     <div className="comprehensive-dashboard-container">
       <div className="dashboard-content">
         {/* Header */}
+         {message && (
+    <div className="message">
+      {message}
+    </div>
+  )}
         <div className="dashboard-header">
           <div className="header-main">
             <div className="profile-avatar">
