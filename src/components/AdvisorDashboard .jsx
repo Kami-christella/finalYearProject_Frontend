@@ -2549,11 +2549,11 @@ const handleLogoutBtn = () => {
         paddingBottom: '15px',
         borderBottom: '2px solid #e0e0e0'
       }}>
-        <h2 style={{margin: 0, color: '#333'}}>📨 Messages</h2>
+        <h2 style={{margin: 0, color: '#333'}}>Student Messages</h2>
         <div style={{display: 'flex', gap: '10px'}}>
           <span style={{
             padding: '6px 12px',
-            background: '#e3f2fd',
+            // background: '#e3f2fd',
             color: '#1976d2',
             borderRadius: '20px',
             fontSize: '0.85rem',
@@ -2642,7 +2642,7 @@ const handleLogoutBtn = () => {
               borderRadius: '8px',
               cursor: 'pointer',
               fontWeight: '500',
-              background: messageFilter === 'read' ? '#4caf50' : '#f5f5f5',
+              // background: messageFilter === 'read' ? '#4caf50' : '#f5f5f5',
               color: messageFilter === 'read' ? 'white' : '#333',
               transition: 'all 0.2s'
             }}
@@ -2683,12 +2683,12 @@ const handleLogoutBtn = () => {
           }}>
             <thead>
               <tr style={{background: '#f5f5f5'}}>
-                <th style={{padding: '12px', textAlign: 'left', fontWeight: '600', fontSize: '0.9rem'}}>Status</th>
+                {/* <th style={{padding: '12px', textAlign: 'left', fontWeight: '600', fontSize: '0.9rem'}}>Status</th> */}
                 <th style={{padding: '12px', textAlign: 'left', fontWeight: '600', fontSize: '0.9rem'}}>Name</th>
                 <th style={{padding: '12px', textAlign: 'left', fontWeight: '600', fontSize: '0.9rem'}}>Email</th>
                 <th style={{padding: '12px', textAlign: 'left', fontWeight: '600', fontSize: '0.9rem'}}>Phone</th>
                 <th style={{padding: '12px', textAlign: 'left', fontWeight: '600', fontSize: '0.9rem'}}>Message</th>
-                <th style={{padding: '12px', textAlign: 'left', fontWeight: '600', fontSize: '0.9rem'}}>Date</th>
+                {/* <th style={{padding: '12px', textAlign: 'left', fontWeight: '600', fontSize: '0.9rem'}}>Date</th> */}
                 <th style={{padding: '12px', textAlign: 'center', fontWeight: '600', fontSize: '0.9rem'}}>Actions</th>
               </tr>
             </thead>
@@ -2698,21 +2698,21 @@ const handleLogoutBtn = () => {
                   key={message._id || index}
                   style={{
                     borderTop: '1px solid #e0e0e0',
-                    background: !message.isRead ? '#fff8e1' : 'white',
+                    background: !message.isRead ? 'white' : 'white',
                     transition: 'background 0.2s'
                   }}
-                  onMouseEnter={(e) => e.currentTarget.style.background = !message.isRead ? '#fff3cd' : '#f9f9f9'}
-                  onMouseLeave={(e) => e.currentTarget.style.background = !message.isRead ? '#fff8e1' : 'white'}
+                  onMouseEnter={(e) => e.currentTarget.style.background = !message.isRead ? '#white' : 'white'}
+                  onMouseLeave={(e) => e.currentTarget.style.background = !message.isRead ? 'white' : 'white'}
                 >
                   {/* Status */}
-                  <td style={{padding: '12px'}}>
+                  {/* <td style={{padding: '12px'}}>
                     <span style={{
                       fontSize: '1.2rem',
                       color: !message.isRead ? '#ff9800' : '#9e9e9e'
                     }}>
                       {!message.isRead ? '●' : '○'}
                     </span>
-                  </td>
+                  </td> */}
 
                   {/* Name */}
                   <td style={{padding: '12px'}}>
@@ -2721,7 +2721,7 @@ const handleLogoutBtn = () => {
                         width: '36px',
                         height: '36px',
                         borderRadius: '50%',
-                        background: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',
+                        background: 'white',
                         color: 'white',
                         display: 'flex',
                         alignItems: 'center',
@@ -2785,7 +2785,7 @@ const handleLogoutBtn = () => {
                   </td>
 
                   {/* Date */}
-                  <td style={{padding: '12px'}}>
+                  {/* <td style={{padding: '12px'}}>
                     <div>
                       <div style={{fontSize: '0.9rem'}}>
                         {message.createdAt 
@@ -2807,7 +2807,7 @@ const handleLogoutBtn = () => {
                         }
                       </div>
                     </div>
-                  </td>
+                  </td> */}
 
                   {/* Actions */}
                   <td style={{padding: '12px'}}>
