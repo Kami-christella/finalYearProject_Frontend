@@ -2741,7 +2741,7 @@ const handleLogoutBtn = () => {
                   <td style={{padding: '12px'}}>
                     <a 
                       href={`mailto:${message.email}`}
-                      style={{color: '#1976d2', textDecoration: 'none'}}
+                      style={{color: '#666', textDecoration: 'none'}}
                       onMouseEnter={(e) => e.currentTarget.style.textDecoration = 'underline'}
                       onMouseLeave={(e) => e.currentTarget.style.textDecoration = 'none'}
                     >
@@ -2754,7 +2754,7 @@ const handleLogoutBtn = () => {
                     {message.phone ? (
                       <a 
                         href={`tel:${message.phone}`}
-                        style={{color: '#1976d2', textDecoration: 'none'}}
+                        style={{color: '#666', textDecoration: 'none'}}
                         onMouseEnter={(e) => e.currentTarget.style.textDecoration = 'underline'}
                         onMouseLeave={(e) => e.currentTarget.style.textDecoration = 'none'}
                       >
