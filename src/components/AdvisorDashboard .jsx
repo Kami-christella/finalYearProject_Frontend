@@ -14,10 +14,8 @@ const SIDEBAR_ITEMS = [
   { id: 'overview', label: 'Overview', icon: '📊' },
   { id: 'students', label: 'All Students', icon: '👥' },
   { id: 'questionsManager', label: 'Questions Manager', icon: '📋' },
-  // { id: 'pending', label: 'Pending Reviews', icon: '⏳' },
-  // { id: 'approved', label: 'Approved', icon: '✅' },
-  // { id: 'transfer', label: 'Transfer Students', icon: '🔄' },
   { id: 'appointments', label: 'Appointments', icon: '📅' },
+  { id: 'messages', label: 'Messages', icon: '✉️' },
   { id: 'activity', label: 'Activity Log', icon: '📋' }
 ];
 
@@ -77,6 +75,7 @@ const AdvisorDashboard = () => {
   const [showDropdown, setShowDropdown] = useState(false);
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const [showUserDropdown, setShowUserDropdown] = useState(false); 
+  const [messageFilter, setMessageFilter] = useState('all');
   const [students, setStudents] = useState([]);
   const [filteredStudents, setFilteredStudents] = useState([]);
   const [selectedStudent, setSelectedStudent] = useState(null);
@@ -94,9 +93,22 @@ const AdvisorDashboard = () => {
   const [currentDocument, setCurrentDocument] = useState(null);
   const [showDocumentsModal, setShowDocumentsModal] = useState(false);
   const [selectedStudentDocuments, setSelectedStudentDocuments] = useState([]);
-  const [availableSlots, setAvailableSlots] = useState([]); // Add this
+  const [availableSlots, setAvailableSlots] = useState([]); 
   
-
+// Message state - ADD THESE
+const [messages, setMessages] = useState([]);
+const [filteredMessages, setFilteredMessages] = useState([]);
+const [messageSearchTerm, setMessageSearchTerm] = useState('');
+const [selectedMessage, setSelectedMessage] = useState(null);
+const [showMessageModal, setShowMessageModal] = useState(false);
+const [showReplyModal, setShowReplyModal] = useState(false);
+const [replyText, setReplyText] = useState('');
+const [messagePagination, setMessagePagination] = useState({
+  currentPage: 1,
+  totalPages: 1,
+  totalItems: 0,
+  itemsPerPage: 10
+});
   const [pagination, setPagination] = useState({
     currentPage: 1,
     totalPages: 1,
@@ -168,12 +180,18 @@ const [appointmentForm, setAppointmentForm] = useState({
       fetchActivityLog();
     } else if (activeTab === 'appointments') {
       fetchAppointments();
-    }
+    } else if (activeTab === 'messages') {  
+    fetchMessages();
+  }
   }, [activeTab, pagination.currentPage]);
 
   useEffect(() => {
     filterStudents();
   }, [students, searchTerm, filterStatus]);
+
+  useEffect(() => {
+  filterMessages();
+}, [messages, messageSearchTerm, messageFilter]);
 
   useEffect(() => {
     filterAppointments();
@@ -304,7 +322,207 @@ useEffect(() => {
       setLoading(false);
     }
   };
+  // Fetch messages from contacts table
+const fetchMessages = async (page = 1) => {
+  try {
+    setLoading(true);
+    const token = localStorage.getItem('token');
+    
+    const response = await fetch(`http://localhost:5000/api/advisor/messages?page=${page}&limit=10`, {
+      headers: {
+        'Authorization': `Bearer ${token}`
+      }
+    });
 
+    if (response.ok) {
+      const data = await response.json();
+      console.log('Messages data:', data);
+      
+      let messagesArray = [];
+      let paginationData = {};
+      
+      // Handle different response structures
+      if (data.data && Array.isArray(data.data.messages)) {
+        messagesArray = data.data.messages;
+        paginationData = data.data.pagination || {};
+      } else if (Array.isArray(data.messages)) {
+        messagesArray = data.messages;
+        paginationData = data.pagination || {};
+      } else if (Array.isArray(data)) {
+        messagesArray = data;
+      }
+      
+      setMessages(messagesArray);
+      setMessagePagination(prev => ({
+        ...prev,
+        ...paginationData,
+        currentPage: page
+      }));
+    } else {
+      console.error('Failed to fetch messages:', response.status);
+      Notify.failure('Failed to fetch messages');
+      setMessages([]);
+    }
+  } catch (error) {
+    console.error('Error loading messages:', error);
+    Notify.failure('Error loading messages: ' + error.message);
+    setMessages([]);
+  } finally {
+    setLoading(false);
+  }
+};
+
+// // Filter messages based on search and status
+// const filterMessages = () => {
+//   console.log('🔍 Filtering messages...');
+//   console.log('📧 Total messages:', messages.length);
+//   console.log('📧 First message sample:', messages[0]); // ADD THIS to see the structure
+//   console.log('🔎 Search term:', messageSearchTerm);
+//   console.log('📊 Filter:', messageFilter);
+  
+//   let filtered = messages;
+  
+//   // Filter by read/unread status
+//   if (messageFilter === 'unread') {
+//     filtered = filtered.filter(msg => !msg.isRead);
+//   } else if (messageFilter === 'read') {
+//     filtered = filtered.filter(msg => msg.isRead);
+//   }
+  
+//   // Filter by search term
+//   if (messageSearchTerm) {
+//     filtered = filtered.filter(msg =>
+//       msg.name?.toLowerCase().includes(messageSearchTerm.toLowerCase()) ||
+//       msg.names?.toLowerCase().includes(messageSearchTerm.toLowerCase()) || // ADD THIS fallback
+//       msg.email?.toLowerCase().includes(messageSearchTerm.toLowerCase()) ||
+//       msg.message?.toLowerCase().includes(messageSearchTerm.toLowerCase()) ||
+//       msg.phone?.toLowerCase().includes(messageSearchTerm.toLowerCase())
+//     );
+//   }
+  
+//   console.log('✅ Filtered messages:', filtered.length);
+//   setFilteredMessages(filtered);
+// };
+const filterMessages = () => {
+  let filtered = messages;
+  
+  // Filter by read/unread status
+  if (messageFilter === 'unread') {
+    filtered = filtered.filter(msg => !msg.isRead);
+  } else if (messageFilter === 'read') {
+    filtered = filtered.filter(msg => msg.isRead);
+  }
+  
+  // Filter by search term
+  if (messageSearchTerm) {
+    filtered = filtered.filter(msg =>
+      msg.name?.toLowerCase().includes(messageSearchTerm.toLowerCase()) ||
+      msg.email?.toLowerCase().includes(messageSearchTerm.toLowerCase()) ||
+      msg.message?.toLowerCase().includes(messageSearchTerm.toLowerCase()) ||
+      msg.phone?.toLowerCase().includes(messageSearchTerm.toLowerCase())
+    );
+  }
+  
+  setFilteredMessages(filtered);
+};
+
+// Mark message as read
+const handleMarkAsRead = async (messageId) => {
+  try {
+    const token = localStorage.getItem('token');
+    const response = await fetch(`http://localhost:5000/api/advisor/messages/${messageId}/read`, {
+      method: 'PUT',
+      headers: {
+        'Authorization': `Bearer ${token}`,
+        'Content-Type': 'application/json'
+      }
+    });
+
+    if (response.ok) {
+      Notify.success('Message marked as read');
+      fetchMessages(messagePagination.currentPage);
+    } else {
+      throw new Error('Failed to mark message as read');
+    }
+  } catch (error) {
+    Notify.failure('Failed to update message: ' + error.message);
+  }
+};
+
+// View message details
+const handleViewMessage = async (message) => {
+  setSelectedMessage(message);
+  setShowMessageModal(true);
+  
+  // Mark as read when opened
+  if (!message.isRead) {
+    await handleMarkAsRead(message._id);
+  }
+};
+
+// Handle reply to message
+const handleReplyToMessage = (message) => {
+  setSelectedMessage(message);
+  setReplyText('');
+  setShowReplyModal(true);
+};
+
+// Submit reply
+const handleSubmitReply = async (e) => {
+  e.preventDefault();
+  
+  try {
+    const token = localStorage.getItem('token');
+    const response = await fetch(`http://localhost:5000/api/advisor/messages/${selectedMessage._id}/reply`, {
+      method: 'POST',
+      headers: {
+        'Authorization': `Bearer ${token}`,
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({
+        replyMessage: replyText,
+        recipientEmail: selectedMessage.email
+      })
+    });
+
+    if (response.ok) {
+      Notify.success('Reply sent successfully');
+      setShowReplyModal(false);
+      setReplyText('');
+      fetchMessages(messagePagination.currentPage);
+    } else {
+      throw new Error('Failed to send reply');
+    }
+  } catch (error) {
+    Notify.failure('Failed to send reply: ' + error.message);
+  }
+};
+
+// Delete message
+const handleDeleteMessage = async (messageId) => {
+  if (!window.confirm('Are you sure you want to delete this message?')) {
+    return;
+  }
+
+  try {
+    const token = localStorage.getItem('token');
+    const response = await fetch(`http://localhost:5000/api/advisor/messages/${messageId}`, {
+      method: 'DELETE',
+      headers: {
+        'Authorization': `Bearer ${token}`
+      }
+    });
+
+    if (response.ok) {
+      Notify.success('Message deleted successfully');
+      fetchMessages(messagePagination.currentPage);
+    } else {
+      throw new Error('Failed to delete message');
+    }
+  } catch (error) {
+    Notify.failure('Failed to delete message: ' + error.message);
+  }
+};
     // Add function to fetch user details (optional)
   const fetchUserDetails = async () => {
     try {
@@ -527,84 +745,7 @@ const fetchStudentRecommendations = async (studentUserId) => {
     }
   };
 
-  // Appointment Management Functions
-  // const fetchAppointments = async (page = 1) => {
-  //   try {
-  //     setLoading(true);
-  //     const token = localStorage.getItem('token');
-      
-  //     // Fetch both appointments and available slots
-  //     const [appointmentsRes, slotsRes] = await Promise.all([
-  //       fetch(`http://localhost:5000/api/appointments/manage?page=${page}&limit=10`, {
-  //         headers: { 'Authorization': `Bearer ${token}` }
-  //       }),
-  //       fetch(`http://localhost:5000/api/appointments/slots/my-slots`, {
-  //         headers: { 'Authorization': `Bearer ${token}` }
-  //       })
-  //     ]);
-      
-  //     const appointmentsData = appointmentsRes.ok ? await appointmentsRes.json() : { data: { appointments: [] } };
-  //     const slotsData = slotsRes.ok ? await slotsRes.json() : { data: { slots: [] } };
-      
-  //     // Combine appointments and available slots
-  //     const allAppointments = [
-  //       ...(appointmentsData.data.appointments || []),
-  //       ...(slotsData.data.slots || []).map(slot => ({
-  //         ...slot,
-  //         status: slot.available ? 'available' : 'booked',
-  //         _id: slot._id,
-  //         date: slot.date,
-  //         startTime: slot.time,
-  //         endTime: slot.time,
-  //         duration: slot.duration || 30,
-  //         meetingType: slot.type,
-  //         location: slot.location,
-  //         notes: ''
-  //       }))
-  //     ];
-      
-  //     setAppointments(allAppointments);
-  //     setAppointmentPagination(appointmentsData.data.pagination || appointmentPagination);
-      
-  //   } catch (error) {
-  //     setAppointments([]);
-  //     Notify.failure('Error loading appointments');
-  //   } finally {
-  //     setLoading(false);
-  //   }
-  // };
 
-// Appointment Management Functions
-// const fetchAppointments = async (page = 1) => {
-//   try {
-//     setLoading(true);
-//     const token = localStorage.getItem('token');
-    
-//     // Fetch both appointments and available slots
-//     const [appointmentsRes, slotsRes] = await Promise.all([
-//       fetch(`http://localhost:5000/api/appointments/manage?page=${page}&limit=10`, {
-//         headers: { 'Authorization': `Bearer ${token}` }
-//       }),
-//       fetch(`http://localhost:5000/api/appointments/slots/my-slots`, {
-//         headers: { 'Authorization': `Bearer ${token}` }
-//       })
-//     ]);
-    
-//     const appointmentsData = appointmentsRes.ok ? await appointmentsRes.json() : { data: { appointments: [] } };
-//     const slotsData = slotsRes.ok ? await slotsRes.json() : { data: { slots: [] } };
-    
-//     // DON'T mix appointments with slots - keep them separate!
-//     setAppointments(appointmentsData.data.appointments || []);
-//     setAvailableSlots(slotsData.data.slots || []); // Store slots separately
-//     setAppointmentPagination(appointmentsData.data.pagination || appointmentPagination);
-    
-//   } catch (error) {
-//     setAppointments([]);
-//     Notify.failure('Error loading appointments');
-//   } finally {
-//     setLoading(false);
-//   }
-// };
 
 const fetchAppointments = async (page = 1) => {
   try {
@@ -1474,6 +1615,7 @@ const handleLogoutBtn = () => {
               <h2>Loading Advisor Dashboard...</h2>
             </div>
           </main>
+
         </div>
       </div>
     );
@@ -2393,7 +2535,697 @@ const handleLogoutBtn = () => {
               )}
             </div>
           )}
+          {/* start */}
+{/* Messages Tab - REPLACE YOUR EXISTING MESSAGES TAB WITH THIS */}
+{activeTab === 'messages' && (
+  <div className="tab-content">
+    <div style={{padding: '20px'}}>
+      {/* Header */}
+      <div style={{
+        display: 'flex',
+        justifyContent: 'space-between',
+        alignItems: 'center',
+        marginBottom: '20px',
+        paddingBottom: '15px',
+        borderBottom: '2px solid #e0e0e0'
+      }}>
+        <h2 style={{margin: 0, color: '#333'}}>📨 Messages</h2>
+        <div style={{display: 'flex', gap: '10px'}}>
+          <span style={{
+            padding: '6px 12px',
+            background: '#e3f2fd',
+            color: '#1976d2',
+            borderRadius: '20px',
+            fontSize: '0.85rem',
+            fontWeight: '500'
+          }}>
+            Total: {messages.length}
+          </span>
+          <span style={{
+            padding: '6px 12px',
+            background: '#fff3e0',
+            color: '#f57c00',
+            borderRadius: '20px',
+            fontSize: '0.85rem',
+            fontWeight: '500'
+          }}>
+            Unread: {messages.filter(m => !m.isRead).length}
+          </span>
+        </div>
+      </div>
 
+      {/* Filters */}
+      <div style={{
+        display: 'flex',
+        gap: '15px',
+        marginBottom: '20px',
+        flexWrap: 'wrap'
+      }}>
+        {/* Search Box */}
+        <div style={{flex: '1', minWidth: '300px'}}>
+          <div className="search-box">
+            <span className="search-icon">🔍</span>
+            <input
+              type="text"
+              placeholder="Search by name, email, or message..."
+              value={messageSearchTerm}
+              onChange={(e) => setMessageSearchTerm(e.target.value)}
+              className="search-input"
+              style={{
+                width: '100%',
+                padding: '10px 10px 10px 35px',
+                border: '1px solid #ddd',
+                borderRadius: '8px',
+                fontSize: '14px'
+              }}
+            />
+          </div>
+        </div>
+
+        {/* Filter Buttons */}
+        <div style={{display: 'flex', gap: '8px'}}>
+          <button
+            onClick={() => setMessageFilter('all')}
+            style={{
+              padding: '10px 20px',
+              border: 'none',
+              borderRadius: '8px',
+              cursor: 'pointer',
+              fontWeight: '500',
+              background: messageFilter === 'all' ? '#1976d2' : '#f5f5f5',
+              color: messageFilter === 'all' ? 'white' : '#333',
+              transition: 'all 0.2s'
+            }}
+          >
+            All Messages
+          </button>
+          <button
+            onClick={() => setMessageFilter('unread')}
+            style={{
+              padding: '10px 20px',
+              border: 'none',
+              borderRadius: '8px',
+              cursor: 'pointer',
+              fontWeight: '500',
+              background: messageFilter === 'unread' ? '#ff9800' : '#f5f5f5',
+              color: messageFilter === 'unread' ? 'white' : '#333',
+              transition: 'all 0.2s'
+            }}
+          >
+            Unread ({messages.filter(m => !m.isRead).length})
+          </button>
+          <button
+            onClick={() => setMessageFilter('read')}
+            style={{
+              padding: '10px 20px',
+              border: 'none',
+              borderRadius: '8px',
+              cursor: 'pointer',
+              fontWeight: '500',
+              background: messageFilter === 'read' ? '#4caf50' : '#f5f5f5',
+              color: messageFilter === 'read' ? 'white' : '#333',
+              transition: 'all 0.2s'
+            }}
+          >
+            Read
+          </button>
+        </div>
+      </div>
+
+      {/* Messages Table */}
+      {loading ? (
+        <div style={{textAlign: 'center', padding: '60px 20px'}}>
+          <div className="loading-spinner"></div>
+          <p>Loading messages...</p>
+        </div>
+      ) : messages.length === 0 ? (
+        <div style={{
+          textAlign: 'center',
+          padding: '60px 20px',
+          background: 'white',
+          borderRadius: '8px',
+          boxShadow: '0 2px 4px rgba(0,0,0,0.1)'
+        }}>
+          <div style={{fontSize: '4rem', marginBottom: '20px'}}>📭</div>
+          <h3>No messages yet</h3>
+          <p style={{color: '#666'}}>Messages from the contact form will appear here</p>
+        </div>
+      ) : filteredMessages.length > 0 ? (
+        <div style={{
+          background: 'white',
+          borderRadius: '8px',
+          boxShadow: '0 2px 4px rgba(0,0,0,0.1)',
+          overflow: 'hidden'
+        }}>
+          <table style={{
+            width: '100%',
+            borderCollapse: 'collapse'
+          }}>
+            <thead>
+              <tr style={{background: '#f5f5f5'}}>
+                <th style={{padding: '12px', textAlign: 'left', fontWeight: '600', fontSize: '0.9rem'}}>Status</th>
+                <th style={{padding: '12px', textAlign: 'left', fontWeight: '600', fontSize: '0.9rem'}}>Name</th>
+                <th style={{padding: '12px', textAlign: 'left', fontWeight: '600', fontSize: '0.9rem'}}>Email</th>
+                <th style={{padding: '12px', textAlign: 'left', fontWeight: '600', fontSize: '0.9rem'}}>Phone</th>
+                <th style={{padding: '12px', textAlign: 'left', fontWeight: '600', fontSize: '0.9rem'}}>Message</th>
+                <th style={{padding: '12px', textAlign: 'left', fontWeight: '600', fontSize: '0.9rem'}}>Date</th>
+                <th style={{padding: '12px', textAlign: 'center', fontWeight: '600', fontSize: '0.9rem'}}>Actions</th>
+              </tr>
+            </thead>
+            <tbody>
+              {filteredMessages.map((message, index) => (
+                <tr 
+                  key={message._id || index}
+                  style={{
+                    borderTop: '1px solid #e0e0e0',
+                    background: !message.isRead ? '#fff8e1' : 'white',
+                    transition: 'background 0.2s'
+                  }}
+                  onMouseEnter={(e) => e.currentTarget.style.background = !message.isRead ? '#fff3cd' : '#f9f9f9'}
+                  onMouseLeave={(e) => e.currentTarget.style.background = !message.isRead ? '#fff8e1' : 'white'}
+                >
+                  {/* Status */}
+                  <td style={{padding: '12px'}}>
+                    <span style={{
+                      fontSize: '1.2rem',
+                      color: !message.isRead ? '#ff9800' : '#9e9e9e'
+                    }}>
+                      {!message.isRead ? '●' : '○'}
+                    </span>
+                  </td>
+
+                  {/* Name */}
+                  <td style={{padding: '12px'}}>
+                    <div style={{display: 'flex', alignItems: 'center', gap: '10px'}}>
+                      <div style={{
+                        width: '36px',
+                        height: '36px',
+                        borderRadius: '50%',
+                        background: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',
+                        color: 'white',
+                        display: 'flex',
+                        alignItems: 'center',
+                        justifyContent: 'center',
+                        fontWeight: '600',
+                        fontSize: '0.9rem'
+                      }}>
+                        {(message.name || message.names)?.charAt(0).toUpperCase() || '?'}
+                      </div>
+                      <span style={{fontWeight: '500'}}>
+                        {message.name || message.names || 'Unknown'}
+                      </span>
+                    </div>
+                  </td>
+
+                  {/* Email */}
+                  <td style={{padding: '12px'}}>
+                    <a 
+                      href={`mailto:${message.email}`}
+                      style={{color: '#1976d2', textDecoration: 'none'}}
+                      onMouseEnter={(e) => e.currentTarget.style.textDecoration = 'underline'}
+                      onMouseLeave={(e) => e.currentTarget.style.textDecoration = 'none'}
+                    >
+                      {message.email || 'No email'}
+                    </a>
+                  </td>
+
+                  {/* Phone */}
+                  <td style={{padding: '12px'}}>
+                    {message.phone ? (
+                      <a 
+                        href={`tel:${message.phone}`}
+                        style={{color: '#1976d2', textDecoration: 'none'}}
+                        onMouseEnter={(e) => e.currentTarget.style.textDecoration = 'underline'}
+                        onMouseLeave={(e) => e.currentTarget.style.textDecoration = 'none'}
+                      >
+                        {message.phone}
+                      </a>
+                    ) : (
+                      <span style={{color: '#999', fontStyle: 'italic', fontSize: '0.85rem'}}>
+                        Not provided
+                      </span>
+                    )}
+                  </td>
+
+                  {/* Message Preview */}
+                  <td style={{padding: '12px'}}>
+                    <div style={{
+                      maxWidth: '300px',
+                      overflow: 'hidden',
+                      textOverflow: 'ellipsis',
+                      whiteSpace: 'nowrap',
+                      color: '#666',
+                      fontSize: '0.9rem'
+                    }}>
+                      {message.message 
+                        ? message.message.substring(0, 60) + (message.message.length > 60 ? '...' : '')
+                        : 'No message content'
+                      }
+                    </div>
+                  </td>
+
+                  {/* Date */}
+                  <td style={{padding: '12px'}}>
+                    <div>
+                      <div style={{fontSize: '0.9rem'}}>
+                        {message.createdAt 
+                          ? new Date(message.createdAt).toLocaleDateString('en-US', {
+                              month: 'short',
+                              day: 'numeric',
+                              year: 'numeric'
+                            })
+                          : 'Unknown'
+                        }
+                      </div>
+                      <div style={{fontSize: '0.75rem', color: '#999', marginTop: '2px'}}>
+                        {message.createdAt 
+                          ? new Date(message.createdAt).toLocaleTimeString('en-US', {
+                              hour: '2-digit',
+                              minute: '2-digit'
+                            })
+                          : ''
+                        }
+                      </div>
+                    </div>
+                  </td>
+
+                  {/* Actions */}
+                  <td style={{padding: '12px'}}>
+                    <div style={{display: 'flex', gap: '6px', justifyContent: 'center'}}>
+                      <button
+                        onClick={() => handleViewMessage(message)}
+                        style={{
+                          padding: '6px 10px',
+                          border: 'none',
+                          borderRadius: '4px',
+                          cursor: 'pointer',
+                          fontSize: '1rem',
+                          background: '#e3f2fd',
+                          transition: 'all 0.2s'
+                        }}
+                        onMouseEnter={(e) => {
+                          e.currentTarget.style.background = '#2196f3';
+                          e.currentTarget.style.transform = 'translateY(-2px)';
+                        }}
+                        onMouseLeave={(e) => {
+                          e.currentTarget.style.background = '#e3f2fd';
+                          e.currentTarget.style.transform = 'translateY(0)';
+                        }}
+                        title="View message"
+                      >
+                        👁️
+                      </button>
+                      <button
+                        onClick={() => handleReplyToMessage(message)}
+                        style={{
+                          padding: '6px 10px',
+                          border: 'none',
+                          borderRadius: '4px',
+                          cursor: 'pointer',
+                          fontSize: '1rem',
+                          background: '#e8f5e9',
+                          transition: 'all 0.2s'
+                        }}
+                        onMouseEnter={(e) => {
+                          e.currentTarget.style.background = '#4caf50';
+                          e.currentTarget.style.transform = 'translateY(-2px)';
+                        }}
+                        onMouseLeave={(e) => {
+                          e.currentTarget.style.background = '#e8f5e9';
+                          e.currentTarget.style.transform = 'translateY(0)';
+                        }}
+                        title="Reply"
+                      >
+                        ↩️
+                      </button>
+                      {!message.isRead && (
+                        <button
+                          onClick={() => handleMarkAsRead(message._id)}
+                          style={{
+                            padding: '6px 10px',
+                            border: 'none',
+                            borderRadius: '4px',
+                            cursor: 'pointer',
+                            fontSize: '1rem',
+                            background: '#fff3e0',
+                            transition: 'all 0.2s'
+                          }}
+                          onMouseEnter={(e) => {
+                            e.currentTarget.style.background = '#ff9800';
+                            e.currentTarget.style.transform = 'translateY(-2px)';
+                          }}
+                          onMouseLeave={(e) => {
+                            e.currentTarget.style.background = '#fff3e0';
+                            e.currentTarget.style.transform = 'translateY(0)';
+                          }}
+                          title="Mark as read"
+                        >
+                          ✓
+                        </button>
+                      )}
+                      <button
+                        onClick={() => handleDeleteMessage(message._id)}
+                        style={{
+                          padding: '6px 10px',
+                          border: 'none',
+                          borderRadius: '4px',
+                          cursor: 'pointer',
+                          fontSize: '1rem',
+                          background: '#ffebee',
+                          transition: 'all 0.2s'
+                        }}
+                        onMouseEnter={(e) => {
+                          e.currentTarget.style.background = '#f44336';
+                          e.currentTarget.style.transform = 'translateY(-2px)';
+                        }}
+                        onMouseLeave={(e) => {
+                          e.currentTarget.style.background = '#ffebee';
+                          e.currentTarget.style.transform = 'translateY(0)';
+                        }}
+                        title="Delete"
+                      >
+                        🗑️
+                      </button>
+                    </div>
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
+      ) : (
+        <div style={{
+          textAlign: 'center',
+          padding: '60px 20px',
+          background: 'white',
+          borderRadius: '8px',
+          boxShadow: '0 2px 4px rgba(0,0,0,0.1)'
+        }}>
+          <div style={{fontSize: '3rem', marginBottom: '20px'}}>🔍</div>
+          <h3>No messages found</h3>
+          <p style={{color: '#666', marginBottom: '20px'}}>
+            {messageSearchTerm 
+              ? `No messages match "${messageSearchTerm}"`
+              : messageFilter === 'unread'
+              ? 'You have no unread messages'
+              : 'You have no read messages'
+            }
+          </p>
+          {messageSearchTerm && (
+            <button
+              onClick={() => setMessageSearchTerm('')}
+              style={{
+                padding: '10px 20px',
+                border: 'none',
+                borderRadius: '8px',
+                cursor: 'pointer',
+                background: '#1976d2',
+                color: 'white',
+                fontWeight: '500'
+              }}
+            >
+              Clear Search
+            </button>
+          )}
+        </div>
+      )}
+
+      {/* Pagination */}
+      {messagePagination.totalPages > 1 && (
+        <div style={{
+          display: 'flex',
+          justifyContent: 'center',
+          alignItems: 'center',
+          gap: '15px',
+          marginTop: '20px',
+          padding: '20px'
+        }}>
+          <button
+            onClick={() => fetchMessages(messagePagination.currentPage - 1)}
+            disabled={messagePagination.currentPage <= 1}
+            style={{
+              padding: '10px 20px',
+              border: 'none',
+              borderRadius: '8px',
+              cursor: messagePagination.currentPage <= 1 ? 'not-allowed' : 'pointer',
+              background: messagePagination.currentPage <= 1 ? '#f5f5f5' : '#1976d2',
+              color: messagePagination.currentPage <= 1 ? '#999' : 'white',
+              fontWeight: '500'
+            }}
+          >
+            ← Previous
+          </button>
+          <span style={{fontSize: '0.9rem', color: '#666'}}>
+            Page {messagePagination.currentPage} of {messagePagination.totalPages}
+            {messagePagination.totalItems && ` (${messagePagination.totalItems} total)`}
+          </span>
+          <button
+            onClick={() => fetchMessages(messagePagination.currentPage + 1)}
+            disabled={messagePagination.currentPage >= messagePagination.totalPages}
+            style={{
+              padding: '10px 20px',
+              border: 'none',
+              borderRadius: '8px',
+              cursor: messagePagination.currentPage >= messagePagination.totalPages ? 'not-allowed' : 'pointer',
+              background: messagePagination.currentPage >= messagePagination.totalPages ? '#f5f5f5' : '#1976d2',
+              color: messagePagination.currentPage >= messagePagination.totalPages ? '#999' : 'white',
+              fontWeight: '500'
+            }}
+          >
+            Next →
+          </button>
+        </div>
+      )}
+    </div>
+  </div>
+)}
+
+{/* View Message Modal */}
+{showMessageModal && selectedMessage && (
+  <div className="modal-overlay">
+    <div className="modal-content">
+      <div className="modal-header">
+        <h2>📧 Message Details</h2>
+        <button onClick={() => setShowMessageModal(false)} className="modal-close">✕</button>
+      </div>
+      
+      <div style={{padding: '20px'}}>
+        <div style={{
+          display: 'flex',
+          gap: '15px',
+          marginBottom: '20px',
+          paddingBottom: '20px',
+          borderBottom: '2px solid #f0f0f0'
+        }}>
+          <div style={{
+            width: '60px',
+            height: '60px',
+            borderRadius: '50%',
+            background: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',
+            color: 'white',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            fontWeight: '600',
+            fontSize: '1.5rem',
+            flexShrink: 0
+          }}>
+            {(selectedMessage.name || selectedMessage.names)?.charAt(0).toUpperCase() || '?'}
+          </div>
+          <div>
+            <h3 style={{margin: '0 0 5px 0', color: '#333'}}>
+              {selectedMessage.name || selectedMessage.names || 'Unknown Sender'}
+            </h3>
+            <p style={{margin: '5px 0', color: '#666'}}>
+              <a href={`mailto:${selectedMessage.email}`} style={{color: '#1976d2', textDecoration: 'none'}}>
+                {selectedMessage.email}
+              </a>
+            </p>
+            {selectedMessage.phone && (
+              <p style={{margin: '5px 0', color: '#666'}}>
+                <a href={`tel:${selectedMessage.phone}`} style={{color: '#1976d2', textDecoration: 'none'}}>
+                  📞 {selectedMessage.phone}
+                </a>
+              </p>
+            )}
+          </div>
+        </div>
+
+        <div style={{
+          display: 'flex',
+          flexWrap: 'wrap',
+          gap: '15px',
+          marginBottom: '20px',
+          padding: '12px',
+          background: '#f9f9f9',
+          borderRadius: '6px',
+          fontSize: '0.85rem'
+        }}>
+          <span style={{color: '#666'}}>
+            📅 {new Date(selectedMessage.createdAt).toLocaleDateString('en-US', {
+              weekday: 'long',
+              year: 'numeric',
+              month: 'long',
+              day: 'numeric'
+            })}
+          </span>
+          <span style={{color: '#666'}}>
+            🕐 {new Date(selectedMessage.createdAt).toLocaleTimeString('en-US', {
+              hour: '2-digit',
+              minute: '2-digit'
+            })}
+          </span>
+          <span style={{
+            marginLeft: 'auto',
+            padding: '4px 12px',
+            borderRadius: '20px',
+            fontWeight: '500',
+            background: !selectedMessage.isRead ? '#fff3e0' : '#e8f5e9',
+            color: !selectedMessage.isRead ? '#f57c00' : '#4caf50'
+          }}>
+            {!selectedMessage.isRead ? '● Unread' : '✓ Read'}
+          </span>
+        </div>
+
+        <div style={{marginTop: '20px'}}>
+          <h4 style={{
+            margin: '0 0 10px 0',
+            color: '#333',
+            fontSize: '0.95rem',
+            textTransform: 'uppercase',
+            letterSpacing: '0.5px'
+          }}>
+            Message:
+          </h4>
+          <div style={{
+            background: '#f9f9f9',
+            padding: '15px',
+            borderRadius: '8px',
+            borderLeft: '4px solid #1976d2',
+            whiteSpace: 'pre-wrap',
+            wordWrap: 'break-word',
+            color: '#333',
+            lineHeight: '1.6'
+          }}>
+            {selectedMessage.message || 'No message content available'}
+          </div>
+        </div>
+      </div>
+
+      <div className="modal-actions">
+        <button
+          onClick={() => {
+            setShowMessageModal(false);
+            handleReplyToMessage(selectedMessage);
+          }}
+          className="btn-submit"
+        >
+          ↩️ Reply
+        </button>
+        <button onClick={() => setShowMessageModal(false)} className="btn-cancel">
+          Close
+        </button>
+      </div>
+    </div>
+  </div>
+)}
+
+{/* Reply Modal */}
+{showReplyModal && selectedMessage && (
+  <div className="modal-overlay">
+    <div className="modal-content">
+      <div className="modal-header">
+        <h2>↩️ Reply to Message</h2>
+        <button onClick={() => setShowReplyModal(false)} className="modal-close">✕</button>
+      </div>
+
+      <form onSubmit={handleSubmitReply}>
+        <div style={{
+          background: '#f5f5f5',
+          padding: '15px',
+          borderRadius: '8px',
+          marginBottom: '20px'
+        }}>
+          <h4 style={{margin: '0 0 10px 0', color: '#333', fontSize: '0.9rem'}}>
+            Replying to:
+          </h4>
+          <p style={{margin: '5px 0', color: '#666'}}>
+            <strong>{selectedMessage.name || selectedMessage.names}</strong> ({selectedMessage.email})
+          </p>
+          <div style={{
+            marginTop: '15px',
+            padding: '10px',
+            background: 'white',
+            borderRadius: '6px',
+            borderLeft: '3px solid #1976d2'
+          }}>
+            <small style={{color: '#999', fontSize: '0.8rem'}}>Original message:</small>
+            <p style={{
+              margin: '5px 0 0 0',
+              color: '#666',
+              fontStyle: 'italic'
+            }}>
+              {selectedMessage.message}
+            </p>
+          </div>
+        </div>
+
+        <div className="form-group">
+          <label className="form-label">Your Reply:</label>
+          <textarea
+            value={replyText}
+            onChange={(e) => setReplyText(e.target.value)}
+            className="form-textarea"
+            rows="6"
+            placeholder="Type your reply here..."
+            required
+            maxLength="2000"
+            style={{
+              width: '100%',
+              padding: '10px',
+              border: '1px solid #ddd',
+              borderRadius: '8px',
+              fontSize: '14px',
+              fontFamily: 'inherit',
+              resize: 'vertical'
+            }}
+          />
+          <small style={{
+            display: 'block',
+            textAlign: 'right',
+            color: '#999',
+            fontSize: '0.8rem',
+            marginTop: '5px'
+          }}>
+            {replyText.length} / 2000 characters
+          </small>
+        </div>
+
+        <div className="modal-actions">
+          <button
+            type="button"
+            onClick={() => setShowReplyModal(false)}
+            className="btn-cancel"
+          >
+            Cancel
+          </button>
+          <button
+            type="submit"
+            className="btn-submit"
+            disabled={!replyText.trim()}
+            style={{
+              opacity: !replyText.trim() ? 0.5 : 1,
+              cursor: !replyText.trim() ? 'not-allowed' : 'pointer'
+            }}
+          >
+            📤 Send Reply
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+)}
+{/* end */}
           {showReviewModal && selectedStudent && (
             <div className="modal-overlay">
               <div className="modal-content large-modal">
