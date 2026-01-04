@@ -1,6 +1,7 @@
 // 📁 frontend/src/components/LandingPage.jsx
 
 import React, { useState, useEffect, useRef } from "react";
+
 import PropTypes from "prop-types";
 import { useLocalization } from "../localization/LocalizationContext";
 import LanguageSwitcher from "./LanguageSwitcher";
@@ -16,8 +17,18 @@ const LandingPage = () => {
     name: '',
     email: '',
     subject: '',
-    message: ''
+    message: '',
+    phone:''
   });
+
+ 
+
+  const [loading, setLoading] = useState(false);
+  const [successMsg, setSuccessMsg] = useState("");
+  const [errorMsg, setErrorMsg] = useState("");
+
+
+ 
 
   const navigate = useNavigate();
   
@@ -118,29 +129,78 @@ const LandingPage = () => {
   };
 
   // Handle form submission
-  const handleFormSubmit = (e) => {
-    e.preventDefault();
-    // Add your form submission logic here
-    console.log('Form submitted:', formData);
-    // Reset form
-    setFormData({
-      name: '',
-      email: '',
-      subject: '',
-      message: ''
+
+  const handleFormSubmit = async (e) => {
+  e.preventDefault();
+
+  setLoading(true);
+  setSuccessMsg("");
+  setErrorMsg("");
+
+  try {
+    const response = await fetch("http://localhost:5000/api/contact", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json"
+      },
+      body: JSON.stringify(formData)
     });
-    // Show success message (you can implement a toast notification)
-    alert('Thank you for your message! We\'ll get back to you soon.');
-  };
+
+    const data = await response.json();
+
+    if (!response.ok) {
+      throw new Error(data.message || "Failed to send message");
+    }
+
+    setSuccessMsg("Message sent successfully ✅");
+
+    // Clear form
+    setFormData({
+      names: "",
+      email: "",
+      phone: "",
+      message: ""
+    });
+
+  } catch (error) {
+    setErrorMsg(error.message);
+  } finally {
+    setLoading(false);
+  }
+};
+
+  // const handleFormSubmit = (e) => {
+  //   e.preventDefault();
+  //   // Add your form submission logic here
+  //   console.log('Form submitted:', formData);
+  //   // Reset form
+  //   setFormData({
+  //     name: '',
+  //     email: '',
+  //     subject: '',
+  //     message: ''
+  //   });
+   
+  //   alert('Thank you for your message! We\'ll get back to you soon.');
+  // };
 
   // Handle form input changes
+  // const handleInputChange = (e) => {
+  //   const { name, value } = e.target;
+  //   setFormData(prev => ({
+  //     ...prev,
+  //     [name]: value
+  //   }));
+  // };
+
   const handleInputChange = (e) => {
-    const { name, value } = e.target;
-    setFormData(prev => ({
-      ...prev,
-      [name]: value
-    }));
-  };
+  const { name, value } = e.target;
+  setFormData((prev) => ({
+    ...prev,
+    [name]: value
+  }));
+};
+
 
   return (
     <div className="landing-page">
@@ -364,13 +424,16 @@ const LandingPage = () => {
             
             <div className="contact-form-container">
               <h3>Send us a Message</h3>
+              {successMsg && <p className="success-message">{successMsg}</p>}
+              {errorMsg && <p className="error-message">{errorMsg}</p>}
+
               <form className="contact-form" onSubmit={handleFormSubmit}>
                 <div className="form-group">
                   <input
                     type="text"
                     id="name"
-                    name="name"
-                    value={formData.name}
+                    name="names"
+                    value={formData.names}
                     onChange={handleInputChange}
                     placeholder="Your Name"
                     required
@@ -390,8 +453,21 @@ const LandingPage = () => {
                     className="form-input"
                   />
                 </div>
-                
+
                 <div className="form-group">
+  <input
+    type="text"
+    name="phone"
+    value={formData.phone}
+    onChange={handleInputChange}
+    placeholder="Your Phone Number"
+    required
+    className="form-input"
+  />
+</div>
+
+                
+                {/* <div className="form-group">
                   <input
                     type="text"
                     id="subject"
@@ -402,7 +478,7 @@ const LandingPage = () => {
                     required
                     className="form-input"
                   />
-                </div>
+                </div> */}
                 
                 <div className="form-group">
                   <textarea
@@ -417,9 +493,13 @@ const LandingPage = () => {
                   ></textarea>
                 </div>
                 
-                <button type="submit" className="btn-primary form-submit">
+                {/* <button type="submit" className="btn-primary form-submit">
                   Send Message
-                </button>
+                </button> */}
+                  <button type="submit" disabled={loading}>
+    {loading ? "Sending..." : "Send Message"}
+  </button>
+
               </form>
             </div>
           </div>

@@ -2642,12 +2642,27 @@ const handleLogoutBtn = () => {
               borderRadius: '8px',
               cursor: 'pointer',
               fontWeight: '500',
-              // background: messageFilter === 'read' ? '#4caf50' : '#f5f5f5',
+              background: messageFilter === 'read' ? '#4caf50' : '#f5f5f5',
               color: messageFilter === 'read' ? 'white' : '#333',
               transition: 'all 0.2s'
             }}
           >
             Read
+          </button>
+            <button
+            onClick={() => setMessageFilter('uploadmessage')}
+            style={{
+              padding: '10px 20px',
+              border: 'none',
+              borderRadius: '8px',
+              cursor: 'pointer',
+              fontWeight: '500',
+              background: messageFilter === 'read' ? '#4caf50' : '#f5f5f5',
+              color: messageFilter === 'read' ? 'white' : 'black',
+              transition: 'all 0.2s'
+            }}
+          >
+            Upload Message
           </button>
         </div>
       </div>
