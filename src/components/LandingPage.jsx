@@ -464,22 +464,7 @@ const LandingPage = () => {
     required
     className="form-input"
   />
-</div>
-
-                
-                {/* <div className="form-group">
-                  <input
-                    type="text"
-                    id="subject"
-                    name="subject"
-                    value={formData.subject}
-                    onChange={handleInputChange}
-                    placeholder="Subject"
-                    required
-                    className="form-input"
-                  />
-                </div> */}
-                
+</div>          
                 <div className="form-group">
                   <textarea
                     id="message"
