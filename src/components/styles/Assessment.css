@@ -4,8 +4,11 @@
 .assessment-container {
   min-height: 100vh;
  margin-top: -500px;
-  padding: 20px;
+  padding: 10px;
+  /* added this  */
+  margin-left: -50px;
   font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  
 }
 
 .assessment-content {

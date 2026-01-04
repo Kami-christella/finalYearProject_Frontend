@@ -1,4 +1,835 @@
-//studentProfile.jsx
+// //studentProfile.jsx
+// import React, { useState, useRef } from "react";
+// import { Notify } from "notiflix";
+// import "./styles/StudentProfile.css";
+// import { useEffect } from 'react';
+// import { useNavigate } from 'react-router-dom';
+
+// const COUNTRIES = [
+//   "Afghanistan", "Albania", "Algeria", "Andorra", "Angola", "Antigua and Barbuda",
+//   "Argentina", "Armenia", "Australia", "Austria", "Azerbaijan", "Bahamas", "Bahrain",
+//   "Bangladesh", "Barbados", "Belarus", "Belgium", "Belize", "Benin", "Bhutan",
+//   "Bolivia", "Bosnia and Herzegovina", "Botswana", "Brazil", "Brunei", "Bulgaria",
+//   "Burkina Faso", "Burundi", "Cambodia", "Cameroon", "Canada", "Cape Verde",
+//   "Central African Republic", "Chad", "Chile", "China", "Colombia", "Comoros",
+//   "Congo", "Costa Rica", "Croatia", "Cuba", "Cyprus", "Czech Republic",
+//   "Democratic Republic of the Congo", "Denmark", "Djibouti", "Dominica",
+//   "Dominican Republic", "Ecuador", "Egypt", "El Salvador", "Equatorial Guinea",
+//   "Eritrea", "Estonia", "Ethiopia", "Fiji", "Finland", "France", "Gabon",
+//   "Gambia", "Georgia", "Germany", "Ghana", "Greece", "Grenada", "Guatemala",
+//   "Guinea", "Guinea-Bissau", "Guyana", "Haiti", "Honduras", "Hungary", "Iceland",
+//   "India", "Indonesia", "Iran", "Iraq", "Ireland", "Israel", "Italy", "Jamaica",
+//   "Japan", "Jordan", "Kazakhstan", "Kenya", "Kiribati", "Kuwait", "Kyrgyzstan",
+//   "Laos", "Latvia", "Lebanon", "Lesotho", "Liberia", "Libya", "Liechtenstein",
+//   "Lithuania", "Luxembourg", "Madagascar", "Malawi", "Malaysia", "Maldives",
+//   "Mali", "Malta", "Marshall Islands", "Mauritania", "Mauritius", "Mexico",
+//   "Micronesia", "Moldova", "Monaco", "Mongolia", "Montenegro", "Morocco",
+//   "Mozambique", "Myanmar", "Namibia", "Nauru", "Nepal", "Netherlands",
+//   "New Zealand", "Nicaragua", "Niger", "Nigeria", "North Korea", "North Macedonia",
+//   "Norway", "Oman", "Pakistan", "Palau", "Palestine", "Panama", "Papua New Guinea",
+//   "Paraguay", "Peru", "Philippines", "Poland", "Portugal", "Qatar", "Romania",
+//   "Russia", "Rwanda", "Saint Kitts and Nevis", "Saint Lucia",
+//   "Saint Vincent and the Grenadines", "Samoa", "San Marino", "Sao Tome and Principe",
+//   "Saudi Arabia", "Senegal", "Serbia", "Seychelles", "Sierra Leone", "Singapore",
+//   "Slovakia", "Slovenia", "Solomon Islands", "Somalia", "South Africa", "South Korea",
+//   "South Sudan", "Spain", "Sri Lanka", "Sudan", "Suriname", "Sweden", "Switzerland",
+//   "Syria", "Taiwan", "Tajikistan", "Tanzania", "Thailand", "Timor-Leste", "Togo",
+//   "Tonga", "Trinidad and Tobago", "Tunisia", "Turkey", "Turkmenistan", "Tuvalu",
+//   "Uganda", "Ukraine", "United Arab Emirates", "United Kingdom", "United States",
+//   "Uruguay", "Uzbekistan", "Vanuatu", "Vatican City", "Venezuela", "Vietnam",
+//   "Yemen", "Zambia", "Zimbabwe"
+// ];
+
+// const SECONDARY_COURSES = [
+//   // Core Subjects
+//   "Mathematics", "Physics", "Chemistry", "Biology", "English Language",
+//   "Kinyarwanda", "French", "History", "Geography", "Computer Science", "Economics",
+//   "Literature","Software Engineering","Networks and Communication",
+//    "Music","Entrepreneurship", "Electronics and Telecommunication",
+  
+// ];
+
+// const HOBBIES_OPTIONS = [
+//   // Creative Arts
+//   "Reading", "Writing", "Poetry", "Drawing", "Painting", "Photography", 
+//   "Graphic Design", "Digital Art", "Sculpture", "Crafts", "Jewelry Making",
+  
+//   // Music & Performance
+//   "Playing Musical Instruments", "Singing", "Dancing", "Theater", "Acting",
+//   "Stand-up Comedy", "DJ-ing", "Music Production",
+  
+//   // Sports & Fitness
+//   "Football", "Basketball", "Tennis", "Swimming", "Running", "Cycling",
+//   "Gym/Fitness", "Yoga", "Martial Arts", "Boxing", "Hiking", "Rock Climbing",
+//   "Skateboarding", "Volleyball", "Baseball", "Cricket",
+  
+//   // Technology
+//   "Programming", "Web Development", "Gaming", "Video Editing", "3D Modeling",
+//   "Robotics", "Electronics", "App Development",
+  
+//   // Outdoor Activities
+//   "Camping", "Fishing", "Gardening", "Bird Watching", "Nature Photography",
+//   "Traveling", "Adventure Sports",
+  
+//   // Social & Community
+//   "Volunteering", "Community Service", "Mentoring", "Public Speaking",
+//   "Event Planning", "Networking",
+  
+//   // Learning & Skills
+//   "Learning Languages", "Cooking", "Baking", "Fashion Design", "Interior Design",
+//   "Collecting", "Board Games", "Chess", "Puzzles", "Meditation"
+// ];
+
+// const SKILLS_OPTIONS = [
+//   // Programming & Technology
+//   "JavaScript", "Python", "Java", "C++", "C#", "PHP", "Ruby", "Swift", "Kotlin",
+//   "React", "Angular", "Vue.js", "Node.js", "Django", "Spring", "Laravel",
+//   "HTML/CSS", "SQL", "MongoDB", "PostgreSQL", "MySQL", "Git", "Docker",
+//   "AWS", "Azure", "Google Cloud", "Linux", "Windows Server",
+  
+//   // Design & Creative
+//   "Adobe Photoshop", "Adobe Illustrator", "Figma", "Sketch", "InDesign",
+//   "Video Editing", "3D Modeling", "Animation", "UI/UX Design", "Graphic Design",
+//   "Web Design", "Logo Design", "Typography", "Color Theory",
+  
+//   // Business & Management
+//   "Project Management", "Leadership", "Team Management", "Strategic Planning",
+//   "Business Analysis", "Data Analysis", "Financial Analysis", "Marketing",
+//   "Sales", "Customer Service", "Negotiation", "Presentation Skills",
+//   "Microsoft Excel", "PowerBI", "Tableau", "CRM Software",
+  
+//   // Communication & Languages
+//   "Public Speaking", "Writing", "Content Creation", "Social Media Management",
+//   "SEO", "Digital Marketing", "Email Marketing", "Copywriting",
+//   "Technical Writing", "Translation", "Interpretation",
+  
+//   // Healthcare & Sciences
+//   "Patient Care", "Medical Research", "Laboratory Skills", "Data Collection",
+//   "Statistical Analysis", "Research Methods", "Clinical Skills",
+  
+//   // Other Professional Skills
+//   "Accounting", "Bookkeeping", "Legal Research", "Teaching", "Training",
+//   "Event Planning", "Time Management", "Problem Solving", "Critical Thinking",
+//   "Attention to Detail", "Multitasking", "Organization"
+// ];
+
+// const LANGUAGES_OPTIONS = [
+//   "English", "French", "Kinyarwanda", "Swahili", "Spanish", "Portuguese",
+//   "German", "Italian", "Dutch", "Russian", "Chinese (Mandarin)", "Japanese",
+//   "Korean", "Arabic", "Hindi", "Urdu", "Bengali", "Tamil", "Telugu",
+//   "Gujarati", "Marathi", "Punjabi", "Thai", "Vietnamese", "Indonesian",
+//   "Malay", "Filipino", "Turkish", "Hebrew", "Persian", "Greek",
+//   "Polish", "Czech", "Hungarian", "Romanian", "Bulgarian", "Croatian",
+//   "Serbian", "Slovak", "Slovenian", "Estonian", "Latvian", "Lithuanian",
+//   "Finnish", "Swedish", "Norwegian", "Danish", "Icelandic", "Irish",
+//   "Welsh", "Scottish Gaelic", "Catalan", "Basque", "Galician"
+// ];
+
+// const INTERESTS_OPTIONS = [
+//   // Technology & Science
+//   "Artificial Intelligence", "Machine Learning", "Data Science", "Cybersecurity",
+//   "Web Development", "Mobile Development", "Blockchain", "Internet of Things",
+//   "Biotechnology", "Environmental Science", "Space Technology", "Renewable Energy",
+  
+//   // Business & Finance
+//   "Entrepreneurship", "Business Management", "Marketing", "Digital Marketing",
+//   "E-commerce", "Investment", "Banking", "Economics", "International Trade",
+//   "Project Management", "Human Resources",
+  
+//   // Healthcare & Medicine
+//   "Public Health", "Nursing", "Medical Research", "Mental Health", "Nutrition",
+//   "Physical Therapy", "Pharmaceutical Sciences", "Healthcare Technology",
+  
+//   // Education & Social Sciences
+//   "Education Technology", "Child Development", "Psychology", "Sociology",
+//   "Political Science", "International Relations", "Social Work", "Philosophy",
+  
+//   // Arts & Media
+//   "Journalism", "Content Creation", "Film Making", "Animation", "Game Design",
+//   "Creative Writing", "Fashion", "Architecture", "Museum Studies",
+  
+//   // Environment & Sustainability
+//   "Climate Change", "Sustainable Development", "Conservation", "Green Technology",
+//   "Urban Planning", "Agriculture", "Food Security",
+  
+//   // Culture & Languages
+//   "Cultural Studies", "Language Learning", "Translation", "Travel", "History",
+//   "Anthropology", "Religious Studies"
+// ];
+
+
+// const StudentProfile = () => {
+
+//   const navigate = useNavigate();
+
+//   useEffect(() => {
+//     const checkAuth = () => {
+//       const token = localStorage.getItem('token');
+//       const user = localStorage.getItem('user');
+      
+//       if (!token || !user) {
+//         Notify.warning('Please log in to access this page');
+//         navigate('/'); // Redirect to login page
+//         return;
+//       }
+      
+//       // Optional: Verify token is not expired
+//       try {
+//         const tokenData = JSON.parse(atob(token.split('.')[1])); // Decode JWT payload
+//         if (tokenData.exp * 1000 < Date.now()) {
+//           localStorage.removeItem('token');
+//           localStorage.removeItem('user');
+//           Notify.failure('Session expired. Please log in again.');
+//           navigate('/');
+//           return;
+//         }
+//       } catch (error) {
+//         // Invalid token format
+//         localStorage.removeItem('token');
+//         localStorage.removeItem('user');
+//         Notify.failure('Invalid session. Please log in again.');
+//         navigate('/');
+//         return;
+//       }
+//     };
+
+//     checkAuth();
+//   }, [navigate]);
+  
+//   const [formData, setFormData] = useState({
+//     nationality: "",
+//     dateOfBirth: "",
+//     age: "",
+//     gender: "",
+//     country: "",
+//     phoneNumber: "",
+//     studentType: "Undergraduate",
+//     currentAcademicLevel: "",
+//     studentProgram: "",
+//     maritalStatus: "",
+//     yourReligion: "",
+//     sponsorshipDetails: "",
+//     highSchoolGrades: "",
+//     // coursesStudiedInSecondary: "",
+//     haveTwoPrincipalPasses: false,
+//     // Transfer Student Fields
+//     transferStudent: false,
+//     previousInstitution: "",
+//     overallGradePreviousUniversity: "",
+//     disability: "None",
+//     haveJob: "",
+//     // hobbies: "",
+//     // interests: "",
+//     desiredFaculty: "",
+//     desiredDepartment: "",
+//     careerGoals: "",
+//     emergencyContact: {
+//       name: "",
+//       relationship: "",
+//       phoneNumber: "",
+//       email: "",
+//     },
+//   });
+
+//   // Separate state for complex arrays
+//   const [workExperience, setWorkExperience] = useState([]);
+//   const [extracurricularActivities, setExtracurricularActivities] = useState(
+//     []
+//   );
+//   const [skills, setSkills] = useState([]);
+//   const [languagesSpoken, setLanguagesSpoken] = useState([]);
+//   // Add these state variables with your other useState declarations
+// const [selectedHobbies, setSelectedHobbies] = useState([]);
+// const [selectedInterests, setSelectedInterests] = useState([]);
+//   const [
+//     coursesStudiedPreviousUniversity,
+//     setCoursesStudiedPreviousUniversity,
+//   ] = useState([]);
+//   const [equivalentCourses, setEquivalentCourses] = useState([]);
+// const [coursesStudiedInSecondary, setCoursesStudiedInSecondary] = useState([]);
+//   const [profileImage, setProfileImage] = useState(null);
+//   const [documents, setDocuments] = useState([]);
+//   const [loading, setLoading] = useState(false);
+//   const [error, setError] = useState("");
+//   const [success, setSuccess] = useState("");
+//   const [step, setStep] = useState(1);
+// const [hasCompletedMapping, setHasCompletedMapping] = useState(false);
+//   // mapping
+
+//   const [courseContentData, setCourseContentData] = useState([]);
+// const [mappingResults, setMappingResults] = useState(null);
+// const [mappingInProgress, setMappingInProgress] = useState(false);
+// const [showMappingResults, setShowMappingResults] = useState(false);
+
+//   const fileInputRef = useRef(null);
+//   const cameraInputRef = useRef(null);
+//   const documentInputRef = useRef(null);
+
+//   // Handle form input changes
+//   const handleChange = (e) => {
+//     const { name, value, type, checked } = e.target;
+
+//     if (name.includes(".")) {
+//       // Handle nested objects like emergencyContact
+//       const [parent, child] = name.split(".");
+//       setFormData((prev) => ({
+//         ...prev,
+//         [parent]: {
+//           ...prev[parent],
+//           [child]: value,
+//         },
+//       }));
+//     } else {
+//       setFormData((prev) => ({
+//         ...prev,
+//         [name]: type === "checkbox" ? checked : value,
+//       }));
+//     }
+//   };
+
+//   // Transfer Student Course Management
+//   const addPreviousCourse = () => {
+//     setCoursesStudiedPreviousUniversity([
+//       ...coursesStudiedPreviousUniversity,
+//       {
+//         courseName: "",
+//         courseCode: "",
+//         credits: "",
+//         grade: "",
+//         contentStudied: [],
+//          aucaCourseName: "",
+//          //new fields
+//       aucaCourseCode: "",
+//       matchPercentage: 0,
+//       creditTransferStatus: "",
+//       aiReasoning: "",
+//       matchingTopics: [],
+//       missingTopics: [],
+//       additionalTopics: []
+//       },
+//     ]);
+//   };
+
+ 
+//   const updatePreviousCourse = (index, field, value) => {
+//   const updated = coursesStudiedPreviousUniversity.map((course, i) => {
+//     if (i === index) {
+//       if (field === 'contentStudied') {
+//         // Handle content as comma-separated string, convert to array
+//         const contentArray = typeof value === 'string' 
+//           ? value.split(',').map(item => item.trim()).filter(item => item)
+//           : value;
+//         return { ...course, [field]: contentArray };
+//       }
+//       return { ...course, [field]: value };
+//     }
+//     return course;
+//   });
+//   setCoursesStudiedPreviousUniversity(updated);
+// };
+
+//   const removePreviousCourse = (index) => {
+//     setCoursesStudiedPreviousUniversity(
+//       coursesStudiedPreviousUniversity.filter((_, i) => i !== index)
+//     );
+//   };
+
+//   // Add new function for AI course mapping
+
+//   const handleAICourseMapping = async () => {
+//   if (coursesStudiedPreviousUniversity.length === 0) {
+//     Notify.failure('Please add at least one course before mapping');
+//     return;
+//   }
+
+//   const invalidCourses = coursesStudiedPreviousUniversity.filter(course => 
+//     !course.courseName || !course.contentStudied || course.contentStudied.length === 0
+//   );
+
+//   if (invalidCourses.length > 0) {
+//     Notify.failure('Please provide course names and content for all courses before mapping');
+//     return;
+//   }
+
+//   setMappingInProgress(true);
+//   setError('');
+
+//   try {
+//     const token = localStorage.getItem("token");
+    
+//     const mappingData = coursesStudiedPreviousUniversity.map(course => ({
+//       ...course,
+//       university: formData.previousInstitution,
+//       contentStudied: Array.isArray(course.contentStudied) 
+//         ? course.contentStudied 
+//         : course.contentStudied.split(',').map(item => item.trim()).filter(item => item)
+//     }));
+
+//     console.log('🚀 Sending course mapping request:', mappingData);
+
+//     // CHANGE THIS LINE - Update the endpoint
+//     const response = await fetch('http://localhost:5000/api/map-courses', {
+//       method: 'POST',
+//       headers: {
+//         'Content-Type': 'application/json',
+//         'Authorization': `Bearer ${token}`
+//       },
+//       body: JSON.stringify({
+//         courseContentData: mappingData,
+//         targetProgram: 'BSc in Software Engineering'
+//       })
+//     });
+
+//     const data = await response.json();
+    
+//     if (response.ok) {
+//       // ADD THIS SECTION - Update courses with mapping results
+//       const updatedCoursesWithMapping = coursesStudiedPreviousUniversity.map((course, index) => {
+//         const mappingResult = data.data.mappingResults[index];
+//         if (mappingResult) {
+//           return {
+//             ...course,
+//             aucaCourseName: mappingResult.aucaCourseName || "",
+//             aucaCourseCode: mappingResult.aucaCourseCode || "",
+//             matchPercentage: mappingResult.matchPercentage || 0,
+//             creditTransferStatus: mappingResult.creditTransferStatus || "",
+//             aiReasoning: mappingResult.aiReasoning || "",
+//             matchingTopics: mappingResult.matchingTopics || [],
+//             missingTopics: mappingResult.missingTopics || [],
+//             additionalTopics: mappingResult.additionalTopics || []
+//           };
+//         }
+//         return course;
+//       });
+
+//       setCoursesStudiedPreviousUniversity(updatedCoursesWithMapping);
+//       setMappingResults(data.data);
+//       setShowMappingResults(true);
+//       setHasCompletedMapping(true); // ADD THIS LINE
+//       setCourseContentData(mappingData);
+      
+//       Notify.success(`🎉 Course mapping completed! ${data.data.summary.coursesAccepted} courses accepted for transfer`);
+      
+//     } else {
+//       throw new Error(data.message || 'Course mapping failed');
+//     }
+//   } catch (error) {
+//     console.error('❌ Course mapping error:', error);
+//     setError('Course mapping failed: ' + error.message);
+//     Notify.failure('Course mapping failed: ' + error.message);
+//   } finally {
+//     setMappingInProgress(false);
+//   }
+// };
+
+// // Helper function to get status color
+// const getStatusColor = (status) => {
+//   switch (status) {
+//     case 'full_credit':
+//       return '#16a34a';
+//     case 'partial_credit':
+//       return '#d97706';
+//     case 'no_credit':
+//       return '#dc2626';
+//     default:
+//       return '#6b7280';
+//   }
+// };
+
+// // Helper function to get status text
+// const getStatusText = (status) => {
+//   switch (status) {
+//     case 'full_credit':
+//       return 'Full Credit';
+//     case 'partial_credit':
+//       return 'Partial Credit';
+//     case 'no_credit':
+//       return 'No Credit';
+//     default:
+//       return 'Not Mapped';
+//   }
+// };
+
+// // Add function to close mapping results
+// const closeMappingResults = () => {
+//   setShowMappingResults(false);
+// };
+
+//   // Equivalent Courses Management
+//   const addEquivalentCourse = () => {
+//     setEquivalentCourses([
+//       ...equivalentCourses,
+//       {
+//         previousCourseName: "",
+//         previousCourseCode: "",
+//         aucaCourseName: "",
+//         aucaCourseCode: "",
+//         reasonForEquivalence: "",
+//       },
+//     ]);
+//   };
+
+//   const updateEquivalentCourse = (index, field, value) => {
+//     const updated = equivalentCourses.map((course, i) =>
+//       i === index ? { ...course, [field]: value } : course
+//     );
+//     setEquivalentCourses(updated);
+//   };
+
+//   const removeEquivalentCourse = (index) => {
+//     setEquivalentCourses(equivalentCourses.filter((_, i) => i !== index));
+//   };
+
+//   // Work experience functions
+//   const addWorkExperience = () => {
+//     setWorkExperience([
+//       ...workExperience,
+//       {
+//         jobTitle: "",
+//         company: "",
+//         startDate: "",
+//         endDate: "",
+//         duration: "",
+//         description: "",
+//         isCurrent: false,
+//       },
+//     ]);
+//   };
+
+//   const updateWorkExperience = (index, field, value) => {
+//     const updated = workExperience.map((exp, i) =>
+//       i === index ? { ...exp, [field]: value } : exp
+//     );
+//     setWorkExperience(updated);
+//   };
+
+//   const removeWorkExperience = (index) => {
+//     setWorkExperience(workExperience.filter((_, i) => i !== index));
+//   };
+
+//   // Extracurricular activities functions
+//   const addExtracurricularActivity = () => {
+//     setExtracurricularActivities([
+//       ...extracurricularActivities,
+//       {
+//         activity: "",
+//         role: "",
+//         organization: "",
+//         startDate: "",
+//         endDate: "",
+//         description: "",
+//       },
+//     ]);
+//   };
+
+//   const updateExtracurricularActivity = (index, field, value) => {
+//     const updated = extracurricularActivities.map((activity, i) =>
+//       i === index ? { ...activity, [field]: value } : activity
+//     );
+//     setExtracurricularActivities(updated);
+//   };
+
+//   const removeExtracurricularActivity = (index) => {
+//     setExtracurricularActivities(
+//       extracurricularActivities.filter((_, i) => i !== index)
+//     );
+//   };
+
+//   // Skills functions
+//   // const addSkill = () => {
+//   //   setSkills([
+//   //     ...skills,
+//   //     {
+//   //       skillName: "",
+//   //       proficiencyLevel: "Beginner",
+//   //     },
+//   //   ]);
+//   // };
+
+//   // const updateSkill = (index, field, value) => {
+//   //   const updated = skills.map((skill, i) =>
+//   //     i === index ? { ...skill, [field]: value } : skill
+//   //   );
+//   //   setSkills(updated);
+//   // };
+
+//   // const removeSkill = (index) => {
+//   //   setSkills(skills.filter((_, i) => i !== index));
+//   // };
+
+//   // // Language functions
+//   // const addLanguage = () => {
+//   //   setLanguagesSpoken([
+//   //     ...languagesSpoken,
+//   //     {
+//   //       language: "",
+//   //       proficiency: "Basic",
+//   //     },
+//   //   ]);
+//   // };
+
+//   // const updateLanguage = (index, field, value) => {
+//   //   const updated = languagesSpoken.map((lang, i) =>
+//   //     i === index ? { ...lang, [field]: value } : lang
+//   //   );
+//   //   setLanguagesSpoken(updated);
+//   // };
+
+//   // const removeLanguage = (index) => {
+//   //   setLanguagesSpoken(languagesSpoken.filter((_, i) => i !== index));
+//   // };
+
+//   // Handle profile image upload
+//   const handleImageUpload = (e) => {
+//     const file = e.target.files[0];
+//     if (file) {
+//       if (!file.type.startsWith("image/")) {
+//         setError("Please select a valid image file");
+//         return;
+//       }
+//       if (file.size > 5 * 1024 * 1024) {
+//         setError("Image size must be less than 5MB");
+//         return;
+//       }
+//       setProfileImage(file);
+//       setError("");
+//     }
+//   };
+
+//   const handleCameraCapture = (e) => {
+//     const file = e.target.files[0];
+//     if (file) {
+//       setProfileImage(file);
+//     }
+//   };
+
+//   const handleDocumentUpload = (e) => {
+//     const files = Array.from(e.target.files);
+
+//     if (documents.length + files.length > 5) {
+//       setError("Maximum 5 documents allowed");
+//       return;
+//     }
+
+//     const validFiles = files.filter((file) => {
+//       if (file.size > 5 * 1024 * 1024) {
+//         setError(`${file.name} is too large. Maximum 5MB per file.`);
+//         return false;
+//       }
+
+//       const allowedTypes = [
+//         "application/pdf",
+//         "image/jpeg",
+//         "image/jpg",
+//         "image/png",
+//         "application/msword",
+//         "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
+//       ];
+//       if (!allowedTypes.includes(file.type)) {
+//         setError(`${file.name} is not a supported file type.`);
+//         return false;
+//       }
+
+//       return true;
+//     });
+
+//     setDocuments((prev) => [...prev, ...validFiles]);
+//     setError("");
+//   };
+
+//   const removeDocument = (index) => {
+//     setDocuments((prev) => prev.filter((_, i) => i !== index));
+//   };
+
+//   // Handle form submission
+//   const handleSubmit = async (e) => {
+//   e.preventDefault();
+//   setLoading(true);
+//   setError("");
+//   setSuccess("");
+
+//   try {
+//     const token = localStorage.getItem("token");
+//     if (!token) {
+//       setError("Please log in to continue");
+//       setLoading(false);
+//       return;
+//     }
+
+//     // Create FormData for file uploads
+//     const formDataToSend = new FormData();
+
+//     // Add all basic form fields
+//     Object.keys(formData).forEach((key) => {
+//       if (key === "emergencyContact") {
+//         formDataToSend.append(key, JSON.stringify(formData[key]));
+//       } 
+//       else if (key === "interests") {
+//         const interestsArray = formData[key]
+//           .split(",")
+//           .map((item) => item.trim())
+//           .filter((item) => item);
+//         formDataToSend.append(key, JSON.stringify(interestsArray));
+//       } 
+//       else if (key === "coursesStudiedInSecondary") {
+//         formDataToSend.append(key, formData[key]);
+//       } 
+//       // ✅ FIX: Convert boolean fields properly - handle both checked and unchecked
+//       else if (key === "transferStudent" || key === "haveTwoPrincipalPasses") {
+//         // Explicitly convert to boolean, then to string
+//         const boolValue = formData[key] === true || formData[key] === 'true';
+//         formDataToSend.append(key, boolValue ? 'true' : 'false'); // Always send 'true' or 'false'
+//         console.log(`📝 ${key}:`, boolValue ? 'true' : 'false'); // Debug log
+//       } 
+//       else {
+//         formDataToSend.append(key, formData[key] || '');
+//       }
+//     });
+
+//     // ✅ IMPORTANT: Explicitly set transferStudent if not already set
+//     if (!formDataToSend.has('transferStudent')) {
+//       formDataToSend.append('transferStudent', 'false');
+//       console.log('📝 transferStudent (default):', 'false');
+//     }
+
+//     // ✅ IMPORTANT: Explicitly set haveTwoPrincipalPasses if not already set
+//     if (!formDataToSend.has('haveTwoPrincipalPasses')) {
+//       formDataToSend.append('haveTwoPrincipalPasses', 'false');
+//       console.log('📝 haveTwoPrincipalPasses (default):', 'false');
+//     }
+
+//     // Add hobbies, interests, and courses
+//     formDataToSend.append("hobbies", JSON.stringify(selectedHobbies));
+//     formDataToSend.append("interests", JSON.stringify(selectedInterests));
+//     formDataToSend.append("coursesStudiedInSecondary", JSON.stringify(coursesStudiedInSecondary));
+
+//     // Add complex arrays
+//     formDataToSend.append("skills", JSON.stringify(skills));
+//     formDataToSend.append("languagesSpoken", JSON.stringify(languagesSpoken));
+//     formDataToSend.append("workExperience", JSON.stringify(workExperience));
+//     formDataToSend.append("extracurricularActivities", JSON.stringify(extracurricularActivities));
+//     formDataToSend.append("coursesStudiedPreviousUniversity", JSON.stringify(coursesStudiedPreviousUniversity));
+//     formDataToSend.append("equivalentCourses", JSON.stringify(equivalentCourses));
+
+//     // Add profile image
+//     if (profileImage) {
+//       formDataToSend.append("images", profileImage);
+//     }
+
+//     // Add documents
+//     documents.forEach((doc) => {
+//       formDataToSend.append("documents", doc);
+//     });
+
+//     // ✅ DEBUG: Log what we're sending
+//     console.log('📤 Sending FormData:');
+//     for (let [key, value] of formDataToSend.entries()) {
+//       if (key === 'transferStudent' || key === 'haveTwoPrincipalPasses') {
+//         console.log(`  ${key}:`, value);
+//       }
+//     }
+
+//     const response = await fetch(
+//       "http://localhost:5000/api/student/createprofile",
+//       {
+//         method: "POST",
+//         headers: {
+//           Authorization: `Bearer ${token}`,
+//         },
+//         body: formDataToSend,
+//       }
+//     );
+
+//     const data = await response.json();
+
+//     if (response.ok) {
+//       setSuccess(
+//         "🎉 Profile created successfully! Redirecting to assessment..."
+//       );
+//       Notify.success(
+//         "Profile created successfully! Redirecting to assessment..."
+//       );
+//       console.log("Profile created:", data);
+
+//       setTimeout(() => {
+//         window.location.href = "/dashboard/assessment";
+//       }, 2000);
+//     } else {
+//       setError(data.message || "Failed to create profile");
+//       Notify.failure(data.message || "Failed to create profile");
+//       console.error("Profile creation failed:", data);
+//     }
+//   } catch (err) {
+//     console.error("Submit error:", err);
+//     setError("Network error. Please try again.");
+//     Notify.failure("Network error. Please try again.");
+//   } finally {
+//     setLoading(false);
+//   }
+// };
+
+//   // Faculty and department options
+//   const facultyOptions = [
+//     "Faculty of Business Administration",
+//     "Faculty of Information Technology",
+//     "Faculty of Health Sciences",
+//     "Faculty of Medicine",
+//     "Faculty in Education",
+//     "Bachelor Of Theology",
+//   ];
+
+//   const getDepartmentOptions = (faculty) => {
+//     const departments = {
+//       "Faculty of Business Administration": [
+//         "BBA In Accounting",
+//         "BBA In Management",
+//         "BBA in Finance",
+//         "BBA in Marketing",
+//         "MBA in Accounting",
+//         "MBA In Management",
+//         "MBA In Finance",
+//         "MBA in Human Resource Management",
+//         "MBA in Project Management",
+//       ],
+//       "Faculty of Information Technology": [
+//         "BSc in Information Management",
+//         "BSc in Networks and Communication Systems",
+//         "BSc in Software Engineering",
+//         "Master Of Science In Data Analytics",
+//       ],
+//       "Faculty of Health Sciences": [
+//         "Bachelor of Science in Nursing",
+//         "Bachelor of Science in Midwifery",
+//       ],
+//       "Faculty of Medicine": ["MD Of General Medicine"],
+//       "Faculty in Education": [
+//         "BA in Accounting and Information Technology",
+//         "BA in English Language and Literature and French",
+//         "BA In Geography and History",
+//         "Master of Art in Educational Administration",
+//         "Master of Art In Curriculum, Instructions and Supervision",
+//       ],
+//       "Bachelor Of Theology": ["Bachelor of Theology"],
+//     };
+//     return departments[faculty] || [];
+//   };
+
+//   const nextStep = () => setStep(step + 1);
+//    const prevStep = () => setStep(step - 1);
+
+  //  const nextStep = () => {
+  //   if (validateStep(step)) {
+  //     setStep(step + 1);
+  //     window.scrollTo(0, 0); // Scroll to top when moving to next step
+  //   }
+  // };
+ 
+  // const prevStep = () => {
+  //   setStep(step - 1);
+  //   window.scrollTo(0, 0);
+  // };
+
+  //studentProfile.jsx - FIXED VERSION
 import React, { useState, useRef } from "react";
 import { Notify } from "notiflix";
 import "./styles/StudentProfile.css";
@@ -41,73 +872,47 @@ const COUNTRIES = [
 ];
 
 const SECONDARY_COURSES = [
-  // Core Subjects
   "Mathematics", "Physics", "Chemistry", "Biology", "English Language",
   "Kinyarwanda", "French", "History", "Geography", "Computer Science", "Economics",
   "Literature","Software Engineering","Networks and Communication",
    "Music","Entrepreneurship", "Electronics and Telecommunication",
-  
 ];
 
 const HOBBIES_OPTIONS = [
-  // Creative Arts
   "Reading", "Writing", "Poetry", "Drawing", "Painting", "Photography", 
   "Graphic Design", "Digital Art", "Sculpture", "Crafts", "Jewelry Making",
-  
-  // Music & Performance
   "Playing Musical Instruments", "Singing", "Dancing", "Theater", "Acting",
   "Stand-up Comedy", "DJ-ing", "Music Production",
-  
-  // Sports & Fitness
   "Football", "Basketball", "Tennis", "Swimming", "Running", "Cycling",
   "Gym/Fitness", "Yoga", "Martial Arts", "Boxing", "Hiking", "Rock Climbing",
   "Skateboarding", "Volleyball", "Baseball", "Cricket",
-  
-  // Technology
   "Programming", "Web Development", "Gaming", "Video Editing", "3D Modeling",
   "Robotics", "Electronics", "App Development",
-  
-  // Outdoor Activities
   "Camping", "Fishing", "Gardening", "Bird Watching", "Nature Photography",
   "Traveling", "Adventure Sports",
-  
-  // Social & Community
   "Volunteering", "Community Service", "Mentoring", "Public Speaking",
   "Event Planning", "Networking",
-  
-  // Learning & Skills
   "Learning Languages", "Cooking", "Baking", "Fashion Design", "Interior Design",
   "Collecting", "Board Games", "Chess", "Puzzles", "Meditation"
 ];
 
 const SKILLS_OPTIONS = [
-  // Programming & Technology
   "JavaScript", "Python", "Java", "C++", "C#", "PHP", "Ruby", "Swift", "Kotlin",
   "React", "Angular", "Vue.js", "Node.js", "Django", "Spring", "Laravel",
   "HTML/CSS", "SQL", "MongoDB", "PostgreSQL", "MySQL", "Git", "Docker",
   "AWS", "Azure", "Google Cloud", "Linux", "Windows Server",
-  
-  // Design & Creative
   "Adobe Photoshop", "Adobe Illustrator", "Figma", "Sketch", "InDesign",
   "Video Editing", "3D Modeling", "Animation", "UI/UX Design", "Graphic Design",
   "Web Design", "Logo Design", "Typography", "Color Theory",
-  
-  // Business & Management
   "Project Management", "Leadership", "Team Management", "Strategic Planning",
   "Business Analysis", "Data Analysis", "Financial Analysis", "Marketing",
   "Sales", "Customer Service", "Negotiation", "Presentation Skills",
   "Microsoft Excel", "PowerBI", "Tableau", "CRM Software",
-  
-  // Communication & Languages
   "Public Speaking", "Writing", "Content Creation", "Social Media Management",
   "SEO", "Digital Marketing", "Email Marketing", "Copywriting",
   "Technical Writing", "Translation", "Interpretation",
-  
-  // Healthcare & Sciences
   "Patient Care", "Medical Research", "Laboratory Skills", "Data Collection",
   "Statistical Analysis", "Research Methods", "Clinical Skills",
-  
-  // Other Professional Skills
   "Accounting", "Bookkeeping", "Legal Research", "Teaching", "Training",
   "Event Planning", "Time Management", "Problem Solving", "Critical Thinking",
   "Attention to Detail", "Multitasking", "Organization"
@@ -126,40 +931,25 @@ const LANGUAGES_OPTIONS = [
 ];
 
 const INTERESTS_OPTIONS = [
-  // Technology & Science
   "Artificial Intelligence", "Machine Learning", "Data Science", "Cybersecurity",
   "Web Development", "Mobile Development", "Blockchain", "Internet of Things",
   "Biotechnology", "Environmental Science", "Space Technology", "Renewable Energy",
-  
-  // Business & Finance
   "Entrepreneurship", "Business Management", "Marketing", "Digital Marketing",
   "E-commerce", "Investment", "Banking", "Economics", "International Trade",
   "Project Management", "Human Resources",
-  
-  // Healthcare & Medicine
   "Public Health", "Nursing", "Medical Research", "Mental Health", "Nutrition",
   "Physical Therapy", "Pharmaceutical Sciences", "Healthcare Technology",
-  
-  // Education & Social Sciences
   "Education Technology", "Child Development", "Psychology", "Sociology",
   "Political Science", "International Relations", "Social Work", "Philosophy",
-  
-  // Arts & Media
   "Journalism", "Content Creation", "Film Making", "Animation", "Game Design",
   "Creative Writing", "Fashion", "Architecture", "Museum Studies",
-  
-  // Environment & Sustainability
   "Climate Change", "Sustainable Development", "Conservation", "Green Technology",
   "Urban Planning", "Agriculture", "Food Security",
-  
-  // Culture & Languages
   "Cultural Studies", "Language Learning", "Translation", "Travel", "History",
   "Anthropology", "Religious Studies"
 ];
 
-
 const StudentProfile = () => {
-
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -169,13 +959,12 @@ const StudentProfile = () => {
       
       if (!token || !user) {
         Notify.warning('Please log in to access this page');
-        navigate('/'); // Redirect to login page
+        navigate('/');
         return;
       }
       
-      // Optional: Verify token is not expired
       try {
-        const tokenData = JSON.parse(atob(token.split('.')[1])); // Decode JWT payload
+        const tokenData = JSON.parse(atob(token.split('.')[1]));
         if (tokenData.exp * 1000 < Date.now()) {
           localStorage.removeItem('token');
           localStorage.removeItem('user');
@@ -184,7 +973,6 @@ const StudentProfile = () => {
           return;
         }
       } catch (error) {
-        // Invalid token format
         localStorage.removeItem('token');
         localStorage.removeItem('user');
         Notify.failure('Invalid session. Please log in again.');
@@ -210,16 +998,12 @@ const StudentProfile = () => {
     yourReligion: "",
     sponsorshipDetails: "",
     highSchoolGrades: "",
-    // coursesStudiedInSecondary: "",
     haveTwoPrincipalPasses: false,
-    // Transfer Student Fields
     transferStudent: false,
     previousInstitution: "",
     overallGradePreviousUniversity: "",
     disability: "None",
     haveJob: "",
-    // hobbies: "",
-    // interests: "",
     desiredFaculty: "",
     desiredDepartment: "",
     careerGoals: "",
@@ -231,46 +1015,94 @@ const StudentProfile = () => {
     },
   });
 
-  // Separate state for complex arrays
   const [workExperience, setWorkExperience] = useState([]);
-  const [extracurricularActivities, setExtracurricularActivities] = useState(
-    []
-  );
+  const [extracurricularActivities, setExtracurricularActivities] = useState([]);
   const [skills, setSkills] = useState([]);
   const [languagesSpoken, setLanguagesSpoken] = useState([]);
-  // Add these state variables with your other useState declarations
-const [selectedHobbies, setSelectedHobbies] = useState([]);
-const [selectedInterests, setSelectedInterests] = useState([]);
-  const [
-    coursesStudiedPreviousUniversity,
-    setCoursesStudiedPreviousUniversity,
-  ] = useState([]);
+  const [selectedHobbies, setSelectedHobbies] = useState([]);
+  const [selectedInterests, setSelectedInterests] = useState([]);
+  const [coursesStudiedPreviousUniversity, setCoursesStudiedPreviousUniversity] = useState([]);
   const [equivalentCourses, setEquivalentCourses] = useState([]);
-const [coursesStudiedInSecondary, setCoursesStudiedInSecondary] = useState([]);
+  const [coursesStudiedInSecondary, setCoursesStudiedInSecondary] = useState([]);
   const [profileImage, setProfileImage] = useState(null);
   const [documents, setDocuments] = useState([]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
   const [success, setSuccess] = useState("");
   const [step, setStep] = useState(1);
-const [hasCompletedMapping, setHasCompletedMapping] = useState(false);
-  // mapping
-
+  const [hasCompletedMapping, setHasCompletedMapping] = useState(false);
   const [courseContentData, setCourseContentData] = useState([]);
-const [mappingResults, setMappingResults] = useState(null);
-const [mappingInProgress, setMappingInProgress] = useState(false);
-const [showMappingResults, setShowMappingResults] = useState(false);
+  const [mappingResults, setMappingResults] = useState(null);
+  const [mappingInProgress, setMappingInProgress] = useState(false);
+  const [showMappingResults, setShowMappingResults] = useState(false);
 
   const fileInputRef = useRef(null);
   const cameraInputRef = useRef(null);
   const documentInputRef = useRef(null);
 
-  // Handle form input changes
+  // ✅ VALIDATION FUNCTION FOR EACH STEP
+  const validateStep = (currentStep) => {
+    let missingFields = [];
+
+    switch (currentStep) {
+      case 1: // Personal Information
+        if (!formData.nationality) missingFields.push("Nationality");
+        if (!formData.dateOfBirth) missingFields.push("Date of Birth");
+        if (!formData.age) missingFields.push("Age");
+        if (!formData.gender) missingFields.push("Gender");
+        if (!formData.country) missingFields.push("Country");
+        if (!formData.phoneNumber) missingFields.push("Phone Number");
+        if (!formData.maritalStatus) missingFields.push("Marital Status");
+        if (!formData.yourReligion) missingFields.push("Religion");
+        break;
+
+      case 2: // Academic Information
+        if (!formData.currentAcademicLevel) missingFields.push("Current Academic Level");
+        if (!formData.studentProgram) missingFields.push("Student Program");
+        if (!formData.highSchoolGrades) missingFields.push("High School Grades");
+        if (!formData.sponsorshipDetails) missingFields.push("Sponsorship Details");
+        if (coursesStudiedInSecondary.length === 0) missingFields.push("Courses Studied in Secondary");
+        if (!formData.haveJob) missingFields.push("Have Job");
+        
+        // Transfer student validation
+        if (formData.transferStudent) {
+          if (!formData.previousInstitution) missingFields.push("Previous Institution");
+          if (!formData.overallGradePreviousUniversity) missingFields.push("Overall Grade at Previous University");
+        }
+        break;
+
+      case 3: // Skills & Experience
+        if (selectedHobbies.length === 0) missingFields.push("Hobbies");
+        if (selectedInterests.length === 0) missingFields.push("Interests");
+        if (skills.length === 0) missingFields.push("Skills");
+        if (languagesSpoken.length === 0) missingFields.push("Languages Spoken");
+        break;
+
+      case 4: // Documents & Emergency Contact
+        if (!profileImage) missingFields.push("Profile Image");
+        if (!formData.emergencyContact.name) missingFields.push("Emergency Contact Name");
+        if (!formData.emergencyContact.relationship) missingFields.push("Emergency Contact Relationship");
+        if (!formData.emergencyContact.phoneNumber) missingFields.push("Emergency Contact Phone Number");
+        break;
+
+      default:
+        break;
+    }
+
+    if (missingFields.length > 0) {
+      Notify.failure(`Please fill in the following required fields: ${missingFields.join(", ")}`);
+      setError(`Missing required fields: ${missingFields.join(", ")}`);
+      return false;
+    }
+
+    setError(""); // Clear error if validation passes
+    return true;
+  };
+
   const handleChange = (e) => {
     const { name, value, type, checked } = e.target;
 
     if (name.includes(".")) {
-      // Handle nested objects like emergencyContact
       const [parent, child] = name.split(".");
       setFormData((prev) => ({
         ...prev,
@@ -287,7 +1119,6 @@ const [showMappingResults, setShowMappingResults] = useState(false);
     }
   };
 
-  // Transfer Student Course Management
   const addPreviousCourse = () => {
     setCoursesStudiedPreviousUniversity([
       ...coursesStudiedPreviousUniversity,
@@ -297,36 +1128,33 @@ const [showMappingResults, setShowMappingResults] = useState(false);
         credits: "",
         grade: "",
         contentStudied: [],
-         aucaCourseName: "",
-         //new fields
-      aucaCourseCode: "",
-      matchPercentage: 0,
-      creditTransferStatus: "",
-      aiReasoning: "",
-      matchingTopics: [],
-      missingTopics: [],
-      additionalTopics: []
+        aucaCourseName: "",
+        aucaCourseCode: "",
+        matchPercentage: 0,
+        creditTransferStatus: "",
+        aiReasoning: "",
+        matchingTopics: [],
+        missingTopics: [],
+        additionalTopics: []
       },
     ]);
   };
 
- 
   const updatePreviousCourse = (index, field, value) => {
-  const updated = coursesStudiedPreviousUniversity.map((course, i) => {
-    if (i === index) {
-      if (field === 'contentStudied') {
-        // Handle content as comma-separated string, convert to array
-        const contentArray = typeof value === 'string' 
-          ? value.split(',').map(item => item.trim()).filter(item => item)
-          : value;
-        return { ...course, [field]: contentArray };
+    const updated = coursesStudiedPreviousUniversity.map((course, i) => {
+      if (i === index) {
+        if (field === 'contentStudied') {
+          const contentArray = typeof value === 'string' 
+            ? value.split(',').map(item => item.trim()).filter(item => item)
+            : value;
+          return { ...course, [field]: contentArray };
+        }
+        return { ...course, [field]: value };
       }
-      return { ...course, [field]: value };
-    }
-    return course;
-  });
-  setCoursesStudiedPreviousUniversity(updated);
-};
+      return course;
+    });
+    setCoursesStudiedPreviousUniversity(updated);
+  };
 
   const removePreviousCourse = (index) => {
     setCoursesStudiedPreviousUniversity(
@@ -334,128 +1162,109 @@ const [showMappingResults, setShowMappingResults] = useState(false);
     );
   };
 
-  // Add new function for AI course mapping
-
   const handleAICourseMapping = async () => {
-  if (coursesStudiedPreviousUniversity.length === 0) {
-    Notify.failure('Please add at least one course before mapping');
-    return;
-  }
+    if (coursesStudiedPreviousUniversity.length === 0) {
+      Notify.failure('Please add at least one course before mapping');
+      return;
+    }
 
-  const invalidCourses = coursesStudiedPreviousUniversity.filter(course => 
-    !course.courseName || !course.contentStudied || course.contentStudied.length === 0
-  );
+    const invalidCourses = coursesStudiedPreviousUniversity.filter(course => 
+      !course.courseName || !course.contentStudied || course.contentStudied.length === 0
+    );
 
-  if (invalidCourses.length > 0) {
-    Notify.failure('Please provide course names and content for all courses before mapping');
-    return;
-  }
+    if (invalidCourses.length > 0) {
+      Notify.failure('Please provide course names and content for all courses before mapping');
+      return;
+    }
 
-  setMappingInProgress(true);
-  setError('');
+    setMappingInProgress(true);
+    setError('');
 
-  try {
-    const token = localStorage.getItem("token");
-    
-    const mappingData = coursesStudiedPreviousUniversity.map(course => ({
-      ...course,
-      university: formData.previousInstitution,
-      contentStudied: Array.isArray(course.contentStudied) 
-        ? course.contentStudied 
-        : course.contentStudied.split(',').map(item => item.trim()).filter(item => item)
-    }));
+    try {
+      const token = localStorage.getItem("token");
+      
+      const mappingData = coursesStudiedPreviousUniversity.map(course => ({
+        ...course,
+        university: formData.previousInstitution,
+        contentStudied: Array.isArray(course.contentStudied) 
+          ? course.contentStudied 
+          : course.contentStudied.split(',').map(item => item.trim()).filter(item => item)
+      }));
 
-    console.log('🚀 Sending course mapping request:', mappingData);
-
-    // CHANGE THIS LINE - Update the endpoint
-    const response = await fetch('http://localhost:5000/api/map-courses', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-        'Authorization': `Bearer ${token}`
-      },
-      body: JSON.stringify({
-        courseContentData: mappingData,
-        targetProgram: 'BSc in Software Engineering'
-      })
-    });
-
-    const data = await response.json();
-    
-    if (response.ok) {
-      // ADD THIS SECTION - Update courses with mapping results
-      const updatedCoursesWithMapping = coursesStudiedPreviousUniversity.map((course, index) => {
-        const mappingResult = data.data.mappingResults[index];
-        if (mappingResult) {
-          return {
-            ...course,
-            aucaCourseName: mappingResult.aucaCourseName || "",
-            aucaCourseCode: mappingResult.aucaCourseCode || "",
-            matchPercentage: mappingResult.matchPercentage || 0,
-            creditTransferStatus: mappingResult.creditTransferStatus || "",
-            aiReasoning: mappingResult.aiReasoning || "",
-            matchingTopics: mappingResult.matchingTopics || [],
-            missingTopics: mappingResult.missingTopics || [],
-            additionalTopics: mappingResult.additionalTopics || []
-          };
-        }
-        return course;
+      const response = await fetch('http://localhost:5000/api/map-courses', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${token}`
+        },
+        body: JSON.stringify({
+          courseContentData: mappingData,
+          targetProgram: 'BSc in Software Engineering'
+        })
       });
 
-      setCoursesStudiedPreviousUniversity(updatedCoursesWithMapping);
-      setMappingResults(data.data);
-      setShowMappingResults(true);
-      setHasCompletedMapping(true); // ADD THIS LINE
-      setCourseContentData(mappingData);
+      const data = await response.json();
       
-      Notify.success(`🎉 Course mapping completed! ${data.data.summary.coursesAccepted} courses accepted for transfer`);
-      
-    } else {
-      throw new Error(data.message || 'Course mapping failed');
+      if (response.ok) {
+        const updatedCoursesWithMapping = coursesStudiedPreviousUniversity.map((course, index) => {
+          const mappingResult = data.data.mappingResults[index];
+          if (mappingResult) {
+            return {
+              ...course,
+              aucaCourseName: mappingResult.aucaCourseName || "",
+              aucaCourseCode: mappingResult.aucaCourseCode || "",
+              matchPercentage: mappingResult.matchPercentage || 0,
+              creditTransferStatus: mappingResult.creditTransferStatus || "",
+              aiReasoning: mappingResult.aiReasoning || "",
+              matchingTopics: mappingResult.matchingTopics || [],
+              missingTopics: mappingResult.missingTopics || [],
+              additionalTopics: mappingResult.additionalTopics || []
+            };
+          }
+          return course;
+        });
+
+        setCoursesStudiedPreviousUniversity(updatedCoursesWithMapping);
+        setMappingResults(data.data);
+        setShowMappingResults(true);
+        setHasCompletedMapping(true);
+        setCourseContentData(mappingData);
+        
+        Notify.success(`🎉 Course mapping completed! ${data.data.summary.coursesAccepted} courses accepted for transfer`);
+      } else {
+        throw new Error(data.message || 'Course mapping failed');
+      }
+    } catch (error) {
+      console.error('❌ Course mapping error:', error);
+      setError('Course mapping failed: ' + error.message);
+      Notify.failure('Course mapping failed: ' + error.message);
+    } finally {
+      setMappingInProgress(false);
     }
-  } catch (error) {
-    console.error('❌ Course mapping error:', error);
-    setError('Course mapping failed: ' + error.message);
-    Notify.failure('Course mapping failed: ' + error.message);
-  } finally {
-    setMappingInProgress(false);
-  }
-};
+  };
 
-// Helper function to get status color
-const getStatusColor = (status) => {
-  switch (status) {
-    case 'full_credit':
-      return '#16a34a';
-    case 'partial_credit':
-      return '#d97706';
-    case 'no_credit':
-      return '#dc2626';
-    default:
-      return '#6b7280';
-  }
-};
+  const getStatusColor = (status) => {
+    switch (status) {
+      case 'full_credit': return '#16a34a';
+      case 'partial_credit': return '#d97706';
+      case 'no_credit': return '#dc2626';
+      default: return '#6b7280';
+    }
+  };
 
-// Helper function to get status text
-const getStatusText = (status) => {
-  switch (status) {
-    case 'full_credit':
-      return 'Full Credit';
-    case 'partial_credit':
-      return 'Partial Credit';
-    case 'no_credit':
-      return 'No Credit';
-    default:
-      return 'Not Mapped';
-  }
-};
+  const getStatusText = (status) => {
+    switch (status) {
+      case 'full_credit': return 'Full Credit';
+      case 'partial_credit': return 'Partial Credit';
+      case 'no_credit': return 'No Credit';
+      default: return 'Not Mapped';
+    }
+  };
 
-// Add function to close mapping results
-const closeMappingResults = () => {
-  setShowMappingResults(false);
-};
+  const closeMappingResults = () => {
+    setShowMappingResults(false);
+  };
 
-  // Equivalent Courses Management
   const addEquivalentCourse = () => {
     setEquivalentCourses([
       ...equivalentCourses,
@@ -480,7 +1289,6 @@ const closeMappingResults = () => {
     setEquivalentCourses(equivalentCourses.filter((_, i) => i !== index));
   };
 
-  // Work experience functions
   const addWorkExperience = () => {
     setWorkExperience([
       ...workExperience,
@@ -507,7 +1315,6 @@ const closeMappingResults = () => {
     setWorkExperience(workExperience.filter((_, i) => i !== index));
   };
 
-  // Extracurricular activities functions
   const addExtracurricularActivity = () => {
     setExtracurricularActivities([
       ...extracurricularActivities,
@@ -535,51 +1342,6 @@ const closeMappingResults = () => {
     );
   };
 
-  // Skills functions
-  // const addSkill = () => {
-  //   setSkills([
-  //     ...skills,
-  //     {
-  //       skillName: "",
-  //       proficiencyLevel: "Beginner",
-  //     },
-  //   ]);
-  // };
-
-  // const updateSkill = (index, field, value) => {
-  //   const updated = skills.map((skill, i) =>
-  //     i === index ? { ...skill, [field]: value } : skill
-  //   );
-  //   setSkills(updated);
-  // };
-
-  // const removeSkill = (index) => {
-  //   setSkills(skills.filter((_, i) => i !== index));
-  // };
-
-  // // Language functions
-  // const addLanguage = () => {
-  //   setLanguagesSpoken([
-  //     ...languagesSpoken,
-  //     {
-  //       language: "",
-  //       proficiency: "Basic",
-  //     },
-  //   ]);
-  // };
-
-  // const updateLanguage = (index, field, value) => {
-  //   const updated = languagesSpoken.map((lang, i) =>
-  //     i === index ? { ...lang, [field]: value } : lang
-  //   );
-  //   setLanguagesSpoken(updated);
-  // };
-
-  // const removeLanguage = (index) => {
-  //   setLanguagesSpoken(languagesSpoken.filter((_, i) => i !== index));
-  // };
-
-  // Handle profile image upload
   const handleImageUpload = (e) => {
     const file = e.target.files[0];
     if (file) {
@@ -641,134 +1403,114 @@ const closeMappingResults = () => {
     setDocuments((prev) => prev.filter((_, i) => i !== index));
   };
 
-  // Handle form submission
   const handleSubmit = async (e) => {
-  e.preventDefault();
-  setLoading(true);
-  setError("");
-  setSuccess("");
-
-  try {
-    const token = localStorage.getItem("token");
-    if (!token) {
-      setError("Please log in to continue");
-      setLoading(false);
+    e.preventDefault();
+    
+    // ✅ Validate step 4 before submitting
+    if (!validateStep(4)) {
       return;
     }
 
-    // Create FormData for file uploads
-    const formDataToSend = new FormData();
+    setLoading(true);
+    setError("");
+    setSuccess("");
 
-    // Add all basic form fields
-    Object.keys(formData).forEach((key) => {
-      if (key === "emergencyContact") {
-        formDataToSend.append(key, JSON.stringify(formData[key]));
-      } 
-      else if (key === "interests") {
-        const interestsArray = formData[key]
-          .split(",")
-          .map((item) => item.trim())
-          .filter((item) => item);
-        formDataToSend.append(key, JSON.stringify(interestsArray));
-      } 
-      else if (key === "coursesStudiedInSecondary") {
-        formDataToSend.append(key, formData[key]);
-      } 
-      // ✅ FIX: Convert boolean fields properly - handle both checked and unchecked
-      else if (key === "transferStudent" || key === "haveTwoPrincipalPasses") {
-        // Explicitly convert to boolean, then to string
-        const boolValue = formData[key] === true || formData[key] === 'true';
-        formDataToSend.append(key, boolValue ? 'true' : 'false'); // Always send 'true' or 'false'
-        console.log(`📝 ${key}:`, boolValue ? 'true' : 'false'); // Debug log
-      } 
-      else {
-        formDataToSend.append(key, formData[key] || '');
+    try {
+      const token = localStorage.getItem("token");
+      if (!token) {
+        setError("Please log in to continue");
+        setLoading(false);
+        return;
       }
-    });
 
-    // ✅ IMPORTANT: Explicitly set transferStudent if not already set
-    if (!formDataToSend.has('transferStudent')) {
-      formDataToSend.append('transferStudent', 'false');
-      console.log('📝 transferStudent (default):', 'false');
-    }
+      const formDataToSend = new FormData();
 
-    // ✅ IMPORTANT: Explicitly set haveTwoPrincipalPasses if not already set
-    if (!formDataToSend.has('haveTwoPrincipalPasses')) {
-      formDataToSend.append('haveTwoPrincipalPasses', 'false');
-      console.log('📝 haveTwoPrincipalPasses (default):', 'false');
-    }
+      Object.keys(formData).forEach((key) => {
+        if (key === "emergencyContact") {
+          formDataToSend.append(key, JSON.stringify(formData[key]));
+        } 
+        else if (key === "interests") {
+          const interestsArray = formData[key]
+            .split(",")
+            .map((item) => item.trim())
+            .filter((item) => item);
+          formDataToSend.append(key, JSON.stringify(interestsArray));
+        } 
+        else if (key === "coursesStudiedInSecondary") {
+          formDataToSend.append(key, formData[key]);
+        } 
+        else if (key === "transferStudent" || key === "haveTwoPrincipalPasses") {
+          const boolValue = formData[key] === true || formData[key] === 'true';
+          formDataToSend.append(key, boolValue ? 'true' : 'false');
+        } 
+        else {
+          formDataToSend.append(key, formData[key] || '');
+        }
+      });
 
-    // Add hobbies, interests, and courses
-    formDataToSend.append("hobbies", JSON.stringify(selectedHobbies));
-    formDataToSend.append("interests", JSON.stringify(selectedInterests));
-    formDataToSend.append("coursesStudiedInSecondary", JSON.stringify(coursesStudiedInSecondary));
-
-    // Add complex arrays
-    formDataToSend.append("skills", JSON.stringify(skills));
-    formDataToSend.append("languagesSpoken", JSON.stringify(languagesSpoken));
-    formDataToSend.append("workExperience", JSON.stringify(workExperience));
-    formDataToSend.append("extracurricularActivities", JSON.stringify(extracurricularActivities));
-    formDataToSend.append("coursesStudiedPreviousUniversity", JSON.stringify(coursesStudiedPreviousUniversity));
-    formDataToSend.append("equivalentCourses", JSON.stringify(equivalentCourses));
-
-    // Add profile image
-    if (profileImage) {
-      formDataToSend.append("images", profileImage);
-    }
-
-    // Add documents
-    documents.forEach((doc) => {
-      formDataToSend.append("documents", doc);
-    });
-
-    // ✅ DEBUG: Log what we're sending
-    console.log('📤 Sending FormData:');
-    for (let [key, value] of formDataToSend.entries()) {
-      if (key === 'transferStudent' || key === 'haveTwoPrincipalPasses') {
-        console.log(`  ${key}:`, value);
+      if (!formDataToSend.has('transferStudent')) {
+        formDataToSend.append('transferStudent', 'false');
       }
-    }
 
-    const response = await fetch(
-      "http://localhost:5000/api/student/createprofile",
-      {
-        method: "POST",
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-        body: formDataToSend,
+      if (!formDataToSend.has('haveTwoPrincipalPasses')) {
+        formDataToSend.append('haveTwoPrincipalPasses', 'false');
       }
-    );
 
-    const data = await response.json();
+      formDataToSend.append("hobbies", JSON.stringify(selectedHobbies));
+      formDataToSend.append("interests", JSON.stringify(selectedInterests));
+      formDataToSend.append("coursesStudiedInSecondary", JSON.stringify(coursesStudiedInSecondary));
+      formDataToSend.append("skills", JSON.stringify(skills));
+      formDataToSend.append("languagesSpoken", JSON.stringify(languagesSpoken));
+      formDataToSend.append("workExperience", JSON.stringify(workExperience));
+      formDataToSend.append("extracurricularActivities", JSON.stringify(extracurricularActivities));
+      formDataToSend.append("coursesStudiedPreviousUniversity", JSON.stringify(coursesStudiedPreviousUniversity));
+      formDataToSend.append("equivalentCourses", JSON.stringify(equivalentCourses));
 
-    if (response.ok) {
-      setSuccess(
-        "🎉 Profile created successfully! Redirecting to assessment..."
+      if (profileImage) {
+        formDataToSend.append("images", profileImage);
+      }
+
+      documents.forEach((doc) => {
+        formDataToSend.append("documents", doc);
+      });
+
+      const response = await fetch(
+        "http://localhost:5000/api/student/createprofile",
+        {
+          method: "POST",
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+          body: formDataToSend,
+        }
       );
-      Notify.success(
-        "Profile created successfully! Redirecting to assessment..."
-      );
-      console.log("Profile created:", data);
 
-      setTimeout(() => {
-        window.location.href = "/dashboard/assessment";
-      }, 2000);
-    } else {
-      setError(data.message || "Failed to create profile");
-      Notify.failure(data.message || "Failed to create profile");
-      console.error("Profile creation failed:", data);
+      const data = await response.json();
+
+      if (response.ok) {
+        setSuccess(
+          "🎉 Profile created successfully! Redirecting to assessment..."
+        );
+        Notify.success(
+          "Profile created successfully! Redirecting to assessment..."
+        );
+
+        setTimeout(() => {
+          window.location.href = "/dashboard/assessment";
+        }, 2000);
+      } else {
+        setError(data.message || "Failed to create profile");
+        Notify.failure(data.message || "Failed to create profile");
+      }
+    } catch (err) {
+      console.error("Submit error:", err);
+      setError("Network error. Please try again.");
+      Notify.failure("Network error. Please try again.");
+    } finally {
+      setLoading(false);
     }
-  } catch (err) {
-    console.error("Submit error:", err);
-    setError("Network error. Please try again.");
-    Notify.failure("Network error. Please try again.");
-  } finally {
-    setLoading(false);
-  }
-};
+  };
 
-  // Faculty and department options
   const facultyOptions = [
     "Faculty of Business Administration",
     "Faculty of Information Technology",
@@ -814,8 +1556,20 @@ const closeMappingResults = () => {
     return departments[faculty] || [];
   };
 
-  const nextStep = () => setStep(step + 1);
-  const prevStep = () => setStep(step - 1);
+  // ✅ UPDATED NEXT STEP FUNCTION WITH VALIDATION
+  const nextStep = () => {
+    if (validateStep(step)) {
+      setStep(step + 1);
+      window.scrollTo(0, 0); // Scroll to top when moving to next step
+    }
+  };
+
+  const prevStep = () => {
+    setStep(step - 1);
+    window.scrollTo(0, 0);
+  };
+
+  // Component imports for multi-selects
 
   const CoursesMultiSelect = ({ selectedCourses, onChange, disabled = false }) => {
   const [isOpen, setIsOpen] = useState(false);
@@ -1780,23 +2534,6 @@ const LanguagesMultiSelect = ({ selectedLanguages, onChange, disabled = false })
                       </select>
                     </div>
                   </div>
-
-                  {/* <div className="form-group">
-                    <label className="form-label">
-                   
-                    </label>
-                    <div className="input-wrapper">
-                      <input
-                        type="text"
-                        name="country"
-                        value={formData.country}
-                        onChange={handleChange}
-                        required
-                        className="form-input"
-                        placeholder="Country"
-                      />
-                    </div>
-                  </div> */}
 
                   <div className="form-group">
   <label className="form-label">
