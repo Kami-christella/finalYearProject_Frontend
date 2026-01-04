@@ -493,12 +493,12 @@ const LandingPage = () => {
                   ></textarea>
                 </div>
                 
-                {/* <button type="submit" className="btn-primary form-submit">
+                <button type="submit" className="btn-primary form-submit">
                   Send Message
-                </button> */}
-                  <button type="submit" disabled={loading}>
+                </button>
+                  {/* <button type="submit" disabled={loading}>
     {loading ? "Sending..." : "Send Message"}
-  </button>
+  </button> */}
 
               </form>
             </div>
