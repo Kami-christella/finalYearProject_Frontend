@@ -5,6 +5,11 @@
   padding: 0;
   box-sizing: border-box;
 }
+.form-label::before,
+.form-label::after {
+  content: none !important;
+  display: none !important;
+}
 
 .profile-container {
   margin-top:-530px !important;

@@ -1015,8 +1015,8 @@ const StudentProfile = () => {
     },
   });
 
-  const [workExperience, setWorkExperience] = useState([]);
-  const [extracurricularActivities, setExtracurricularActivities] = useState([]);
+  // const [workExperience, setWorkExperience] = useState([]);
+  const [extracurricularActivities, setExtracurricularActivities] = useState([""]);
   const [skills, setSkills] = useState([]);
   const [languagesSpoken, setLanguagesSpoken] = useState([]);
   const [selectedHobbies, setSelectedHobbies] = useState([]);
@@ -1048,7 +1048,7 @@ const StudentProfile = () => {
       case 1: // Personal Information
         if (!formData.nationality) missingFields.push("Nationality");
         if (!formData.dateOfBirth) missingFields.push("Date of Birth");
-        if (!formData.age) missingFields.push("Age");
+        // if (!formData.age) missingFields.push("Age");
         if (!formData.gender) missingFields.push("Gender");
         if (!formData.country) missingFields.push("Country");
         if (!formData.phoneNumber) missingFields.push("Phone Number");
@@ -1289,58 +1289,77 @@ const StudentProfile = () => {
     setEquivalentCourses(equivalentCourses.filter((_, i) => i !== index));
   };
 
-  const addWorkExperience = () => {
-    setWorkExperience([
-      ...workExperience,
-      {
-        jobTitle: "",
-        company: "",
-        startDate: "",
-        endDate: "",
-        duration: "",
-        description: "",
-        isCurrent: false,
-      },
-    ]);
-  };
+  // const addWorkExperience = () => {
+  //   setWorkExperience([
+  //     ...workExperience,
+  //     {
+  //       jobTitle: "",
+  //       company: "",
+  //       startDate: "",
+  //       endDate: "",
+  //       duration: "",
+  //       description: "",
+  //       isCurrent: false,
+  //     },
+  //   ]);
+  // };
 
-  const updateWorkExperience = (index, field, value) => {
-    const updated = workExperience.map((exp, i) =>
-      i === index ? { ...exp, [field]: value } : exp
-    );
-    setWorkExperience(updated);
-  };
+  // const updateWorkExperience = (index, field, value) => {
+  //   const updated = workExperience.map((exp, i) =>
+  //     i === index ? { ...exp, [field]: value } : exp
+  //   );
+  //   setWorkExperience(updated);
+  // };
 
-  const removeWorkExperience = (index) => {
-    setWorkExperience(workExperience.filter((_, i) => i !== index));
-  };
+  // const removeWorkExperience = (index) => {
+  //   setWorkExperience(workExperience.filter((_, i) => i !== index));
+  // };
+
+  // const addExtracurricularActivity = () => {
+  //   setExtracurricularActivities([
+  //     ...extracurricularActivities,
+  //     {
+  //       activity: "",
+  //       role: "",
+  //       organization: "",
+  //       startDate: "",
+  //       endDate: "",
+  //       description: "",
+  //     },
+  //   ]);
+  // };
 
   const addExtracurricularActivity = () => {
-    setExtracurricularActivities([
-      ...extracurricularActivities,
-      {
-        activity: "",
-        role: "",
-        organization: "",
-        startDate: "",
-        endDate: "",
-        description: "",
-      },
-    ]);
-  };
+  if (extracurricularActivities.length < 3) {
+    setExtracurricularActivities([...extracurricularActivities, ""]);
+  }
+};
 
-  const updateExtracurricularActivity = (index, field, value) => {
-    const updated = extracurricularActivities.map((activity, i) =>
-      i === index ? { ...activity, [field]: value } : activity
-    );
-    setExtracurricularActivities(updated);
-  };
+  // const updateExtracurricularActivity = (index, field, value) => {
+  //   const updated = extracurricularActivities.map((activity, i) =>
+  //     i === index ? { ...activity, [field]: value } : activity
+  //   );
+  //   setExtracurricularActivities(updated);
+  // };
+
+  const updateExtracurricularActivity = (index, value) => {
+  const updated = [...extracurricularActivities];
+  updated[index] = value;
+  setExtracurricularActivities(updated);
+};
+
+  // const removeExtracurricularActivity = (index) => {
+  //   setExtracurricularActivities(
+  //     extracurricularActivities.filter((_, i) => i !== index)
+  //   );
+  // };
 
   const removeExtracurricularActivity = (index) => {
-    setExtracurricularActivities(
-      extracurricularActivities.filter((_, i) => i !== index)
-    );
-  };
+  setExtracurricularActivities(
+    extracurricularActivities.filter((_, i) => i !== index)
+  );
+};
+
 
   const handleImageUpload = (e) => {
     const file = e.target.files[0];
@@ -1461,7 +1480,7 @@ const StudentProfile = () => {
       formDataToSend.append("coursesStudiedInSecondary", JSON.stringify(coursesStudiedInSecondary));
       formDataToSend.append("skills", JSON.stringify(skills));
       formDataToSend.append("languagesSpoken", JSON.stringify(languagesSpoken));
-      formDataToSend.append("workExperience", JSON.stringify(workExperience));
+      // formDataToSend.append("workExperience", JSON.stringify(workExperience));
       formDataToSend.append("extracurricularActivities", JSON.stringify(extracurricularActivities));
       formDataToSend.append("coursesStudiedPreviousUniversity", JSON.stringify(coursesStudiedPreviousUniversity));
       formDataToSend.append("equivalentCourses", JSON.stringify(equivalentCourses));
@@ -2498,8 +2517,7 @@ const LanguagesMultiSelect = ({ selectedLanguages, onChange, disabled = false })
                       {/* <span className="label-text">Age</span>
                       <span className="label-required">*</span> */}
                     </label>
-                    <div className="input-wrapper">
-                      {/* <span className="input-icon">🎂</span> */}
+                    {/* <div className="input-wrapper">
                       <input
                         type="number"
                         name="age"
@@ -2511,7 +2529,7 @@ const LanguagesMultiSelect = ({ selectedLanguages, onChange, disabled = false })
                         className="form-input"
                         placeholder="Age"
                       />
-                    </div>
+                    </div> */}
                   </div>
 
                   <div className="form-group">
@@ -3975,7 +3993,7 @@ The more detailed you are, the better our System can match your courses!"
                   </div> */}
 
                   {/* Work Experience Section */}
-                  <div className="form-group">
+                  {/* <div className="form-group">
                     <div className="section-header">
                       <h3 className="section-titles">Work Experience</h3>
                       <button
@@ -4118,10 +4136,51 @@ The more detailed you are, the better our System can match your courses!"
                         </button>
                       </div>
                     ))}
-                  </div>
+                  </div> */}
 
                   {/* Extracurricular Activities Section */}
-                  <div className="form-group">
+                  {/* Extracurricular Activities Section */}
+<div className="form-group">
+  <div className="section-header">
+    <h3 className="section-titles">Extracurricular Activities</h3>
+
+    <button
+      type="button"
+      onClick={addExtracurricularActivity}
+      className="add-btn"
+      disabled={extracurricularActivities.length >= 3}
+    >
+      + Add Activity
+    </button>
+  </div>
+
+  {extracurricularActivities.map((activity, index) => (
+    <div key={index} className="dynamic-item">
+      <input
+        type="text"
+        placeholder={`Activity ${index + 1} (e.g. Football)`}
+        value={activity}
+        onChange={(e) =>
+          updateExtracurricularActivity(index, e.target.value)
+        }
+        className="form-input"
+        required
+      />
+
+      {extracurricularActivities.length > 1 && (
+        <button
+          type="button"
+          onClick={() => removeExtracurricularActivity(index)}
+          className="remove-btn"
+        >
+          Remove
+        </button>
+      )}
+    </div>
+  ))}
+</div>
+
+                  {/* <div className="form-group">
                     <div className="section-header">
                       <h3 className="section-titles">
                         Extracurricular Activities
@@ -4246,7 +4305,7 @@ The more detailed you are, the better our System can match your courses!"
                         </button>
                       </div>
                     ))}
-                  </div>
+                  </div> */}
 
                   {/* Faculty and Department Selection */}
                   <div className="form-grid">

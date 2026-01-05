@@ -15,7 +15,7 @@ const SIDEBAR_ITEMS = [
   { id: 'students', label: 'All Students', icon: '👥' },
   { id: 'questionsManager', label: 'Questions Manager', icon: '📋' },
   { id: 'appointments', label: 'Appointments', icon: '📅' },
-  { id: 'messages', label: 'Messages', icon: '✉️' },
+  // { id: 'messages', label: 'Messages', icon: '✉️' },
   { id: 'activity', label: 'Activity Log', icon: '📋' }
 ];
 
