@@ -1076,6 +1076,10 @@ const StudentProfile = () => {
         if (selectedInterests.length === 0) missingFields.push("Interests");
         if (skills.length === 0) missingFields.push("Skills");
         if (languagesSpoken.length === 0) missingFields.push("Languages Spoken");
+        // if (extracurricularActivities.length === 0) missingFields.push("Extra curricular activities");
+        // if (languagesSpoken.length === 0) missingFields.push("Languages Spoken");
+        // if (languagesSpoken.length === 0) missingFields.push("Languages Spoken"); 
+        //  if (languagesSpoken.length === 0) missingFields.push("Languages Spoken"); 
         break;
 
       case 4: // Documents & Emergency Contact
@@ -2512,12 +2516,12 @@ const LanguagesMultiSelect = ({ selectedLanguages, onChange, disabled = false })
                     </div>
                   </div>
 
-                  <div className="form-group">
+                  {/* <div className="form-group">
                     <label className="form-label">
-                      {/* <span className="label-text">Age</span>
-                      <span className="label-required">*</span> */}
+                      <span className="label-text">Age</span>
+                      <span className="label-required">*</span>
                     </label>
-                    {/* <div className="input-wrapper">
+                    <div className="input-wrapper">
                       <input
                         type="number"
                         name="age"
@@ -2529,8 +2533,8 @@ const LanguagesMultiSelect = ({ selectedLanguages, onChange, disabled = false })
                         className="form-input"
                         placeholder="Age"
                       />
-                    </div> */}
-                  </div>
+                    </div>
+                  </div> */}
 
                   <div className="form-group">
                     <label className="form-label">
@@ -3801,7 +3805,7 @@ The more detailed you are, the better our System can match your courses!"
     onChange={setSelectedHobbies}
     disabled={loading}
   />
-  <p className="input-help" style={{ marginTop: '0.5rem', fontSize: '0.85rem', color: '#6b7280' }}>
+  <p className="input-help" style={{ marginTop: '0.5rem', fontSize: '0.85rem', color: '#1B3058;' }}>
     Search and select your hobbies. You can select multiple options.
   </p>
 </div>
@@ -3838,7 +3842,7 @@ The more detailed you are, the better our System can match your courses!"
     onChange={setSelectedInterests}
     disabled={loading}
   />
-  <p className="input-help" style={{ marginTop: '0.5rem', fontSize: '0.85rem', color: '#6b7280' }}>
+  <p className="input-help" style={{ marginTop: '0.5rem', fontSize: '0.85rem', color: '#1B3058;' }}>
     Search and select your areas of interest. You can select multiple options.
   </p>
 </div>
