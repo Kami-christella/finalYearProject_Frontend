@@ -64,8 +64,11 @@ const Assessment = () => {
   const [loading, setLoading] = useState(true);
   const [submitting, setSubmitting] = useState(false);
   const [error, setError] = useState('');
-  const [selectedAnswer, setSelectedAnswer] = useState('');
-  
+  //const [selectedAnswer, setSelectedAnswer] = useState('');
+  const [selectedAnswer, setSelectedAnswer] = useState(null);
+// radio → string
+// checkbox → array of strings
+
   // Progress calculation
   const [totalQuestions, setTotalQuestions] = useState(0);
   
@@ -210,33 +213,81 @@ const Assessment = () => {
     }
   };
 
-  const loadSavedAnswer = () => {
-    if (!currentQuestion) return;
+//   const loadSavedAnswer = () => {
+//     if (!currentQuestion) return;
     
-    const sectionName = assessmentSections[currentSection];
-    let savedAnswers = {};
+//     const sectionName = assessmentSections[currentSection];
+//     let savedAnswers = {};
     
-    switch (sectionName) {
-      case 'career':
-        savedAnswers = careerTest;
-        break;
-      case 'skills':
-        savedAnswers = skillsAssessment;
-        break;
-      case 'personality':
-        savedAnswers = personalityAssessment;
-        break;
-    }
+//     switch (sectionName) {
+//       case 'career':
+//         savedAnswers = careerTest;
+//         break;
+//       case 'skills':
+//         savedAnswers = skillsAssessment;
+//         break;
+//       case 'personality':
+//         savedAnswers = personalityAssessment;
+//         break;
+//     }
     
-    setSelectedAnswer(savedAnswers[currentQuestion._id] || '');
-  };
+//     //setSelectedAnswer(savedAnswers[currentQuestion._id] || '');
+//     const saved = savedAnswers[currentQuestion._id];
 
-  const handleAnswerSelect = (answer) => {
-    setSelectedAnswer(answer);
-  };
+// if (currentQuestion.type === 'checkbox') {
+//   setSelectedAnswer(saved || []);
+// } else {
+//   setSelectedAnswer(saved || '');
+// }
+
+//   };
+
+const loadSavedAnswer = () => {
+  if (!currentQuestion) return;
+
+  const sectionName = assessmentSections[currentSection];
+  const answersMap =
+    sectionName === 'career'
+      ? careerTest
+      : sectionName === 'skills'
+      ? skillsAssessment
+      : personalityAssessment;
+
+  const saved = answersMap[currentQuestion._id];
+
+  if (currentQuestion.type === 'checkbox') {
+    setSelectedAnswer(Array.isArray(saved) ? saved : []);
+  } else {
+    setSelectedAnswer(saved || '');
+  }
+};
+
+
+  // const handleAnswerSelect = (answer) => {
+  //   setSelectedAnswer(answer);
+  // };
+
+  const handleAnswerSelect = (option) => {
+  if (currentQuestion.type === 'checkbox') {
+    setSelectedAnswer(prev => {
+      if (!Array.isArray(prev)) return [option];
+      return prev.includes(option)
+        ? prev.filter(o => o !== option)
+        : [...prev, option];
+    });
+  } else {
+    setSelectedAnswer(option);
+  }
+};
 
   const saveCurrentAnswer = () => {
-    if (!currentQuestion || !selectedAnswer) return;
+    // if (!currentQuestion || !selectedAnswer) return;
+    if (
+  !currentQuestion ||
+  (currentQuestion.type === 'radio' && !selectedAnswer) ||
+  (currentQuestion.type === 'checkbox' && selectedAnswer.length === 0)
+) return;
+
     
     const sectionName = assessmentSections[currentSection];
     const questionId = currentQuestion._id;
@@ -255,21 +306,38 @@ const Assessment = () => {
   };
 
   const handleNext = () => {
-    if (!selectedAnswer) {
-      Notify.warning('Please select an answer before continuing');
-      return;
-    }
+    // if (!selectedAnswer) {
+    //   Notify.warning('Please select an answer before continuing');
+    //   return;
+    // }
+
+    if (
+  (currentQuestion.type === 'radio' && !selectedAnswer) ||
+  (currentQuestion.type === 'checkbox' && selectedAnswer.length === 0)
+) {
+  Notify.warning('Please select at least one answer before continuing');
+  return;
+}
+
 
     saveCurrentAnswer();
 
     if (currentQuestionIndex < currentQuestions.length - 1) {
       setCurrentQuestionIndex(prev => prev + 1);
-      setSelectedAnswer('');
+      // setSelectedAnswer('');
+      setSelectedAnswer(
+  currentQuestion?.type === 'checkbox' ? [] : ''
+);
+
     } else {
       if (currentSection < assessmentSections.length - 1) {
         setCurrentSection(prev => prev + 1);
         setCurrentQuestionIndex(0);
-        setSelectedAnswer('');
+        // setSelectedAnswer('');
+        setSelectedAnswer(
+  currentQuestion?.type === 'checkbox' ? [] : ''
+);
+
         Notify.success(`${assessmentSections[currentSection]} section completed!`);
       } else {
         completeAssessment();
@@ -371,7 +439,17 @@ const completeAssessment = async () => {
     return totalQuestions > 0 ? Math.round((total / totalQuestions) * 100) : 0;
   };
 
-  const canShowNext = () => selectedAnswer !== '';
+  // const canShowNext = () => selectedAnswer !== '';
+  const canShowNext = () => {
+  if (!currentQuestion) return false;
+
+  if (currentQuestion.type === 'checkbox') {
+    return Array.isArray(selectedAnswer) && selectedAnswer.length > 0;
+  }
+
+  return !!selectedAnswer;
+};
+
   const canShowPrevious = () => currentQuestionIndex > 0 || currentSection > 0;
 
   if (!hasProfile && !loading) {
@@ -530,18 +608,70 @@ const completeAssessment = async () => {
               <h2 className="question-text">{currentQuestion.question}</h2>
               
               <div className="answer-options">
-                {currentQuestion.options && currentQuestion.options.map((option, index) => (
+                {/* {currentQuestion.options && currentQuestion.options.map((option, index) => (
                   <button
                     key={index}
                     onClick={() => handleAnswerSelect(option)}
                     className={`answer-option ${selectedAnswer === option ? 'selected' : ''}`}
                   >
-                    <div className="option-radio">
-                      {selectedAnswer === option && <div className="radio-dot"></div>}
-                    </div>
+                 
+
+                    <div className="answer-options">
+  {currentQuestion.options.map((option, index) => {
+    const isChecked =
+      currentQuestion.type === 'checkbox'
+        ? selectedAnswer?.includes(option)
+        : selectedAnswer === option;
+
+    return (
+      <button
+        key={index}
+        onClick={() => handleAnswerSelect(option)}
+        className={`answer-option ${isChecked ? 'selected' : ''}`}
+      >
+        <div className={currentQuestion.type === 'checkbox' ? 'option-checkbox' : 'option-radio'}>
+          {isChecked && <div className="check-dot"></div>}
+        </div>
+
+        <span className="option-text">{option}</span>
+      </button>
+    );
+  })}
+</div>
+
                     <span className="option-text">{option}</span>
                   </button>
-                ))}
+                ))} */}
+
+                <div className="answer-options">
+  {currentQuestion.options.map((option, index) => {
+    const isChecked =
+      currentQuestion.type === 'checkbox'
+        ? Array.isArray(selectedAnswer) && selectedAnswer.includes(option)
+        : selectedAnswer === option;
+
+    return (
+      <button
+        key={index}
+        onClick={() => handleAnswerSelect(option)}
+        className={`answer-option ${isChecked ? 'selected' : ''}`}
+      >
+        <div
+          className={
+            currentQuestion.type === 'checkbox'
+              ? 'option-checkbox'
+              : 'option-radio'
+          }
+        >
+          {isChecked && <div className="check-dot" />}
+        </div>
+
+        <span className="option-text">{option}</span>
+      </button>
+    );
+  })}
+</div>
+
               </div>
             </div>
 
