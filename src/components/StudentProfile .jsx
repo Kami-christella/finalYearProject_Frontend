@@ -874,8 +874,8 @@ const COUNTRIES = [
 const SECONDARY_COURSES = [
   "Mathematics", "Physics", "Chemistry", "Biology", "English Language",
   "Kinyarwanda", "French", "History", "Geography", "Computer Science", "Economics",
-  "Literature","Software Engineering","Networks and Communication",
-   "Music","Entrepreneurship", "Electronics and Telecommunication",
+  "Literature","Software Engineering","Networks and Communication","Languages","Education",
+   "Music","Entrepreneurship", "Electronics and Telecommunication","Accounting","Telecommunication"
 ];
 
 const HOBBIES_OPTIONS = [
@@ -893,7 +893,7 @@ const HOBBIES_OPTIONS = [
   "Volunteering", "Community Service", "Mentoring", "Public Speaking",
   "Event Planning", "Networking",
   "Learning Languages", "Cooking", "Baking", "Fashion Design", "Interior Design",
-  "Collecting", "Board Games", "Chess", "Puzzles", "Meditation"
+  "Collecting", "Board Games", "Chess", "Puzzles", "Meditation","Music"
 ];
 
 const SKILLS_OPTIONS = [
@@ -927,7 +927,7 @@ const LANGUAGES_OPTIONS = [
   "Polish", "Czech", "Hungarian", "Romanian", "Bulgarian", "Croatian",
   "Serbian", "Slovak", "Slovenian", "Estonian", "Latvian", "Lithuanian",
   "Finnish", "Swedish", "Norwegian", "Danish", "Icelandic", "Irish",
-  "Welsh", "Scottish Gaelic", "Catalan", "Basque", "Galician"
+  "Welsh", "Scottish Gaelic", "Catalan", "Basque", "Galician","Other African Language"
 ];
 
 const INTERESTS_OPTIONS = [
@@ -946,7 +946,8 @@ const INTERESTS_OPTIONS = [
   "Climate Change", "Sustainable Development", "Conservation", "Green Technology",
   "Urban Planning", "Agriculture", "Food Security",
   "Cultural Studies", "Language Learning", "Translation", "Travel", "History",
-  "Anthropology", "Religious Studies"
+  "Anthropology", "Religious Studies", "Accounting", "Entrepreneurship", "Arts", "Music",
+  "Programming", "Marketing","Technology", "Computer Science"
 ];
 
 const StudentProfile = () => {
@@ -1072,21 +1073,26 @@ const StudentProfile = () => {
         break;
 
       case 3: // Skills & Experience
+    {
         if (selectedHobbies.length === 0) missingFields.push("Hobbies");
         if (selectedInterests.length === 0) missingFields.push("Interests");
         if (skills.length === 0) missingFields.push("Skills");
         if (languagesSpoken.length === 0) missingFields.push("Languages Spoken");
-        // if (extracurricularActivities.length === 0) missingFields.push("Extra curricular activities");
-        // if (languagesSpoken.length === 0) missingFields.push("Languages Spoken");
-        // if (languagesSpoken.length === 0) missingFields.push("Languages Spoken"); 
-        //  if (languagesSpoken.length === 0) missingFields.push("Languages Spoken"); 
+        if (!formData.desiredFaculty) missingFields.push("Desired Faculty");
+      if (!formData.desiredDepartment) missingFields.push("Desired Department");
+      if (!formData.careerGoals || formData.careerGoals.trim() === "") missingFields.push("Career Goals");
+       // Validate extracurricular activities (at least one non-empty)
+      const validActivities = extracurricularActivities.filter(activity => activity.trim() !== "");
+      if (validActivities.length === 0) missingFields.push("At least one Extracurricular Activity");
         break;
-
+}
       case 4: // Documents & Emergency Contact
         if (!profileImage) missingFields.push("Profile Image");
+        if (documents.length <=2) missingFields.push("Supporting Documents (at least three document required)");
         if (!formData.emergencyContact.name) missingFields.push("Emergency Contact Name");
         if (!formData.emergencyContact.relationship) missingFields.push("Emergency Contact Relationship");
         if (!formData.emergencyContact.phoneNumber) missingFields.push("Emergency Contact Phone Number");
+        //  if (!formData.disability) missingFields.push("Disability Status");
         break;
 
       default:

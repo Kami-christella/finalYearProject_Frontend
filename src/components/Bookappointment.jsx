@@ -1,69 +1,75 @@
-// components/BookAppointment.jsx 
-import React, { useState, useEffect } from 'react';
-import { Notify } from 'notiflix';
-import { FaCalendarAlt, FaClock, FaMapMarkerAlt, FaUser, FaPhone, FaEnvelope } from 'react-icons/fa';
-import { MdVideoCall, MdLocationOn } from 'react-icons/md';
-import { IoCheckmarkCircle, IoCloseCircle } from 'react-icons/io5';
-import { useNavigate } from 'react-router-dom';
+// components/BookAppointment.jsx
+import React, { useState, useEffect } from "react";
+import { Notify } from "notiflix";
+import {
+  FaCalendarAlt,
+  FaClock,
+  FaMapMarkerAlt,
+  FaUser,
+  FaPhone,
+  FaEnvelope,
+} from "react-icons/fa";
+import { MdVideoCall, MdLocationOn } from "react-icons/md";
+import { IoCheckmarkCircle, IoCloseCircle } from "react-icons/io5";
+import { useNavigate } from "react-router-dom";
 
-import './styles/BookAppointment.css';
+import "./styles/BookAppointment.css";
 
 const BookAppointment = () => {
-  
   const navigate = useNavigate();
-    
-      useEffect(() => {
-        const checkAuth = () => {
-          const token = localStorage.getItem('token');
-          const user = localStorage.getItem('user');
-          
-          if (!token || !user) {
-            Notify.warning('Please log in to access this page');
-            navigate('/'); // Redirect to login page
-            return;
-          }
-          
-          // Optional: Verify token is not expired
-          try {
-            const tokenData = JSON.parse(atob(token.split('.')[1])); // Decode JWT payload
-            if (tokenData.exp * 1000 < Date.now()) {
-              localStorage.removeItem('token');
-              localStorage.removeItem('user');
-              Notify.failure('Session expired. Please log in again.');
-              navigate('/');
-              return;
-            }
-          } catch (error) {
-            // Invalid token format
-            localStorage.removeItem('token');
-            localStorage.removeItem('user');
-            Notify.failure('Invalid session. Please log in again.');
-            navigate('/');
-            return;
-          }
-        };
-    
-        checkAuth();
-      }, [navigate]);
+
+  useEffect(() => {
+    const checkAuth = () => {
+      const token = localStorage.getItem("token");
+      const user = localStorage.getItem("user");
+
+      if (!token || !user) {
+        Notify.warning("Please log in to access this page");
+        navigate("/"); // Redirect to login page
+        return;
+      }
+
+      // Optional: Verify token is not expired
+      try {
+        const tokenData = JSON.parse(atob(token.split(".")[1])); // Decode JWT payload
+        if (tokenData.exp * 1000 < Date.now()) {
+          localStorage.removeItem("token");
+          localStorage.removeItem("user");
+          Notify.failure("Session expired. Please log in again.");
+          navigate("/");
+          return;
+        }
+      } catch (error) {
+        // Invalid token format
+        localStorage.removeItem("token");
+        localStorage.removeItem("user");
+        Notify.failure("Invalid session. Please log in again.");
+        navigate("/");
+        return;
+      }
+    };
+
+    checkAuth();
+  }, [navigate]);
 
   const [availableSlots, setAvailableSlots] = useState([]);
   const [myAppointments, setMyAppointments] = useState([]);
   const [loading, setLoading] = useState(false);
   const [selectedSlot, setSelectedSlot] = useState(null);
   const [formData, setFormData] = useState({
-    studentName: '',
-    studentEmail: '',
-    phone: '',
-    reason: '',
-    preferredType: 'online'
+    studentName: "",
+    studentEmail: "",
+    phone: "",
+    reason: "",
+    preferredType: "online",
   });
-  const [activeTab, setActiveTab] = useState('book');
-  const [error, setError] = useState('');
-  const [success, setSuccess] = useState('');
+  const [activeTab, setActiveTab] = useState("book");
+  const [error, setError] = useState("");
+  const [success, setSuccess] = useState("");
 
   // Helper function to get token properly
   const getAuthToken = () => {
-    const tokenFromStorage = localStorage.getItem('token');
+    const tokenFromStorage = localStorage.getItem("token");
     if (!tokenFromStorage) return null;
 
     try {
@@ -76,16 +82,16 @@ const BookAppointment = () => {
 
   // Helper function to get user data from token
   const getUserDataFromToken = () => {
-    const tokenFromStorage = localStorage.getItem('token');
-    if (!tokenFromStorage) return { name: '', email: '' };
+    const tokenFromStorage = localStorage.getItem("token");
+    if (!tokenFromStorage) return { name: "", email: "" };
 
     try {
       let token;
-      
+
       try {
         const userData = JSON.parse(tokenFromStorage);
         token = userData.token || tokenFromStorage;
-        
+
         if (userData.name && userData.email) {
           return { name: userData.name, email: userData.email };
         }
@@ -93,31 +99,36 @@ const BookAppointment = () => {
         token = tokenFromStorage;
       }
 
-      const base64Url = token.split('.')[1];
-      const base64 = base64Url.replace(/-/g, '+').replace(/_/g, '/');
-      const jsonPayload = decodeURIComponent(atob(base64).split('').map(function(c) {
-        return '%' + ('00' + c.charCodeAt(0).toString(16)).slice(-2);
-      }).join(''));
-      
+      const base64Url = token.split(".")[1];
+      const base64 = base64Url.replace(/-/g, "+").replace(/_/g, "/");
+      const jsonPayload = decodeURIComponent(
+        atob(base64)
+          .split("")
+          .map(function (c) {
+            return "%" + ("00" + c.charCodeAt(0).toString(16)).slice(-2);
+          })
+          .join("")
+      );
+
       const decodedToken = JSON.parse(jsonPayload);
-      
+
       return {
-        name: decodedToken.user?.name || decodedToken.name || '',
-        email: decodedToken.user?.email || decodedToken.email || ''
+        name: decodedToken.user?.name || decodedToken.name || "",
+        email: decodedToken.user?.email || decodedToken.email || "",
       };
     } catch (error) {
-      console.error('Error parsing user data from token:', error);
-      return { name: '', email: '' };
+      console.error("Error parsing user data from token:", error);
+      return { name: "", email: "" };
     }
   };
 
   useEffect(() => {
     const userData = getUserDataFromToken();
     if (userData.name && userData.email) {
-      setFormData(prev => ({
+      setFormData((prev) => ({
         ...prev,
         studentName: userData.name,
-        studentEmail: userData.email
+        studentEmail: userData.email,
       }));
     }
 
@@ -129,26 +140,29 @@ const BookAppointment = () => {
     try {
       const token = getAuthToken();
       if (!token) {
-        setError('Authentication required. Please login again.');
+        setError("Authentication required. Please login again.");
         return;
       }
 
-      const response = await fetch('http://localhost:5000/api/appointments/slots/available?limit=20', {
-        headers: {
-          'Authorization': `Bearer ${token}`,
-          'Content-Type': 'application/json'
+      const response = await fetch(
+        "http://localhost:5000/api/appointments/slots/available?limit=20",
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+            "Content-Type": "application/json",
+          },
         }
-      });
-      
+      );
+
       const data = await response.json();
       if (data.success) {
         setAvailableSlots(data.data.slots || []);
       } else {
-        console.error('Failed to fetch slots:', data.message);
+        console.error("Failed to fetch slots:", data.message);
       }
     } catch (error) {
-      console.error('Error fetching slots:', error);
-      setError('Failed to load available slots. Please refresh the page.');
+      console.error("Error fetching slots:", error);
+      setError("Failed to load available slots. Please refresh the page.");
     }
   };
 
@@ -157,43 +171,43 @@ const BookAppointment = () => {
       const token = getAuthToken();
       if (!token) return;
 
-      const response = await fetch('http://localhost:5000/api/appointments', {
+      const response = await fetch("http://localhost:5000/api/appointments", {
         headers: {
-          'Authorization': `Bearer ${token}`,
-          'Content-Type': 'application/json'
-        }
+          Authorization: `Bearer ${token}`,
+          "Content-Type": "application/json",
+        },
       });
-      
+
       const data = await response.json();
       if (data.success) {
         setMyAppointments(data.data.appointments || []);
       }
     } catch (error) {
-      console.error('Error fetching appointments:', error);
+      console.error("Error fetching appointments:", error);
     }
   };
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
-    setFormData(prev => ({
+    setFormData((prev) => ({
       ...prev,
-      [name]: value
+      [name]: value,
     }));
   };
 
   const handleSlotSelect = (slot) => {
     setSelectedSlot(slot);
-    setError('');
+    setError("");
   };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     setLoading(true);
-    setError('');
-    setSuccess('');
+    setError("");
+    setSuccess("");
 
     if (!selectedSlot) {
-      setError('Please select a time slot');
+      setError("Please select a time slot");
       setLoading(false);
       return;
     }
@@ -201,51 +215,56 @@ const BookAppointment = () => {
     try {
       const token = getAuthToken();
       if (!token) {
-        setError('Authentication required. Please login again.');
+        setError("Authentication required. Please login again.");
         setLoading(false);
         return;
       }
 
       const appointmentData = {
         ...formData,
-        timeSlotId: selectedSlot._id
+        timeSlotId: selectedSlot._id,
       };
 
-      const response = await fetch('http://localhost:5000/api/appointments/book', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          'Authorization': `Bearer ${token}`
-        },
-        body: JSON.stringify(appointmentData)
-      });
+      const response = await fetch(
+        "http://localhost:5000/api/appointments/book",
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${token}`,
+          },
+          body: JSON.stringify(appointmentData),
+        }
+      );
 
       const data = await response.json();
 
       if (response.ok) {
-        setSuccess('Appointment booked successfully! You will receive a confirmation email.');
-        Notify.success('Appointment booked successfully!');
-        
-        setFormData(prev => ({
+        setSuccess(
+          "Appointment booked successfully! You will receive a confirmation email."
+        );
+        Notify.success("Appointment booked successfully!");
+
+        setFormData((prev) => ({
           ...prev,
-          reason: '',
-          phone: ''
+          reason: "",
+          phone: "",
         }));
         setSelectedSlot(null);
-        
+
         fetchAvailableSlots();
         fetchMyAppointments();
-        
+
         setTimeout(() => {
-          setActiveTab('appointments');
+          setActiveTab("appointments");
         }, 2000);
       } else {
-        setError(data.message || 'Failed to book appointment');
-        Notify.failure(data.message || 'Failed to book appointment');
+        setError(data.message || "Failed to book appointment");
+        Notify.failure(data.message || "Failed to book appointment");
       }
     } catch (error) {
-      setError('Network error. Please try again.');
-      Notify.failure('Network error. Please try again.');
+      setError("Network error. Please try again.");
+      Notify.failure("Network error. Please try again.");
     } finally {
       setLoading(false);
     }
@@ -253,26 +272,50 @@ const BookAppointment = () => {
 
   const formatDate = (dateString) => {
     const date = new Date(dateString);
-    return date.toLocaleDateString('en-US', {
-      weekday: 'long',
-      year: 'numeric',
-      month: 'long',
-      day: 'numeric'
+    return date.toLocaleDateString("en-US", {
+      weekday: "long",
+      year: "numeric",
+      month: "long",
+      day: "numeric",
     });
   };
 
   const getStatusBadge = (status) => {
     const statusConfig = {
-      pending: { class: 'book-appointment-status-pending', icon: <FaClock />, text: 'Pending' },
-      confirmed: { class: 'book-appointment-status-confirmed', icon: <IoCheckmarkCircle />, text: 'Confirmed' },
-      rejected: { class: 'book-appointment-status-rejected', icon: <IoCloseCircle />, text: 'Rejected' },
-      completed: { class: 'book-appointment-status-completed', icon: <IoCheckmarkCircle />, text: 'Completed' },
-      cancelled: { class: 'book-appointment-status-cancelled', icon: <IoCloseCircle />, text: 'Cancelled' },
-      rescheduled: { class: 'book-appointment-status-rescheduled', icon: <FaCalendarAlt />, text: 'Rescheduled' }
+      pending: {
+        class: "book-appointment-status-pending",
+        icon: <FaClock />,
+        text: "Pending",
+      },
+      confirmed: {
+        class: "book-appointment-status-confirmed",
+        icon: <IoCheckmarkCircle />,
+        text: "Confirmed",
+      },
+      rejected: {
+        class: "book-appointment-status-rejected",
+        icon: <IoCloseCircle />,
+        text: "Rejected",
+      },
+      completed: {
+        class: "book-appointment-status-completed",
+        icon: <IoCheckmarkCircle />,
+        text: "Completed",
+      },
+      cancelled: {
+        class: "book-appointment-status-cancelled",
+        icon: <IoCloseCircle />,
+        text: "Cancelled",
+      },
+      rescheduled: {
+        class: "book-appointment-status-rescheduled",
+        icon: <FaCalendarAlt />,
+        text: "Rescheduled",
+      },
     };
 
     const config = statusConfig[status] || statusConfig.pending;
-    
+
     return (
       <span className={`book-appointment-status-badge ${config.class}`}>
         {config.icon}
@@ -285,15 +328,19 @@ const BookAppointment = () => {
     <div className="book-appointment-container">
       {/* Tab Navigation */}
       <div className="book-appointment-tab-navigation">
-        <button 
-          className={`book-appointment-tab-btn ${activeTab === 'book' ? 'active' : ''}`}
-          onClick={() => setActiveTab('book')}
+        <button
+          className={`book-appointment-tab-btn ${
+            activeTab === "book" ? "active" : ""
+          }`}
+          onClick={() => setActiveTab("book")}
         >
           <FaCalendarAlt /> Book Appointment
         </button>
-        <button 
-          className={`book-appointment-tab-btn ${activeTab === 'appointments' ? 'active' : ''}`}
-          onClick={() => setActiveTab('appointments')}
+        <button
+          className={`book-appointment-tab-btn ${
+            activeTab === "appointments" ? "active" : ""
+          }`}
+          onClick={() => setActiveTab("appointments")}
         >
           <FaClock /> My Appointments ({myAppointments.length})
         </button>
@@ -301,14 +348,19 @@ const BookAppointment = () => {
 
       {/* Content */}
       <div className="book-appointment-content">
-        {activeTab === 'book' && (
+        {activeTab === "book" && (
           <div className="book-appointment-section">
             {/* Error/Success Messages */}
             {error && (
               <div className="book-appointment-message-alert book-appointment-error-alert">
                 <IoCloseCircle className="book-appointment-alert-icon" />
                 <span>{error}</span>
-                <button onClick={() => setError('')} className="book-appointment-close-btn">×</button>
+                <button
+                  onClick={() => setError("")}
+                  className="book-appointment-close-btn"
+                >
+                  ×
+                </button>
               </div>
             )}
 
@@ -316,7 +368,12 @@ const BookAppointment = () => {
               <div className="book-appointment-message-alert book-appointment-success-alert">
                 <IoCheckmarkCircle className="book-appointment-alert-icon" />
                 <span>{success}</span>
-                <button onClick={() => setSuccess('')} className="book-appointment-close-btn">×</button>
+                <button
+                  onClick={() => setSuccess("")}
+                  className="book-appointment-close-btn"
+                >
+                  ×
+                </button>
               </div>
             )}
 
@@ -327,19 +384,23 @@ const BookAppointment = () => {
                   <FaClock className="book-appointment-section-icon" />
                   Available Time Slots
                 </h3>
-                
+
                 <div className="book-appointment-slots-container">
                   {availableSlots.length === 0 ? (
                     <div className="book-appointment-no-slots">
                       <FaCalendarAlt className="book-appointment-no-slots-icon" />
                       <p>No available slots at the moment</p>
-                      <small>Please check back later or contact the academic office</small>
+                      <small>
+                        Please check back later or contact the academic office
+                      </small>
                     </div>
                   ) : (
                     availableSlots.map((slot) => (
-                      <div 
+                      <div
                         key={slot._id}
-                        className={`book-appointment-slot-card ${selectedSlot?._id === slot._id ? 'selected' : ''}`}
+                        className={`book-appointment-slot-card ${
+                          selectedSlot?._id === slot._id ? "selected" : ""
+                        }`}
                         onClick={() => handleSlotSelect(slot)}
                       >
                         <div className="book-appointment-slot-header">
@@ -352,28 +413,33 @@ const BookAppointment = () => {
                             {slot.time}
                           </div>
                         </div>
-                        
+
                         <div className="book-appointment-slot-details">
                           <div className="book-appointment-advisor-info">
                             <FaUser />
-                            <span>{slot.advisor?.name || 'Academic Advisor'}</span>
+                            <span>
+                              {slot.advisor?.name || "Academic Advisor"}
+                            </span>
                           </div>
-                          
+
                           <div className="book-appointment-slot-type">
-                            {slot.type === 'online' && <MdVideoCall />}
-                            {slot.type === 'physical' && <MdLocationOn />}
-                            {slot.type === 'both' && (
+                            {slot.type === "online" && <MdVideoCall />}
+                            {slot.type === "physical" && <MdLocationOn />}
+                            {slot.type === "both" && (
                               <>
                                 <MdVideoCall />
                                 <MdLocationOn />
                               </>
                             )}
                             <span>
-                              {slot.type === 'both' ? 'Online or Physical' : 
-                               slot.type === 'online' ? 'Online Meeting' : 'Physical Meeting'}
+                              {slot.type === "both"
+                                ? "Online or Physical"
+                                : slot.type === "online"
+                                ? "Online Meeting"
+                                : "Physical Meeting"}
                             </span>
                           </div>
-                          
+
                           {slot.location && (
                             <div className="book-appointment-slot-location">
                               <FaMapMarkerAlt />
@@ -396,18 +462,17 @@ const BookAppointment = () => {
 
                 <form onSubmit={handleSubmit} className="book-appointment-form">
                   <div className="book-appointment-form-group">
-                      <div className="book-appointment-form-group">
-                  
-                    <input
-                      type="tel"
-                      name="phone"
-                      value={formData.phone}
-                      onChange={handleInputChange}
-                      required
-                      className="book-appointment-form-input"
-                      placeholder="Phone Number"
-                    />
-                  </div>
+                    <div className="book-appointment-form-group">
+                      <input
+                        type="tel"
+                        name="phone"
+                        value={formData.phone}
+                        onChange={handleInputChange}
+                        required
+                        className="book-appointment-form-input"
+                        placeholder="Phone Number (+250)"
+                      />
+                    </div>
                     <label className="book-appointment-form-label">
                       {/* <FaUser className="book-appointment-label-icon" /> */}
                       {/* Full Name */}
@@ -439,8 +504,6 @@ const BookAppointment = () => {
                     />
                   </div>
 
-                
-
                   <div className="book-appointment-form-group">
                     <label className="book-appointment-form-label">
                       Meeting Preference
@@ -451,7 +514,7 @@ const BookAppointment = () => {
                           type="radio"
                           name="preferredType"
                           value="online"
-                          checked={formData.preferredType === 'online'}
+                          checked={formData.preferredType === "online"}
                           onChange={handleInputChange}
                         />
                         <span className="book-appointment-radio-custom"></span>
@@ -463,7 +526,7 @@ const BookAppointment = () => {
                           type="radio"
                           name="preferredType"
                           value="physical"
-                          checked={formData.preferredType === 'physical'}
+                          checked={formData.preferredType === "physical"}
                           onChange={handleInputChange}
                         />
                         <span className="book-appointment-radio-custom"></span>
@@ -492,17 +555,25 @@ const BookAppointment = () => {
                     <div className="book-appointment-selected-slot-summary">
                       <h4>Selected Appointment</h4>
                       <div className="book-appointment-summary-details">
-                        <p><FaCalendarAlt /> {formatDate(selectedSlot.date)}</p>
-                        <p><FaClock /> {selectedSlot.time}</p>
-                        <p><FaUser /> {selectedSlot.advisor?.name}</p>
+                        <p>
+                          <FaCalendarAlt /> {formatDate(selectedSlot.date)}
+                        </p>
+                        <p>
+                          <FaClock /> {selectedSlot.time}
+                        </p>
+                        <p>
+                          <FaUser /> {selectedSlot.advisor?.name}
+                        </p>
                       </div>
                     </div>
                   )}
 
-                  <button 
-                    type="submit" 
+                  <button
+                    type="submit"
                     disabled={loading || !selectedSlot}
-                    className={`book-appointment-submit-btn ${loading ? 'loading' : ''}`}
+                    className={`book-appointment-submit-btn ${
+                      loading ? "loading" : ""
+                    }`}
                   >
                     {loading ? (
                       <>
@@ -522,7 +593,7 @@ const BookAppointment = () => {
           </div>
         )}
 
-        {activeTab === 'appointments' && (
+        {activeTab === "appointments" && (
           <div className="book-appointment-appointments-section">
             <h3 className="book-appointment-section-title">
               <FaClock className="book-appointment-section-icon" />
@@ -533,9 +604,13 @@ const BookAppointment = () => {
               <div className="book-appointment-no-appointments">
                 <FaCalendarAlt className="book-appointment-no-appointments-icon" />
                 <h4>No Appointments Yet</h4>
-                <p>You haven't booked any appointments. Click on "Book Appointment" to schedule your first meeting with an academic advisor.</p>
-                <button 
-                  onClick={() => setActiveTab('book')}
+                <p>
+                  You haven't booked any appointments. Click on "Book
+                  Appointment" to schedule your first meeting with an academic
+                  advisor.
+                </p>
+                <button
+                  onClick={() => setActiveTab("book")}
                   className="book-appointment-first-btn"
                 >
                   <FaCalendarAlt />
@@ -550,8 +625,12 @@ const BookAppointment = () => {
                       <div className="book-appointment-date">
                         <FaCalendarAlt />
                         <div>
-                          <div className="book-appointment-date-main">{formatDate(appointment.date)}</div>
-                          <div className="book-appointment-time-main">{appointment.time}</div>
+                          <div className="book-appointment-date-main">
+                            {formatDate(appointment.date)}
+                          </div>
+                          <div className="book-appointment-time-main">
+                            {appointment.time}
+                          </div>
                         </div>
                       </div>
                       {getStatusBadge(appointment.status)}
@@ -561,20 +640,32 @@ const BookAppointment = () => {
                       <div className="book-appointment-advisor-section">
                         <FaUser className="book-appointment-detail-icon" />
                         <div>
-                          <strong>{appointment.advisor?.name || 'Academic Advisor'}</strong>
+                          <strong>
+                            {appointment.advisor?.name || "Academic Advisor"}
+                          </strong>
                           {appointment.advisor?.department && (
-                            <div className="book-appointment-advisor-dept">{appointment.advisor.department}</div>
+                            <div className="book-appointment-advisor-dept">
+                              {appointment.advisor.department}
+                            </div>
                           )}
                         </div>
                       </div>
 
                       <div className="book-appointment-meeting-info">
                         <div className="book-appointment-meeting-type">
-                          {appointment.type === 'online' && <MdVideoCall className="book-appointment-detail-icon" />}
-                          {appointment.type === 'physical' && <MdLocationOn className="book-appointment-detail-icon" />}
-                          <span>{appointment.type === 'online' ? 'Online Meeting' : 'Physical Meeting'}</span>
+                          {appointment.type === "online" && (
+                            <MdVideoCall className="book-appointment-detail-icon" />
+                          )}
+                          {appointment.type === "physical" && (
+                            <MdLocationOn className="book-appointment-detail-icon" />
+                          )}
+                          <span>
+                            {appointment.type === "online"
+                              ? "Online Meeting"
+                              : "Physical Meeting"}
+                          </span>
                         </div>
-                        
+
                         <div className="book-appointment-meeting-location">
                           <FaMapMarkerAlt className="book-appointment-detail-icon" />
                           <span>{appointment.location}</span>

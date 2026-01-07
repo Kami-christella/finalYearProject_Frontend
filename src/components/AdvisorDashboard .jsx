@@ -3,9 +3,8 @@ import React, { useState, useEffect } from 'react';
 import { Notify } from 'notiflix';
 import './styles/AdvisorDashboard.css';
 import { IoPersonCircle, IoHomeOutline, IoSettings } from "react-icons/io5";
-import AUCA from "../assets/images/AUCA.png"
-import AUCALOGO from "../assets/images/AUCALOGO.png"
-import { IoMdPerson } from "react-icons/io";
+import AUCA from "../assets/images/AUCA.png";
+import AUCALOGO from "../assets/images/AUCALOGO.png";
 import { IoIosLogOut } from "react-icons/io";
 import { useNavigate, useLocation } from "react-router-dom";
 import QuestionsManager from './QuestionsManager.jsx';
@@ -168,7 +167,21 @@ const [appointmentForm, setAppointmentForm] = useState({
   meetingType: 'physical',
   meetingLink: ''
 });
+// Helper function to safely get the first letter for avatar
+const getAvatarLetter = (appointment) => {
+  if (appointment.student?.name) {
+    return appointment.student.name.charAt(0).toUpperCase();
+  }
+  if (appointment.studentName) {
+    return appointment.studentName.charAt(0).toUpperCase();
+  }
+  return 'A'; // Default for available slots
+};
 
+// Helper to check if appointment has student info
+const hasStudentInfo = (appointment) => {
+  return !!(appointment.student || appointment.studentName);
+};
   useEffect(() => {
     if (activeTab === 'overview') {
       fetchDashboardData();
@@ -193,9 +206,12 @@ const [appointmentForm, setAppointmentForm] = useState({
   filterMessages();
 }, [messages, messageSearchTerm, messageFilter]);
 
+  // useEffect(() => {
+  //   filterAppointments();
+  // }, [appointments, appointmentFilter, dateFilter]);
   useEffect(() => {
-    filterAppointments();
-  }, [appointments, appointmentFilter, dateFilter]);
+  filterAppointments();
+}, [appointments, appointmentFilter, dateFilter]);
 
   useEffect(() => {
     const user = JSON.parse(localStorage.getItem('user'));
@@ -746,7 +762,7 @@ const fetchStudentRecommendations = async (studentUserId) => {
   };
 
 
-
+// Replace your fetchAppointments function with this:
 const fetchAppointments = async (page = 1) => {
   try {
     setLoading(true);
@@ -765,18 +781,62 @@ const fetchAppointments = async (page = 1) => {
     const appointmentsData = appointmentsRes.ok ? await appointmentsRes.json() : { data: { appointments: [] } };
     const slotsData = slotsRes.ok ? await slotsRes.json() : { data: { slots: [] } };
     
-    // ✅ DON'T mix appointments with slots - keep them separate!
-    setAppointments(appointmentsData.data.appointments || []);
-    setAvailableSlots(slotsData.data.slots || []); // Store slots separately
+    // ✅ FIX: Combine both booked appointments AND available slots
+    const bookedAppointments = appointmentsData.data.appointments || [];
+    const availableSlots = slotsData.data.slots || [];
+    
+    // Merge them together
+    const allAppointments = [...bookedAppointments, ...availableSlots];
+    
+    console.log('📊 Fetched data:', {
+      bookedCount: bookedAppointments.length,
+      availableSlotsCount: availableSlots.length,
+      totalCount: allAppointments.length
+    });
+    
+    setAppointments(allAppointments);
     setAppointmentPagination(appointmentsData.data.pagination || appointmentPagination);
     
   } catch (error) {
+    console.error('Error fetching appointments:', error);
     setAppointments([]);
     Notify.failure('Error loading appointments');
   } finally {
     setLoading(false);
   }
 };
+// const fetchAppointments = async (page = 1) => {
+//   try {
+//     setLoading(true);
+//     const token = localStorage.getItem('token');
+    
+//     // Fetch both appointments and available slots
+//     const [appointmentsRes, slotsRes] = await Promise.all([
+//       fetch(`http://localhost:5000/api/appointments/manage?page=${page}&limit=10`, {
+//         headers: { 'Authorization': `Bearer ${token}` }
+//       }),
+//       fetch(`http://localhost:5000/api/appointments/slots/my-slots`, {
+//         headers: { 'Authorization': `Bearer ${token}` }
+//       })
+//     ]);
+    
+//     const appointmentsData = appointmentsRes.ok ? await appointmentsRes.json() : { data: { appointments: [] } };
+//     const slotsData = slotsRes.ok ? await slotsRes.json() : { data: { slots: [] } };
+    
+//     // ✅ DON'T mix appointments with slots - keep them separate!
+//     setAppointments(appointmentsData.data.appointments || []);
+//     setAvailableSlots(slotsData.data.slots || []); // Store slots separately
+//     setAppointmentPagination(appointmentsData.data.pagination || appointmentPagination);
+    
+//   } catch (error) {
+//     setAppointments([]);
+//     Notify.failure('Error loading appointments');
+//   } finally {
+//     setLoading(false);
+//   }
+// };
+
+
 
 
 // const filterAppointments = () => {
@@ -803,12 +863,21 @@ const fetchAppointments = async (page = 1) => {
 //   setFilteredAppointments(filtered);
 // };
 
-const filterAppointments = () => {
-  let filtered = appointments; // Only filter actual appointments, not slots
+ const filterAppointments = () => {
+  let filtered = appointments;
+  
+  console.log('🔍 Filtering appointments:', {
+    totalAppointments: appointments.length,
+    currentFilter: appointmentFilter,
+    dateFilter: dateFilter
+  });
   
   // Filter by status
   if (appointmentFilter !== 'all') {
-    filtered = filtered.filter(appointment => appointment.status === appointmentFilter);
+    filtered = filtered.filter(appointment => {
+      const status = appointment.status || 'available';
+      return status === appointmentFilter;
+    });
   }
   
   // Filter by date range
@@ -824,32 +893,9 @@ const filterAppointments = () => {
     });
   }
   
+  console.log('✅ Filtered results:', filtered.length);
   setFilteredAppointments(filtered);
 };
-
-  // const filterAppointments = () => {
-  //   let filtered = appointments;
-    
-  //   // Filter by status
-  //   if (appointmentFilter !== 'all') {
-  //     filtered = filtered.filter(appointment => appointment.status === appointmentFilter);
-  //   }
-    
-  //   // Filter by date range
-  //   if (dateFilter.start || dateFilter.end) {
-  //     filtered = filtered.filter(appointment => {
-  //       const appointmentDate = new Date(appointment.date);
-  //       const startDate = dateFilter.start ? new Date(dateFilter.start) : null;
-  //       const endDate = dateFilter.end ? new Date(dateFilter.end) : null;
-        
-  //       if (startDate && appointmentDate < startDate) return false;
-  //       if (endDate && appointmentDate > endDate) return false;
-  //       return true;
-  //     });
-  //   }
-    
-  //   setFilteredAppointments(filtered);
-  // };
     
 
   const handleCreateAppointment = async (e) => {
@@ -2043,7 +2089,7 @@ const handleLogoutBtn = () => {
                     <span className="btn-icon">👁️</span>
                     View
                   </button>
-                  <button
+                  {/* <button
                     onClick={() => {
                       downloadDocument(
                         selectedStudentDocuments.studentId, 
@@ -2056,7 +2102,7 @@ const handleLogoutBtn = () => {
                   >
                     <span className="btn-icon">⬇️</span>
                     Download
-                  </button>
+                  </button> */}
                 </div>
               </div>
             ))}
@@ -2095,7 +2141,7 @@ const handleLogoutBtn = () => {
                     <thead>
                       <tr>
                         <th>Student</th>
-                        <th>Action</th>
+                       
                         <th>Date</th>
                         <th>Nationality / Faculty</th>
                         <th>Advisor Notes</th>
@@ -2105,9 +2151,9 @@ const handleLogoutBtn = () => {
                       {activityLog.map((activity, index) => (
                         <tr key={index}>
                           <td>{activity.student?.name || 'Unknown'}</td>
-                          <td>{activity.action} by {activity.reviewedBy}</td>
+                         
                           <td>{formatDate(activity.reviewDate)}</td>
-                          <td>{activity.nationality} • {activity.desiredFaculty}</td>
+                          <td>{activity.nationality} / {activity.desiredFaculty}</td>
                           <td>{activity.advisorNotes || '-'}</td>
                         </tr>
                       ))}
@@ -2221,8 +2267,36 @@ const handleLogoutBtn = () => {
                         >
                           <span className="day-number">{day.date.getDate()}</span>
                 
-
 <div className="day-appointments">
+  {getAppointmentsForDateSorted(day.date).slice(0, 3).map((apt, i) => (
+    <div 
+      key={i} 
+      className={`mini-appointment ${apt.status || 'available'}`}
+      title={`${formatTimeForCalendar(apt.startTime || apt.time)} - ${apt.status || 'available'} ${apt.student?.name || apt.studentName || 'Available Slot'}`}
+    >
+      <div className="appointment-time-display">
+        {formatTimeForCalendar(apt.startTime || apt.time)}
+      </div>
+      <div className="appointment-status-display">
+        {apt.status === 'booked' || apt.status === 'confirmed' ? (
+          <span className="booked-label">
+            {apt.student?.name?.split(' ')[0] || apt.studentName?.split(' ')[0] || 'Booked'}
+          </span>
+        ) : (apt.status === 'available' || !apt.status) ? (
+          <span className="available-label">Available</span>
+        ) : (
+          <span className="other-status-label">{apt.status}</span>
+        )}
+      </div>
+    </div>
+  ))}
+  {getAppointmentsForDateSorted(day.date).length > 3 && (
+    <div className="more-appointments">
+      +{getAppointmentsForDateSorted(day.date).length - 3} more
+    </div>
+  )}
+</div>
+{/* <div className="day-appointments">
   {getAppointmentsForDate(day.date).slice(0, 3).map((apt, i) => (
     <div key={i} className={`mini-appointment ${apt.status}`} title={`${apt.startTime || apt.time} - ${apt.status} ${apt.student?.name || apt.studentName || ''}`}>
       <div className="appointment-time-display">
@@ -2246,7 +2320,7 @@ const handleLogoutBtn = () => {
       +{getAppointmentsForDate(day.date).length - 3} more
     </div>
   )}
-</div>
+</div> */}
                         </div>
                       ))}
                     </div>
@@ -2262,27 +2336,27 @@ const handleLogoutBtn = () => {
                     </div>
                   ) : filteredAppointments.length > 0 ? (
                     <div className="appointments-grid">
-                      {filteredAppointments.map((appointment) => (
-                        <div key={appointment._id} className={`appointment-card ${appointment.status}`}>
-                          <div className="appointment-header">
-                            <div className="appointment-time">
-                              <span className="appointment-date">
-                                {new Date(appointment.date).toLocaleDateString('en-US', {
-                                  weekday: 'short',
-                                  month: 'short',
-                                  day: 'numeric'
-                                })}
-                              </span>
-                              <span className="appointment-time-slot">
-                                {appointment.startTime || appointment.time} - {appointment.endTime || appointment.time}
-                              </span>
-                            </div>
-                            <div className={`appointment-status-badge ${appointment.status}`}>
-                              {appointment.status.charAt(0).toUpperCase() + appointment.status.slice(1)}
-                            </div>
-                          </div>
+                     {filteredAppointments.map((appointment) => (
+  <div key={appointment._id} className={`appointment-card ${appointment.status || 'available'}`}>
+    <div className="appointment-header">
+      <div className="appointment-time">
+        <span className="appointment-date">
+          {new Date(appointment.date).toLocaleDateString('en-US', {
+            weekday: 'short',
+            month: 'short',
+            day: 'numeric'
+          })}
+        </span>
+        <span className="appointment-time-slot">
+          {appointment.startTime || appointment.time} - {appointment.endTime || appointment.time}
+        </span>
+      </div>
+      <div className={`appointment-status-badge ${appointment.status || 'available'}`}>
+        {((appointment.status || 'available').charAt(0).toUpperCase() + (appointment.status || 'available').slice(1))}
+      </div>
+    </div>
 
-                          <div className="appointment-content">
+                          {/* <div className="appointment-content">
                             {appointment.status === 'booked' && appointment.student ? (
                               <div className="appointment-student-info">
                                 <div className="student-avatar-small">
@@ -2326,7 +2400,53 @@ const handleLogoutBtn = () => {
                                 </a>
                               </div>
                             ) : null}
-                          </div>
+                          </div> */}
+                          
+                          <div className="appointment-content">
+  {(appointment.status === 'booked' || appointment.status === 'confirmed') && hasStudentInfo(appointment) ? (
+    <div className="appointment-student-info">
+      <div className="student-avatar-small">
+        {getAvatarLetter(appointment)}
+      </div>
+      <div className="student-details">
+        <h4 className="student-name">{appointment.student?.name || appointment.studentName}</h4>
+        <p className="student-email">{appointment.student?.email || appointment.studentEmail}</p>
+        <p className="appointment-purpose">{appointment.reason || 'General consultation'}</p>
+      </div>
+    </div>
+  ) : (appointment.status === 'available' || !appointment.status) ? (
+    <div className="appointment-available">
+      <div className="available-icon">📅</div>
+      <p className="available-text">Available slot</p>
+      <p className="slot-duration">{appointment.duration || 30} minutes</p>
+    </div>
+  ) : (
+    <div className="appointment-student-info">
+      <div className="student-avatar-small">
+        {getAvatarLetter(appointment)}
+      </div>
+      <div className="student-details">
+        <h4 className="student-name">{appointment.studentName || 'No student assigned'}</h4>
+        <p className="student-email">{appointment.studentEmail || ''}</p>
+        <p className="appointment-purpose">{appointment.reason || 'General consultation'}</p>
+      </div>
+    </div>
+  )}
+
+  {appointment.notes && (
+    <div className="appointment-notes">
+      <strong>Notes:</strong> {appointment.notes}
+    </div>
+  )}
+
+  {appointment.meetingLink || appointment.location?.includes('http') ? (
+    <div className="meeting-link">
+      <a href={appointment.meetingLink || appointment.location} target="_blank" rel="noopener noreferrer" className="meeting-link-btn">
+        🎥 Join Meeting
+      </a>
+    </div>
+  ) : null}
+</div>
                              {/* start */}
                           {/* <div className="appointment-actions">
                             {appointment.status === 'available' && (
@@ -3497,7 +3617,7 @@ const handleLogoutBtn = () => {
                     }}
                     className="btn-download"
                   >
-                    Download Document
+                    View & Download  Document
                   </button>
                 </div>
               </div>
