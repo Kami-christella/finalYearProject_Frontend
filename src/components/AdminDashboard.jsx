@@ -2836,13 +2836,16 @@ const AdvisorDashboard = () => {
                   <div className="filter-dropdown">
                     <select
                       value={filterRole}
-                      onChange={(e) => setFilterRole(e.target.value)}
+                      onChange={(e) => {
+                        setFilterRole(e.target.value);
+                        setPagination((prev) => ({ ...prev, currentPage: 1 }));
+                      }}
                       className="filter-select"
                     >
                       <option value="all">All users</option>
                       <option value="user">Students</option>
                       <option value="advisor">Advisors</option>
-                      <option value="Admin">Admins</option>
+                      <option value="admin">Admins</option>
                     </select>
                   </div>
 
@@ -3130,7 +3133,7 @@ const AdvisorDashboard = () => {
               placeholder="Department (optional)"
             />
           </div> */}
-                          <div className="form-group">
+                          {/* <div className="form-group">
                             <label className="form-label">Status</label>
                             <select
                               value={editUserForm.isActive}
@@ -3145,7 +3148,7 @@ const AdvisorDashboard = () => {
                               <option value="true">Active</option>
                               <option value="false">Inactive</option>
                             </select>
-                          </div>
+                          </div> */}
                         </div>
 
                         <div className="form-row">
