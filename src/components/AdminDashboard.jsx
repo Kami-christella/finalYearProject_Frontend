@@ -5229,7 +5229,7 @@ const AdvisorDashboard = () => {
                           Student Profiles Report
                         </option>
                         <option value="assessments">Assessments Report</option>
-                        <option value="activity">Activity Report</option>
+                        {/* <option value="activity">Activity Report</option> */}
                       </select>
                     </div>
                     <div className="form-group">
@@ -5246,7 +5246,7 @@ const AdvisorDashboard = () => {
                         required
                       >
                         <option value="excel">Excel (.xlsx)</option>
-                        <option value="pdf">PDF</option>
+                        {/* <option value="pdf">PDF</option> */}
                       </select>
                     </div>
                   </div>
@@ -5321,20 +5321,20 @@ const AdvisorDashboard = () => {
 
                   {/* Advanced Filters Section */}
                   <div
-                    className="advanced-filters"
-                    style={{
-                      marginTop: "1.5rem",
-                      padding: "1rem",
-                      background: "#f8fafc",
-                      borderRadius: "8px",
-                      border: "1px solid #e2e8f0",
-                    }}
+                    // className="advanced-filters"
+                    // style={{
+                    //   marginTop: "1.5rem",
+                    //   padding: "1rem",
+                    //   background: "#f8fafc",
+                    //   borderRadius: "8px",
+                    //   border: "1px solid #e2e8f0",
+                    // }}
                   >
-                    <h4 style={{ marginBottom: "1rem", color: "#374151" }}>
+                    {/* <h4 style={{ marginBottom: "1rem", color: "#374151" }}>
                       Advanced Filters (Optional)
-                    </h4>
+                    </h4> */}
 
-                    {reportForm.reportType === "users" && (
+                    {/* {reportForm.reportType === "users" && (
                       <div className="form-row">
                         <div className="form-group">
                           <label className="form-label">User Role</label>
@@ -5378,9 +5378,9 @@ const AdvisorDashboard = () => {
                           </select>
                         </div>
                       </div>
-                    )}
+                    )} */}
 
-                    {reportForm.reportType === "profiles" && (
+                    {/* {reportForm.reportType === "profiles" && (
                       <div className="form-row">
                         <div className="form-group">
                           <label className="form-label">Approval Status</label>
@@ -5439,9 +5439,9 @@ const AdvisorDashboard = () => {
                           </select>
                         </div>
                       </div>
-                    )}
+                    )} */}
 
-                    {reportForm.reportType === "activity" && (
+                    {/* {reportForm.reportType === "activity" && (
                       <div className="form-group">
                         <label className="form-label">Activity Type</label>
                         <select
@@ -5467,10 +5467,10 @@ const AdvisorDashboard = () => {
                           </option>
                         </select>
                       </div>
-                    )}
+                    )} */}
                   </div>
 
-                  <div className="form-group" style={{ marginTop: "1rem" }}>
+                  {/* <div className="form-group" style={{ marginTop: "1rem" }}>
                     <label className="form-label">
                       <input
                         type="checkbox"
@@ -5485,7 +5485,7 @@ const AdvisorDashboard = () => {
                       />
                       Include charts and visualizations (PDF only)
                     </label>
-                  </div>
+                  </div> */}
 
                   <div className="modal-actions" style={{ marginTop: "2rem" }}>
                     <button
