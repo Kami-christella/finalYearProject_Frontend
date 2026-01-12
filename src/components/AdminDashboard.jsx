@@ -744,44 +744,7 @@ const AdvisorDashboard = () => {
       setReportLoading(false);
     }
   };
-  // const handleGenerateSystemReport = async (format = 'excel') => {
-  //   try {
-  //     setReportLoading(true);
-  //     const token = localStorage.getItem('token');
-
-  //     const params = new URLSearchParams({
-
-  //       reportType: 'system',
-  //       startDate: reportForm.startDate,
-  //       endDate: reportForm.endDate,
-  //       includeCharts: reportForm.includeCharts
-  //     });
-
-  //     const response = await fetch(`http://localhost:5000/api/admin/reports/system/${format}?${params}`, {
-  //       headers: { 'Authorization': `Bearer ${token}` }
-  //     });
-
-  //     if (response.ok) {
-  //       const blob = await response.blob();
-  //       const url = window.URL.createObjectURL(blob);
-  //       const a = document.createElement('a');
-  //       a.href = url;
-  //       a.download = `system-report-${new Date().toISOString().split('T')[0]}.${format === 'pdf' ? 'pdf' : 'xlsx'}`;
-  //       document.body.appendChild(a);
-  //       a.click();
-  //       window.URL.revokeObjectURL(url);
-  //       document.body.removeChild(a);
-
-  //       Notify.success(`${format.toUpperCase()} report downloaded successfully!`);
-  //     } else {
-  //       throw new Error('Failed to generate report');
-  //     }
-  //   } catch (error) {
-  //     Notify.failure('Error generating report: ' + error.message);
-  //   } finally {
-  //     setReportLoading(false);
-  //   }
-  // };
+  
 
   // Generate Analytics Report
 
@@ -835,42 +798,7 @@ const AdvisorDashboard = () => {
       setReportLoading(false);
     }
   };
-  // const handleGenerateAnalyticsReport = async (format = 'excel') => {
-  //   try {
-  //     setReportLoading(true);
-  //     const token = localStorage.getItem('token');
-
-  //     const params = new URLSearchParams({
-  //       format: format,
-  //       period: reportForm.dateRange
-  //     });
-
-  //     const response = await fetch(`http://localhost:5000/api/admin/reports/analytics?${params}`, {
-  //       headers: { 'Authorization': `Bearer ${token}` }
-  //     });
-
-  //     if (response.ok) {
-  //       const blob = await response.blob();
-  //       const url = window.URL.createObjectURL(blob);
-  //       const a = document.createElement('a');
-  //       a.href = url;
-  //       a.download = `analytics-report-${reportForm.dateRange}-${new Date().toISOString().split('T')[0]}.${format === 'pdf' ? 'pdf' : 'xlsx'}`;
-  //       document.body.appendChild(a);
-  //       a.click();
-  //       window.URL.revokeObjectURL(url);
-  //       document.body.removeChild(a);
-
-  //       Notify.success(`Analytics ${format.toUpperCase()} report downloaded successfully!`);
-  //     } else {
-  //       throw new Error('Failed to generate analytics report');
-  //     }
-  //   } catch (error) {
-  //     Notify.failure('Error generating analytics report: ' + error.message);
-  //   } finally {
-  //     setReportLoading(false);
-  //   }
-  // };
-
+ 
   const handleGenerateCustomReport = async (e) => {
     e.preventDefault();
 
@@ -1286,44 +1214,6 @@ const AdvisorDashboard = () => {
     console.log("Users after filtering:", filtered.length);
     return filtered;
   };
-
-  // const getFilteredUsers = () => {
-  //   let filtered = [...users];
-
-  //   // Filter by active tab
-  //   switch (activeTab) {
-  //     case 'users':
-  //       // Show all users
-  //       break;
-  //     case 'roles':
-  //       // Only advisors and admins
-  //       filtered = filtered.filter(
-  //         (user) => user.userRole?.toLowerCase() === 'advisor' || user.userRole?.toLowerCase() === 'admin'
-
-  //       );
-  //       break;
-  //     default:
-  //       break;
-  //   }
-
-  //   // Filter by role dropdown
-  //   if (filterRole && filterRole !== 'all') {
-  //     filtered = filtered.filter(
-  //       (user) => user.userRole?.toLowerCase() === filterRole.toLowerCase()
-  //     );
-  //   }
-
-  //   // Filter by search
-  //   if (searchTerm) {
-  //     filtered = filtered.filter((user) =>
-  //       [user.name, user.email]
-  //         .filter(Boolean) // ignore nulls
-  //         .some((field) => field.toLowerCase().includes(searchTerm.toLowerCase()))
-  //     );
-  //   }
-
-  //   return filtered; // just return the filtered array
-  // };
 
   const handleEditUser = async (e) => {
     e.preventDefault();
@@ -3123,45 +3013,11 @@ const AdvisorDashboard = () => {
                               <option value="admin">Admin</option>
                             </select>
                           </div>
-                          {/* <div className="form-group">
-            <label className="form-label">Department</label>
-            <input
-              type="text"
-              value={editUserForm.department}
-              onChange={(e) => setEditUserForm({ ...editUserForm, department: e.target.value })}
-              className="form-input"
-              placeholder="Department (optional)"
-            />
-          </div> */}
-                          {/* <div className="form-group">
-                            <label className="form-label">Status</label>
-                            <select
-                              value={editUserForm.isActive}
-                              onChange={(e) =>
-                                setEditUserForm({
-                                  ...editUserForm,
-                                  isActive: e.target.value === "true",
-                                })
-                              }
-                              className="form-select"
-                            >
-                              <option value="true">Active</option>
-                              <option value="false">Inactive</option>
-                            </select>
-                          </div> */}
+                        
                         </div>
 
                         <div className="form-row">
-                          {/* <div className="form-group">
-            <label className="form-label">Phone</label>
-            <input
-              type="tel"
-              value={editUserForm.phone}
-              onChange={(e) => setEditUserForm({ ...editUserForm, phone: e.target.value })}
-              className="form-input"
-              placeholder="Phone number (optional)"
-            />
-          </div> */}
+                        
                         </div>
 
                         <div className="modal-actions">
@@ -3454,14 +3310,7 @@ const AdvisorDashboard = () => {
 
                               <td className="actions-column">
                                 <div className="table-actions">
-                                  {/* <button
-                          onClick={() => handleReviewStudent(student)}
-                          className="table-btn view-btn"
-                          title="View Full Details"
-                        >
-                          <span className="btn-icon">👁️</span>
-                          View
-                        </button> */}
+                                
                                   <button
                                     onClick={() => handleReviewStudent(student)}
                                     className="table-btn review-btn"
@@ -4285,42 +4134,7 @@ const AdvisorDashboard = () => {
                               </div>
                             ) : null}
                           </div>
-                          {/* start */}
-                          {/* <div className="appointment-actions">
-                            {appointment.status === 'available' && (
-                              <>
-                                <button 
-                                  onClick={() => handleEditAppointment(appointment)}
-                                  className="action-btn edit-btn"
-                                >
-                                  ✏️ Edit
-                                </button>
-                                <button 
-                                  onClick={() => handleDeleteAppointment(appointment._id)}
-                                  className="action-btn delete-btn"
-                                >
-                                  🗑️ Delete
-                                </button>
-                              </>
-                            )}
-                            
-                            {appointment.status === 'booked' && (
-                              <>
-                                <button 
-                                  onClick={() => handleStartAppointment(appointment)}
-                                  className="action-btn start-btn"
-                                  disabled={!isAppointmentTime(appointment)}
-                                >
-                                  🎯 Start
-                                </button>
-                                <button 
-                                  onClick={() => handleCancelAppointment(appointment._id)}
-                                  className="action-btn cancel-btn"
-                                >
-                                  ❌ Cancel
-                                </button>
-                              </>
-                            )} */}
+                         
 
                           <div className="appointment-actions">
                             {appointment.status === "available" && (
@@ -5380,112 +5194,10 @@ const AdvisorDashboard = () => {
                       </div>
                     )} */}
 
-                    {/* {reportForm.reportType === "profiles" && (
-                      <div className="form-row">
-                        <div className="form-group">
-                          <label className="form-label">Approval Status</label>
-                          <select
-                            value={reportForm.filters.isStudentApproved || ""}
-                            onChange={(e) =>
-                              setReportForm({
-                                ...reportForm,
-                                filters: {
-                                  ...reportForm.filters,
-                                  isStudentApproved: e.target.value,
-                                },
-                              })
-                            }
-                            className="form-select"
-                          >
-                            <option value="">All Profiles</option>
-                            <option value="true">Approved Only</option>
-                            <option value="false">Pending Only</option>
-                          </select>
-                        </div>
-                        <div className="form-group">
-                          <label className="form-label">Faculty</label>
-                          <select
-                            value={reportForm.filters.desiredFaculty || ""}
-                            onChange={(e) =>
-                              setReportForm({
-                                ...reportForm,
-                                filters: {
-                                  ...reportForm.filters,
-                                  desiredFaculty: e.target.value,
-                                },
-                              })
-                            }
-                            className="form-select"
-                          >
-                            <option value="">All Faculties</option>
-                            <option value="Faculty of Business Administration">
-                              Business Administration
-                            </option>
-                            <option value="Faculty of Information Technology">
-                              Information Technology
-                            </option>
-                            <option value="Faculty of Health Sciences">
-                              Health Sciences
-                            </option>
-                            <option value="Faculty of Medicine">
-                              Medicine
-                            </option>
-                            <option value="Faculty in Education">
-                              Education
-                            </option>
-                            <option value="Bachelor Of Theology">
-                              Theology
-                            </option>
-                          </select>
-                        </div>
-                      </div>
-                    )} */}
-
-                    {/* {reportForm.reportType === "activity" && (
-                      <div className="form-group">
-                        <label className="form-label">Activity Type</label>
-                        <select
-                          value={reportForm.filters.activityType || ""}
-                          onChange={(e) =>
-                            setReportForm({
-                              ...reportForm,
-                              filters: {
-                                ...reportForm.filters,
-                                activityType: e.target.value,
-                              },
-                            })
-                          }
-                          className="form-select"
-                        >
-                          <option value="">All Activities</option>
-                          <option value="registration">
-                            New Registrations
-                          </option>
-                          <option value="profile">Profile Creations</option>
-                          <option value="assessment">
-                            Assessment Completions
-                          </option>
-                        </select>
-                      </div>
-                    )} */}
+                   
                   </div>
 
-                  {/* <div className="form-group" style={{ marginTop: "1rem" }}>
-                    <label className="form-label">
-                      <input
-                        type="checkbox"
-                        checked={reportForm.includeCharts}
-                        onChange={(e) =>
-                          setReportForm({
-                            ...reportForm,
-                            includeCharts: e.target.checked,
-                          })
-                        }
-                        style={{ marginRight: "0.5rem" }}
-                      />
-                      Include charts and visualizations (PDF only)
-                    </label>
-                  </div> */}
+                 
 
                   <div className="modal-actions" style={{ marginTop: "2rem" }}>
                     <button
