@@ -2296,31 +2296,6 @@ const handleLogoutBtn = () => {
     </div>
   )}
 </div>
-{/* <div className="day-appointments">
-  {getAppointmentsForDate(day.date).slice(0, 3).map((apt, i) => (
-    <div key={i} className={`mini-appointment ${apt.status}`} title={`${apt.startTime || apt.time} - ${apt.status} ${apt.student?.name || apt.studentName || ''}`}>
-      <div className="appointment-time-display">
-        {formatTimeForCalendar(apt.startTime || apt.time)}
-      </div>
-      <div className="appointment-status-display">
-        {apt.status === 'booked' ? (
-          <span className="booked-label">
-            {apt.student?.name?.split(' ')[0] || apt.studentName?.split(' ')[0] || 'Booked'}
-          </span>
-        ) : apt.status === 'available' ? (
-          <span className="available-label">Available</span>
-        ) : (
-          <span className="other-status-label">{apt.status}</span>
-        )}
-      </div>
-    </div>
-  ))}
-  {getAppointmentsForDate(day.date).length > 3 && (
-    <div className="more-appointments" title={`${getAppointmentsForDate(day.date).length - 3} more appointments on this day`}>
-      +{getAppointmentsForDate(day.date).length - 3} more
-    </div>
-  )}
-</div> */}
                         </div>
                       ))}
                     </div>
