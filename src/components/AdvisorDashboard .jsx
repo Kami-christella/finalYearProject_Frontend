@@ -2355,54 +2355,7 @@ const handleLogoutBtn = () => {
         {((appointment.status || 'available').charAt(0).toUpperCase() + (appointment.status || 'available').slice(1))}
       </div>
     </div>
-
-                          {/* <div className="appointment-content">
-                            {appointment.status === 'booked' && appointment.student ? (
-                              <div className="appointment-student-info">
-                                <div className="student-avatar-small">
-                                  {appointment.student.name?.charAt(0) || appointment.studentName?.charAt(0) || 'S'}
-                                </div>
-                                <div className="student-details">
-                                  <h4 className="student-name">{appointment.student.name || appointment.studentName}</h4>
-                                  <p className="student-email">{appointment.student.email || appointment.studentEmail}</p>
-                                  <p className="appointment-purpose">{appointment.reason || 'General consultation'}</p>
-                                </div>
-                              </div>
-                            ) : appointment.status === 'available' ? (
-                              <div className="appointment-available">
-                                <div className="available-icon">📅</div>
-                                <p className="available-text">Available slot</p>
-                                <p className="slot-duration">{appointment.duration || 30} minutes</p>
-                              </div>
-                            ) : (
-                              <div className="appointment-student-info">
-                                <div className="student-avatar-small">
-                                  {appointment.studentName?.charAt(0) || 'S'}
-                                </div>
-                                <div className="student-details">
-                                  <h4 className="student-name">{appointment.studentName}</h4>
-                                  <p className="student-email">{appointment.studentEmail}</p>
-                                  <p className="appointment-purpose">{appointment.reason || 'General consultation'}</p>
-                                </div>
-                              </div>
-                            )}
-
-                            {appointment.notes && (
-                              <div className="appointment-notes">
-                                <strong>Notes:</strong> {appointment.notes}
-                              </div>
-                            )}
-
-                            {appointment.meetingLink || appointment.location?.includes('http') ? (
-                              <div className="meeting-link">
-                                <a href={appointment.meetingLink || appointment.location} target="_blank" rel="noopener noreferrer" className="meeting-link-btn">
-                                  🎥 Join Meeting
-                                </a>
-                              </div>
-                            ) : null}
-                          </div> */}
-                          
-                          <div className="appointment-content">
+     <div className="appointment-content">
   {(appointment.status === 'booked' || appointment.status === 'confirmed') && hasStudentInfo(appointment) ? (
     <div className="appointment-student-info">
       <div className="student-avatar-small">
