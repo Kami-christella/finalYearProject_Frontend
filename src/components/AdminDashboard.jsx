@@ -1298,20 +1298,7 @@ const AdvisorDashboard = () => {
     }
   }, [filterRole, filterStatus, searchTerm]);
 
-  // Add function to close dropdown when clicking outside
-  // useEffect(() => {
-  //   const handleClickOutside = (event) => {
-  //     if (!event.target.closest('.user-profile-dropdown')) {
-  //       setShowUserDropdown(false);
-  //     }
-  //   };
-
-  //   document.addEventListener('mousedown', handleClickOutside);
-  //   return () => {
-  //     document.removeEventListener('mousedown', handleClickOutside);
-  //   };
-  // }, []);
-
+  
   const fetchStudents = async (page = 1) => {
     try {
       setLoading(true);
