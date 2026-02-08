@@ -400,7 +400,7 @@ const LandingPage = () => {
                   <div className="contact-icon">📞</div>
                   <div className="contact-details">
                     <h4>Phone</h4>
-                    <p> +250 724796998</p>
+                    <p> +250 724 798 691</p>
                   </div>
                 </div>
                 

@@ -1176,8 +1176,9 @@ const fetchAppointments = async (page = 1) => {
     return timeDiff <= 15 * 60 * 1000 && timeDiff >= -appointment.duration * 60 * 1000;
   };
 
-const handleConfirmAppointment = async (appointmentId) => {
-  if (!window.confirm('Are you sure you want to confirm this appointment?')) {
+
+  const handleConfirmAppointment = async (appointmentId) => {
+  if (!window.confirm('Are you sure you want to confirm this appointment? The student will receive an email notification.')) {
     return;
   }
   
@@ -1189,7 +1190,9 @@ const handleConfirmAppointment = async (appointmentId) => {
       return;
     }
     
-    // ✅ IMPORTANT: Only send what the backend expects
+    // Show loading notification
+    Notify.info('Confirming appointment and sending notification...');
+    
     const response = await fetch(`http://localhost:5000/api/appointments/confirm/${appointmentId}`, {
       method: 'PUT',
       headers: { 
@@ -1197,36 +1200,37 @@ const handleConfirmAppointment = async (appointmentId) => {
         'Authorization': `Bearer ${token}` 
       },
       body: JSON.stringify({ 
-        confirmed: true  // Backend expects this
+        confirmed: true
       })
     });
     
     if (response.ok) {
-      Notify.success('Appointment confirmed successfully');
+      const data = await response.json();
+      Notify.success('✅ Appointment confirmed! Email notification sent to student.');
       fetchAppointments(); // Refresh the list
     } else {
       const error = await response.json();
       throw new Error(error.message || 'Failed to confirm appointment');
     }
   } catch (error) {
+    console.error('Confirmation error:', error);
     Notify.failure('Failed to confirm appointment: ' + error.message);
   }
 };
-
-//   const handleConfirmAppointment = async (appointmentId) => {
+// const handleConfirmAppointment = async (appointmentId) => {
 //   if (!window.confirm('Are you sure you want to confirm this appointment?')) {
 //     return;
 //   }
   
 //   try {
 //     const token = localStorage.getItem('token');
-//     console.log('Token:', token); 
     
 //     if (!token) {
 //       Notify.failure('Please log in again');
 //       return;
 //     }
     
+//     // ✅ IMPORTANT: Only send what the backend expects
 //     const response = await fetch(`http://localhost:5000/api/appointments/confirm/${appointmentId}`, {
 //       method: 'PUT',
 //       headers: { 
@@ -1234,16 +1238,13 @@ const handleConfirmAppointment = async (appointmentId) => {
 //         'Authorization': `Bearer ${token}` 
 //       },
 //       body: JSON.stringify({ 
-//         appointmentId: appointmentId,
-//         confirmed: true
+//         confirmed: true  // Backend expects this
 //       })
 //     });
-//      console.log('Confirming appointment:', appointment); // Add this
-//   console.log('Appointment ID:',appointmentId); // Add this
     
 //     if (response.ok) {
 //       Notify.success('Appointment confirmed successfully');
-//       fetchAppointments();
+//       fetchAppointments(); // Refresh the list
 //     } else {
 //       const error = await response.json();
 //       throw new Error(error.message || 'Failed to confirm appointment');
@@ -1252,6 +1253,7 @@ const handleConfirmAppointment = async (appointmentId) => {
 //     Notify.failure('Failed to confirm appointment: ' + error.message);
 //   }
 // };
+
 
   
 
@@ -3716,7 +3718,7 @@ const handleLogoutBtn = () => {
                           className="form-input"
                           placeholder="https://zoom.us/j/123456789 or Google Meet link"
                         />
-                        <small className="form-help">Leave empty to auto-generate meeting link</small>
+                        {/* <small className="form-help">Leave empty to auto-generate meeting link</small> */}
                       </div>
                     )}
                   </div>

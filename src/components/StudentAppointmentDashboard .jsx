@@ -23,7 +23,7 @@ const StudentAppointmentDashboard = () => {
       date: '2025-08-15',
       time: '09:00',
       type: 'both',
-      location: 'Office 205, Masoro Campus / Online',
+      location: 'Office 205, Gishushu Campus / Online',
       advisorName: 'Dr. Sarah Mukamana',
       available: true
     },
@@ -41,7 +41,7 @@ const StudentAppointmentDashboard = () => {
       date: '2025-08-16',
       time: '14:00',
       type: 'physical',
-      location: 'Office 205, Masoro Campus',
+      location: 'Office 205, Gishushu Campus',
       advisorName: 'Dr. Sarah Mukamana',
       available: true
     },
@@ -81,7 +81,7 @@ const StudentAppointmentDashboard = () => {
       date: '2025-08-13',
       time: '14:00',
       type: 'physical',
-      location: 'Office 205, Masoro Campus',
+      location: 'Office 205, Gishushu Campus',
       advisorName: 'Prof. John Uwimana',
       reason: 'Career counseling',
       status: 'pending'

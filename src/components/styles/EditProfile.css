@@ -93,7 +93,7 @@
   width: 60px;
   height: 60px;
   border: 4px solid #f1f5f9;
-  border-top: 4px solid #3b82f6;
+  border-top: 4px solid #1B3058;;
   border-radius: 50%;
   animation: modernSpin 1s linear infinite;
   margin: 0 auto 2rem;
@@ -105,11 +105,12 @@
 }
 
 .loading-card h2 {
-  color: #1e40af;
+
+  color: #1B3058;
   margin-bottom: 1rem;
   font-size: 1.8rem;
   font-weight: 800;
-  background: linear-gradient(135deg, #1e40af, #3b82f6);
+  background: linear-gradient(135deg, #1B3058, #1B3058);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   background-clip: text;
@@ -123,7 +124,7 @@
 
 /* Header */
 .edit-header {
-  background: linear-gradient(135deg, #3b82f6 0%, #1d4ed8 100%);
+  background: linear-gradient(135deg, #1B3058 0%, #1B3058 100%);
   color: white;
   padding: 2.5rem 3rem;
   display: flex;
@@ -173,6 +174,7 @@
   margin: 0 0 0.5rem 0;
   display: flex;
   align-items: center;
+  color: white;
   gap: 1rem;
   text-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 }
@@ -231,7 +233,7 @@
 }
 
 .save-btn {
-  background: linear-gradient(135deg, #10b981, #059669);
+  background: linear-gradient(135deg, #1B3058, #1B3058);
   color: white;
   box-shadow: 0 4px 15px rgba(16, 185, 129, 0.3);
 }
@@ -248,7 +250,7 @@
 }
 
 .save-btn:hover:not(:disabled) {
-  background: linear-gradient(135deg, #059669, #047857);
+  background: linear-gradient(135deg, #1d4ed8, #1B3058);
   transform: translateY(-2px);
   box-shadow: 0 8px 25px rgba(16, 185, 129, 0.4);
 }
@@ -264,7 +266,7 @@
 }
 
 .save-btn.saving {
-  background: linear-gradient(135deg, #059669, #047857);
+  background: linear-gradient(135deg, #1B3058, #1d4ed8);
   animation: savingPulse 1.5s ease-in-out infinite;
 }
 
@@ -306,7 +308,7 @@
 .success-alert {
   background: linear-gradient(135deg, rgba(34, 197, 94, 0.1), rgba(74, 222, 128, 0.05));
   border: 2px solid rgba(34, 197, 94, 0.2);
-  color: #16a34a;
+  color: #1d4ed8;
 }
 
 .alert-icon {
@@ -388,20 +390,20 @@
   left: 0;
   right: 0;
   height: 3px;
-  background: linear-gradient(135deg, #3b82f6, #1d4ed8);
+  background: linear-gradient(135deg, #1B3058, #1B3058);
   transform: scaleX(0);
   transition: transform 0.3s ease;
 }
 
 .tab-btn:hover {
   background: rgba(59, 130, 246, 0.05);
-  color: #3b82f6;
+  color: #1B3058;
   transform: translateY(-2px);
 }
 
 .tab-btn.active {
   background: rgba(255, 255, 255, 0.9);
-  color: #3b82f6;
+  color: #1B3058;
   font-weight: 700;
 }
 
@@ -451,7 +453,7 @@
   margin: 0 0 2rem 0;
   padding-bottom: 1rem;
   border-bottom: 3px solid rgba(59, 130, 246, 0.15);
-  background: linear-gradient(135deg, #1e40af, #3b82f6);
+  background: linear-gradient(135deg, #1B3058, #3b82f6);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   background-clip: text;
@@ -465,14 +467,14 @@
   left: 0;
   width: 60px;
   height: 3px;
-  background: linear-gradient(135deg, #3b82f6, #1d4ed8);
+  background: linear-gradient(135deg, #1B3058, #1d4ed8);
   border-radius: 2px;
 }
 
 .subsection-title {
   font-size: 1.3rem;
   font-weight: 700;
-  color: #1e40af;
+  color: #1B3058;
   margin: 0 0 1.5rem 0;
   display: flex;
   align-items: center;
@@ -483,7 +485,7 @@
   content: '';
   width: 4px;
   height: 20px;
-  background: linear-gradient(135deg, #3b82f6, #1d4ed8);
+  background: linear-gradient(135deg, #1B3058, #1d4ed8);
   border-radius: 2px;
 }
 
@@ -549,7 +551,7 @@
 
 .form-input:focus, .form-textarea:focus {
   outline: none;
-  border-color: #3b82f6;
+  border-color: #1B3058;
   box-shadow: 
     0 0 0 4px rgba(59, 130, 246, 0.1),
     0 4px 12px rgba(59, 130, 246, 0.15);
@@ -585,7 +587,7 @@
 }
 
 .custom-checkbox:hover {
-  color: #3b82f6;
+  color: #1B3058;
   transform: translateX(3px);
 }
 
@@ -607,8 +609,8 @@
 }
 
 .custom-checkbox input[type="checkbox"]:checked + .checkbox-mark {
-  background: linear-gradient(135deg, #3b82f6, #1d4ed8);
-  border-color: #3b82f6;
+  background: linear-gradient(135deg, #1B3058, #1d4ed8);
+  border-color: #1B3058;
   transform: scale(1.1);
   box-shadow: 0 4px 12px rgba(59, 130, 246, 0.3);
 }
@@ -710,7 +712,7 @@
 }
 
 .no-image-placeholder:hover .no-image-icon {
-  color: #3b82f6;
+  color: #1B3058;
   transform: scale(1.1);
 }
 
@@ -726,7 +728,7 @@
   height: 120px;
   object-fit: cover;
   border-radius: 50%;
-  border: 4px solid #3b82f6;
+  border: 4px solid #1B3058;
   box-shadow: 0 8px 25px rgba(59, 130, 246, 0.2);
   transition: all 0.3s ease;
 }
@@ -776,7 +778,7 @@
 
 .upload-btn {
   padding: 1rem 2rem;
-  background: linear-gradient(135deg, #3b82f6, #1d4ed8);
+  background: linear-gradient(135deg, #1B3058, #1d4ed8);
   color: white;
   border: none;
   border-radius: 12px;
@@ -873,7 +875,7 @@
 
 .add-btn {
   padding: 0.75rem 1.5rem;
-  background: linear-gradient(135deg, #10b981, #059669);
+  background: linear-gradient(135deg, #1B3058, #1B3058);
   color: white;
   border: none;
   border-radius: 10px;
@@ -885,7 +887,7 @@
 }
 
 .add-btn:hover {
-  background: linear-gradient(135deg, #059669, #047857);
+  background: linear-gradient(135deg, #1B3058, #1d4ed8);
   transform: translateY(-2px);
   box-shadow: 0 8px 25px rgba(16, 185, 129, 0.3);
 }
@@ -1061,7 +1063,7 @@
 }
 
 .document-item.new-document {
-  border-left: 6px solid #10b981;
+  border-left: 6px solid #1B3058;
   background: linear-gradient(135deg, rgba(16, 185, 129, 0.05), rgba(52, 211, 153, 0.03));
 }
 
@@ -1074,7 +1076,7 @@
 .document-icon {
   font-size: 1.5rem;
   padding: 0.75rem;
-  background: linear-gradient(135deg, #3b82f6, #1d4ed8);
+  background: linear-gradient(135deg, #1B3058, #1d4ed8);
   color: white;
   border-radius: 10px;
   box-shadow: 0 2px 8px rgba(59, 130, 246, 0.2);
@@ -1082,7 +1084,7 @@
 
 .document-name {
   font-weight: 600;
-  color: #1e40af;
+  color: #1B3058;
 }
 
 .document-size {
@@ -1159,19 +1161,19 @@
 
 .form-actions .cancel-btn:hover {
   background: rgba(59, 130, 246, 0.05);
-  border-color: #3b82f6;
-  color: #3b82f6;
+  border-color: #1d4ed8;
+  color: #1B3058;
 }
 
 .form-actions .save-btn {
-  background: linear-gradient(135deg, #10b981, #059669);
+  background: linear-gradient(135deg, #1B3058, #1B3058);
   color: white;
   min-width: 200px;
   box-shadow: 0 6px 20px rgba(16, 185, 129, 0.3);
 }
 
 .form-actions .save-btn:hover:not(:disabled) {
-  background: linear-gradient(135deg, #059669, #047857);
+  background: linear-gradient(135deg, #1B3058, #1B3058);
   box-shadow: 0 12px 35px rgba(16, 185, 129, 0.4);
 }
 
@@ -1233,7 +1235,7 @@
   }
 
   .tab-btn.active {
-    background: linear-gradient(135deg, #3b82f6, #1d4ed8);
+    background: linear-gradient(135deg, #1B3058, #1d4ed8);
     color: white;
   }
 
@@ -1373,7 +1375,7 @@
   }
 
   .tab-btn.active {
-    background: #1d4ed8;
+    background: #1B3058;
     border: 2px solid #1e40af;
   }
 

@@ -440,12 +440,57 @@ const BookAppointment = () => {
                             </span>
                           </div>
 
-                          {slot.location && (
+                          {/* {slot.location && (
                             <div className="book-appointment-slot-location">
                               <FaMapMarkerAlt />
                               <span>{slot.location}</span>
                             </div>
-                          )}
+                          )} */}
+
+                          {/* { slot.location && (
+  <div className="book-appointment-slot-location">
+    {slot.type === "online" ? (
+      <>
+        <MdVideoCall />
+        <a
+  href={slot.location}
+  target="_blank"
+  rel="noopener noreferrer"
+  className="book-appointment-meeting-link"
+  onClick={(e) => e.stopPropagation()
+  }
+  
+>
+  Join Online Meeting
+</a>
+      </>
+    ) : (
+      <>
+        <FaMapMarkerAlt />
+        <span>{slot.location}</span>
+       
+      </>
+    )}
+  </div>
+)} */}
+{slot.location && (
+  <div className="book-appointment-slot-location">
+    {slot.type === "online" ? (
+      <>
+        <MdVideoCall />
+        {/* Show "Online Meeting" text, not the actual link */}
+        <span className="book-appointment-meeting-info">
+          Online Meeting (link will be provided after confirmation)
+        </span>
+      </>
+    ) : (
+      <>
+        <FaMapMarkerAlt />
+        <span>{slot.location}</span>
+      </>
+    )}
+  </div>
+)}
                         </div>
                       </div>
                     ))
@@ -666,11 +711,70 @@ const BookAppointment = () => {
                           </span>
                         </div>
 
-                        <div className="book-appointment-meeting-location">
+                        {/* <div className="book-appointment-meeting-location">
                           <FaMapMarkerAlt className="book-appointment-detail-icon" />
                           <span>{appointment.location}</span>
-                        </div>
+                        </div> */}
+
+                       <div className="book-appointment-meeting-location">
+  {appointment.type === "online" ? (
+    <>
+      <MdVideoCall className="book-appointment-detail-icon" />
+      {appointment.location && appointment.location.startsWith('http') ? (
+        <a
+          href={appointment.location}
+          target="_blank"
+          rel="noopener noreferrer"
+          className="book-appointment-meeting-link"
+        >
+          Join Online Meeting
+        </a>
+      ) : (
+        <span>{appointment.location}</span>
+      )}
+    </>
+  ) : (
+    <>
+      <FaMapMarkerAlt className="book-appointment-detail-icon" />
+      <span>{appointment.location}</span>
+    </>
+  )}
+</div>
+
+                        {/* <div className="book-appointment-meeting-location">
+  {appointment.type === "online" ? (
+    <>
+      <MdVideoCall className="book-appointment-detail-icon" />
+      <a
+        href={appointment.location}
+        target="_blank"
+        rel="noopener noreferrer"
+        className="book-appointment-meeting-link"
+      >
+        Join Online Meeting
+      </a>
+    </>
+  ) : (
+    <>
+      <FaMapMarkerAlt className="book-appointment-detail-icon" />
+      <span>{appointment.location}</span>
+    </>
+  )}
+</div> */}
+
                       </div>
+{appointment.meetingLink && (
+  <div className="book-appointment-meeting-link">
+    <MdVideoCall />
+    <a
+      href={appointment.meetingLink}
+      target="_blank"
+      rel="noopener noreferrer"
+    >
+      Join Meeting with Advisor
+    </a>
+  </div>
+)}
 
                       {appointment.reason && (
                         <div className="book-appointment-reason">

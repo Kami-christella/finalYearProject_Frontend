@@ -4,7 +4,7 @@ import { Notify } from "notiflix";
 import { useNavigate } from "react-router-dom";
 import aiRecommendationService from "../utils/aiRecommendationService";
 import "./styles/ComprehensiveDashboard.css";
-
+//#1B3058
 const ComprehensiveDashboard = () => {
   const navigate = useNavigate();
 
@@ -451,6 +451,7 @@ const ComprehensiveDashboard = () => {
         status: "complete",
         message: "Profile and Assessment Complete",
         color: "#28a745",
+        // backgroundcolor:"#1B3058"
       };
     } else if (hasProfile && !hasAssessment) {
       return {

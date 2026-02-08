@@ -912,7 +912,7 @@
 
 .language-level.fluent,
 .language-level.advanced {
-  background: #28a745;
+  background: #1B3058;
   color: white;
 }
 
@@ -952,7 +952,7 @@
 .company {
   font-size: 14px;
   font-weight: 500;
-  color: #2563eb;
+  color: #1B3058
 }
 
 .duration {
