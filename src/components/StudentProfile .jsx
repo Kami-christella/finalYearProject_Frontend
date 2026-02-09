@@ -2489,6 +2489,7 @@ const LanguagesMultiSelect = ({ selectedLanguages, onChange, disabled = false })
                       {/* <span className="label-text">Nationality</span> */}
                       {/* <span className="label-required">*</span> */}
                     </label>
+                    <span className="label-text">Nationality</span>
                     <div className="input-wrapper">
                       {/* <span className="input-icon">🌍</span> */}
                       <input
@@ -2498,7 +2499,7 @@ const LanguagesMultiSelect = ({ selectedLanguages, onChange, disabled = false })
                         onChange={handleChange}
                         required
                         className="form-input"
-                        placeholder="Nationality"
+                        
                       />
                     </div>
                   </div>
@@ -2508,6 +2509,7 @@ const LanguagesMultiSelect = ({ selectedLanguages, onChange, disabled = false })
                       {/* <span className="label-text">Date of Birth</span>
                       <span className="label-required">*</span> */}
                     </label>
+                    <span className="label-text">Date of Birth</span>
                     <div className="input-wrapper">
                       {/* <span className="input-icon">📅</span> */}
                       <input
@@ -2824,7 +2826,7 @@ const LanguagesMultiSelect = ({ selectedLanguages, onChange, disabled = false })
                         min="0"
                         max="100"
                         className="form-input"
-                        placeholder="NE Grades Out Of 73"
+                        placeholder="NE Grades Out Of 100"
                       />
                     </div>
                   </div>

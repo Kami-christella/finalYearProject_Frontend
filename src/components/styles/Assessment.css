@@ -223,14 +223,14 @@
 }
 
 .section-indicator.active .section-icon {
-  background: linear-gradient(135deg, #1B3058, #764ba2);
+  background: linear-gradient(135deg, #1B3058, #667eea);
   color: white;
   border: 2px solid #1B3058;
   animation: pulse 2s infinite;
 }
 
 .section-indicator.completed .section-icon {
-  background: linear-gradient(135deg, #1B3058, #20c997);
+  background: linear-gradient(135deg, #1B3058, #667eea);
   color: white;
   border: 2px solid #1B3058;
 }
@@ -520,7 +520,7 @@
 }
 
 .generate-recommendations-btn {
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  background: linear-gradient(135deg, #667eea 0%, #1B3058 100%);
   color: white;
   border: none;
   border-radius: 15px;
@@ -534,12 +534,12 @@
   gap: 20px;
   text-decoration: none;
   min-width: 400px;
-  box-shadow: 0 8px 25px rgba(102, 126, 234, 0.3);
+  box-shadow: 0 8px 25px rgba(18, 54, 216, 0.3);
 }
 
 .generate-recommendations-btn:hover {
   transform: translateY(-3px);
-  box-shadow: 0 12px 35px rgba(102, 126, 234, 0.4);
+  box-shadow: 0 12px 35px rgba(53, 82, 213, 0.4);
 }
 
 .btn-icon {
@@ -794,7 +794,7 @@
 
 .create-profile-btn {
   padding: 15px 30px;
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  background: linear-gradient(135deg, #667eea 0%, #1B3058 100%);
   color: white;
   border: none;
   border-radius: 12px;
@@ -810,12 +810,12 @@
 
 .create-profile-btn:hover {
   transform: translateY(-2px);
-  box-shadow: 0 8px 25px rgba(102, 126, 234, 0.3);
+  box-shadow: 0 8px 25px rgba(70, 97, 216, 0.3);
 }
 
 /* Focus States for Accessibility */
 .answer-option:focus {
-  outline: 2px solid #667eea;
+  outline: 2px solid #1B3058;
   outline-offset: 2px;
 }
 
