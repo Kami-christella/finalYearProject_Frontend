@@ -46,12 +46,6 @@ function App() {
           <Route path='assessment' element={<Assessment/>} />
           <Route path='ComprehensiveDashboard' element={<ComprehensiveDashboard/>} />
           <Route path='appointment' element={<Bookappointment/>} />
-          {/* <Route path='assessment2' element={<Assessment2 />} />
-          <Route path='Assessment2/assessment3' element={<Assesment3 />} />
-          <Route path='Assessment2/assessment3/Results' element={<Results />} />
-          <Route path='Settings' element={<Settings />} />
-          <Route path='Profile' element={<Profile />} /> */}
-         
         </Route>
         <Route path='/advisordashboard' element={<AdvisorDashboardLayout />}>
           <Route index element={<AdvisorDashboard />} />
