@@ -32,11 +32,6 @@ function App() {
           <Route index element={<LandingPage/>} />
           <Route path='Signup' element={<Signup />} />
           <Route path='Login' element={<Login />} />
-          {/* <Route path='StudentProfile' element={<StudentProfile/>} /> */}
-          {/* <Route path='ProfileDashboard' element={<ProfileDashboard/>} /> */}
-          {/* <Route path='EditProfile' element={<EditProfile/>} />
-          <Route path='assessment' element={<Assessment/>} />
-          <Route path='ComprehensiveDashboard' element={<ComprehensiveDashboard/>} /> */}
           <Route path='StudentAppointmentDashboard' element={<StudentAppointmentDashboard/>} />
           <Route path='AdvisorAppointmentDashboard' element={<AdvisorAppointmentDashboard/>} />
 
