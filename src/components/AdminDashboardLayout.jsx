@@ -10,9 +10,7 @@ function DashboardLayout() {
       {/* <Sidebar /> */}
       {/* <NewDash/> */}
       <div className="dashboard-content">
-
         <Outlet />
-
       </div>
       <Footer />
     </div>
