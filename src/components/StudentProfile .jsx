@@ -1,4 +1,4 @@
-  //studentProfile.jsx - FIXED VERSION
+  //studentProfile.jsx 
 import React, { useState, useRef } from "react";
 import { Notify } from "notiflix";
 import "./styles/StudentProfile.css";
