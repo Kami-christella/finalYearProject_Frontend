@@ -248,12 +248,13 @@
 /* ── Page content ───────────────────────────────────── */
 .newdash-content {
   flex: 1;
-  padding: 24px 20px;
+  padding: 0;          /* let each child page control its own padding */
   overflow-y: auto;
+  min-height: calc(100vh - 60px);
 }
 
 @media (max-width: 576px) {
   .newdash-content {
-    padding: 16px 12px;
+    padding: 0;
   }
 }

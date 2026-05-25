@@ -468,45 +468,6 @@ const StudentProfile = () => {
     setEquivalentCourses(equivalentCourses.filter((_, i) => i !== index));
   };
 
-  // const addWorkExperience = () => {
-  //   setWorkExperience([
-  //     ...workExperience,
-  //     {
-  //       jobTitle: "",
-  //       company: "",
-  //       startDate: "",
-  //       endDate: "",
-  //       duration: "",
-  //       description: "",
-  //       isCurrent: false,
-  //     },
-  //   ]);
-  // };
-
-  // const updateWorkExperience = (index, field, value) => {
-  //   const updated = workExperience.map((exp, i) =>
-  //     i === index ? { ...exp, [field]: value } : exp
-  //   );
-  //   setWorkExperience(updated);
-  // };
-
-  // const removeWorkExperience = (index) => {
-  //   setWorkExperience(workExperience.filter((_, i) => i !== index));
-  // };
-
-  // const addExtracurricularActivity = () => {
-  //   setExtracurricularActivities([
-  //     ...extracurricularActivities,
-  //     {
-  //       activity: "",
-  //       role: "",
-  //       organization: "",
-  //       startDate: "",
-  //       endDate: "",
-  //       description: "",
-  //     },
-  //   ]);
-  // };
 
   const addExtracurricularActivity = () => {
   if (extracurricularActivities.length < 3) {
@@ -514,24 +475,12 @@ const StudentProfile = () => {
   }
 };
 
-  // const updateExtracurricularActivity = (index, field, value) => {
-  //   const updated = extracurricularActivities.map((activity, i) =>
-  //     i === index ? { ...activity, [field]: value } : activity
-  //   );
-  //   setExtracurricularActivities(updated);
-  // };
-
   const updateExtracurricularActivity = (index, value) => {
   const updated = [...extracurricularActivities];
   updated[index] = value;
   setExtracurricularActivities(updated);
 };
 
-  // const removeExtracurricularActivity = (index) => {
-  //   setExtracurricularActivities(
-  //     extracurricularActivities.filter((_, i) => i !== index)
-  //   );
-  // };
 
   const removeExtracurricularActivity = (index) => {
   setExtracurricularActivities(
@@ -754,7 +703,6 @@ const StudentProfile = () => {
     return departments[faculty] || [];
   };
 
-  // ✅ UPDATED NEXT STEP FUNCTION WITH VALIDATION
   const nextStep = () => {
     if (validateStep(step)) {
       setStep(step + 1);
@@ -1655,12 +1603,11 @@ const LanguagesMultiSelect = ({ selectedLanguages, onChange, disabled = false })
                 <div className="form-grid">
                   <div className="form-group">
                     <label className="form-label">
-                      {/* <span className="label-text">Nationality</span> */}
-                      {/* <span className="label-required">*</span> */}
+                     
                     </label>
                     <span className="label-text">Nationality</span>
                     <div className="input-wrapper">
-                      {/* <span className="input-icon">🌍</span> */}
+                 
                       <input
                         type="text"
                         name="nationality"
@@ -1675,12 +1622,10 @@ const LanguagesMultiSelect = ({ selectedLanguages, onChange, disabled = false })
 
                   <div className="form-group">
                     <label className="form-label">
-                      {/* <span className="label-text">Date of Birth</span>
-                      <span className="label-required">*</span> */}
+                    
                     </label>
                     <span className="label-text">Date of Birth</span>
                     <div className="input-wrapper">
-                      {/* <span className="input-icon">📅</span> */}
                       <input
                         type="date"
                         name="dateOfBirth"
@@ -1693,33 +1638,12 @@ const LanguagesMultiSelect = ({ selectedLanguages, onChange, disabled = false })
                     </div>
                   </div>
 
-                  {/* <div className="form-group">
-                    <label className="form-label">
-                      <span className="label-text">Age</span>
-                      <span className="label-required">*</span>
-                    </label>
-                    <div className="input-wrapper">
-                      <input
-                        type="number"
-                        name="age"
-                        value={formData.age}
-                        onChange={handleChange}
-                        required
-                        min="16"
-                        max="100"
-                        className="form-input"
-                        placeholder="Age"
-                      />
-                    </div>
-                  </div> */}
-
                   <div className="form-group">
                     <label className="form-label">
-                      {/* <span className="label-text">Gender</span>
-                      <span className="label-required">*</span> */}
+                   
                     </label>
                     <div className="input-wrapper">
-                      {/* <span className="input-icon">⚧️</span> */}
+                    
                       <select
                         name="gender"
                         value={formData.gender}
@@ -1736,11 +1660,10 @@ const LanguagesMultiSelect = ({ selectedLanguages, onChange, disabled = false })
 
                   <div className="form-group">
   <label className="form-label">
-    {/* <span className="label-text">Country</span>
-    <span className="label-required">*</span> */}
+   
   </label>
   <div className="input-wrapper">
-    {/* <span className="input-icon">🏳️</span> */}
+  
     <select
       name="country"
       value={formData.country}
@@ -1760,11 +1683,8 @@ const LanguagesMultiSelect = ({ selectedLanguages, onChange, disabled = false })
 
                   <div className="form-group">
                     <label className="form-label">
-                      {/* <span className="label-text">Phone Number</span>
-                      <span className="label-required">*</span> */}
                     </label>
                     <div className="input-wrapper">
-                      {/* <span className="input-icon">📱</span> */}
                       <input
                         type="tel"
                         name="phoneNumber"
@@ -1779,11 +1699,8 @@ const LanguagesMultiSelect = ({ selectedLanguages, onChange, disabled = false })
 
                   <div className="form-group">
                     <label className="form-label">
-                      {/* <span className="label-text">Marital Status</span>
-                      <span className="label-required">*</span> */}
                     </label>
                     <div className="input-wrapper">
-                      {/* <span className="input-icon">💑</span> */}
                       <select
                         name="maritalStatus"
                         value={formData.maritalStatus}
@@ -1805,12 +1722,8 @@ const LanguagesMultiSelect = ({ selectedLanguages, onChange, disabled = false })
 
                   <div className="form-group">
                     <label className="form-label">
-                      {/* <span className="label-text">Religion</span>
-                      <span className="label-required">*</span> */}
                     </label>
                     <div className="input-wrapper">
-                      {/* <span className="input-icon">🙏</span> */}
-                     
                       <select
                         name="yourReligion"
                         value={formData.yourReligion}
@@ -1873,13 +1786,9 @@ const LanguagesMultiSelect = ({ selectedLanguages, onChange, disabled = false })
                       <div className="form-group">
                         <label className="form-label">
                           <span className="label-text">
-                            {/* Previous Institution */}
                           </span>
-                          {/* <span className="label-required">*</span> */}
                         </label>
                         <div className="input-wrapper">
-
-                          {/* <span className="input-icon">🏫</span> */}
                           <input
                             type="text"
                             name="previousInstitution"
@@ -1895,12 +1804,9 @@ const LanguagesMultiSelect = ({ selectedLanguages, onChange, disabled = false })
                       <div className="form-group">
                         <label className="form-label">
                           <span className="label-text">
-                            {/* Overall Grade at Previous University */}
                           </span>
-                          {/* <span className="label-required">*</span> */}
                         </label>
                         <div className="input-wrapper">
-                          {/* <span className="input-icon">📊</span> */}
                           <select
                             name="overallGradePreviousUniversity"
                             value={formData.overallGradePreviousUniversity}
@@ -1933,11 +1839,8 @@ const LanguagesMultiSelect = ({ selectedLanguages, onChange, disabled = false })
 
                   <div className="form-group">
                     <label className="form-label">
-                      {/* <span className="label-text">Current Academic Level</span> */}
-                      {/* <span className="label-required">*</span> */}
                     </label>
                     <div className="input-wrapper">
-                      {/* <span className="input-icon">📚</span> */}
                       <select
                         name="currentAcademicLevel"
                         value={formData.currentAcademicLevel}
@@ -1960,11 +1863,8 @@ const LanguagesMultiSelect = ({ selectedLanguages, onChange, disabled = false })
 
                   <div className="form-group">
                     <label className="form-label">
-                      {/* <span className="label-text">Student Program</span> */}
-                      {/* <span className="label-required">*</span> */}
                     </label>
                     <div className="input-wrapper">
-                      {/* <span className="input-icon">🕐</span> */}
                       <select
                         name="studentProgram"
                         value={formData.studentProgram}
@@ -1981,11 +1881,8 @@ const LanguagesMultiSelect = ({ selectedLanguages, onChange, disabled = false })
 
                   <div className="form-group">
                     <label className="form-label">
-                      {/* <span className="label-text">High School Grades</span>
-                      <span className="label-required">*</span> */}
                     </label>
                     <div className="input-wrapper">
-                      {/* <span className="input-icon">📈</span> */}
                       <input
                         type="number"
                         name="highSchoolGrades"
@@ -2002,11 +1899,8 @@ const LanguagesMultiSelect = ({ selectedLanguages, onChange, disabled = false })
 
                   <div className="form-group">
                     <label className="form-label">
-                      {/* <span className="label-text">Sponsorship Details</span> */}
-                      {/* <span className="label-required">*</span> */}
                     </label>
                     <div className="input-wrapper">
-                      {/* <span className="input-icon">💰</span> */}
                       <select
                         name="sponsorshipDetails"
                         value={formData.sponsorshipDetails}
@@ -2040,30 +1934,11 @@ const LanguagesMultiSelect = ({ selectedLanguages, onChange, disabled = false })
     Search and select all subjects you studied in secondary school. Click on a course to add it, click the × to remove it.
   </p>
 </div>
-                  {/* <div className="form-group">
-                    <label className="form-label">
-                      <span className="label-text">
-                      </span>
-                    </label>
-                    <div className="input-wrapper">
-                      <input
-                        type="text"
-                        name="coursesStudiedInSecondary"
-                        value={formData.coursesStudiedInSecondary}
-                        onChange={handleChange}
-                        className="form-input"
-                        placeholder="Courses Studied in Secondary"
-                      />
-                    </div>
-                  </div> */}
 
                   <div className="form-group">
                     <label className="form-label">
-                      {/* <span className="label-text">Have Job</span>
-                      <span className="label-required">*</span> */}
                     </label>
                     <div className="input-wrapper">
-                      {/* <span className="input-icon">💼</span> */}
                       <select
                         name="haveJob"
                         value={formData.haveJob}
@@ -2103,19 +1978,7 @@ const LanguagesMultiSelect = ({ selectedLanguages, onChange, disabled = false })
                     <>
                       {/* Previous University Courses */}
                       <div className="form-group full-width">
-                        {/* <div className="section-header">
-                          <h5 className="step-titles">
-                            Courses Studied at Previous University
-                          </h5>
-                          <button
-                            type="button"
-                            onClick={addPreviousCourse}
-                            className="add-btn"
-                          >
-                            + Add Course
-                          </button>
-                        </div> */}
-
+                    
                        {coursesStudiedPreviousUniversity.map((course, index) => (
   <div key={index} style={{
     border: '1px solid #e5e7eb',
@@ -2280,7 +2143,7 @@ const LanguagesMultiSelect = ({ selectedLanguages, onChange, disabled = false })
       </div>
     </div>
 
-    {/* ADD THIS SECTION - Mapping Results Display */}
+  
     {hasCompletedMapping && course.aucaCourseName && (
       <div style={{
         marginTop: '16px',
@@ -2795,7 +2658,6 @@ The more detailed you are, the better our System can match your courses!"
     </div>
   </div>
 )}
-
                       {/* Course Equivalence Mapping */}
                       <div className="form-group full-width">
                         <div className="section-header">
@@ -3108,218 +2970,6 @@ The more detailed you are, the better our System can match your courses!"
     Search and select languages you speak. You can set proficiency levels for each language.
   </p>
 </div>
-                  {/* <div className="form-group">
-                    <div className="section-header">
-                      <h3 className="section-titles">Languages Spoken</h3>
-                      <button
-                        type="button"
-                        onClick={addLanguage}
-                        className="add-btn"
-                      >
-                        + Add Language
-                      </button>
-                    </div>
-
-                    {languagesSpoken.map((language, index) => (
-                      <div key={index} className="dynamic-item">
-                        <div className="dynamic-item-content">
-                          <div className="form-row">
-                            <div className="form-group">
-                              <input
-                                type="text"
-                                placeholder="Language (e.g., English)"
-                                value={language.language}
-                                onChange={(e) =>
-                                  updateLanguage(
-                                    index,
-                                    "language",
-                                    e.target.value
-                                  )
-                                }
-                                className="form-input"
-                                required
-                              />
-                            </div>
-                            <div className="form-group">
-                              <select
-                                value={language.proficiency}
-                                onChange={(e) =>
-                                  updateLanguage(
-                                    index,
-                                    "proficiency",
-                                    e.target.value
-                                  )
-                                }
-                                className="form-input"
-                              >
-                                <option value="Basic">Basic</option>
-                                <option value="Conversational">
-                                  Conversational
-                                </option>
-                                <option value="Fluent">Fluent</option>
-                                <option value="Native">Native</option>
-                              </select>
-                            </div>
-                          </div>
-                        </div>
-                        <button
-                          type="button"
-                          onClick={() => removeLanguage(index)}
-                          className="remove-btn"
-                        >
-                          Remove
-                        </button>
-                      </div>
-                    ))}
-                  </div> */}
-
-                  {/* Work Experience Section */}
-                  {/* <div className="form-group">
-                    <div className="section-header">
-                      <h3 className="section-titles">Work Experience</h3>
-                      <button
-                        type="button"
-                        onClick={addWorkExperience}
-                        className="add-btn"
-                      >
-                        + Add Experience
-                      </button>
-                    </div>
-
-                    {workExperience.map((experience, index) => (
-                      <div key={index} className="dynamic-item">
-                        <div className="dynamic-item-content">
-                          <div className="form-row">
-                            <div className="form-group">
-                              <input
-                                type="text"
-                                placeholder="Job Title"
-                                value={experience.jobTitle}
-                                onChange={(e) =>
-                                  updateWorkExperience(
-                                    index,
-                                    "jobTitle",
-                                    e.target.value
-                                  )
-                                }
-                                className="form-input"
-                                required
-                              />
-                            </div>
-                            <div className="form-group">
-                              <input
-                                type="text"
-                                placeholder="Company"
-                                value={experience.company}
-                                onChange={(e) =>
-                                  updateWorkExperience(
-                                    index,
-                                    "company",
-                                    e.target.value
-                                  )
-                                }
-                                className="form-input"
-                              />
-                            </div>
-                          </div>
-                          <div className="form-row">
-                            <div className="form-group">
-                              <input
-                                type="date"
-                                placeholder="Start Date"
-                                value={experience.startDate}
-                                onChange={(e) =>
-                                  updateWorkExperience(
-                                    index,
-                                    "startDate",
-                                    e.target.value
-                                  )
-                                }
-                                className="form-input"
-                              />
-                            </div>
-                            <div className="form-group">
-                              <input
-                                type="date"
-                                placeholder="End Date"
-                                value={experience.endDate}
-                                onChange={(e) =>
-                                  updateWorkExperience(
-                                    index,
-                                    "endDate",
-                                    e.target.value
-                                  )
-                                }
-                                className="form-input"
-                                disabled={experience.isCurrent}
-                              />
-                            </div>
-                          </div>
-                          <div className="form-row">
-                            <div className="form-group">
-                              <input
-                                type="text"
-                                placeholder="Duration (e.g., 6 months)"
-                                value={experience.duration}
-                                onChange={(e) =>
-                                  updateWorkExperience(
-                                    index,
-                                    "duration",
-                                    e.target.value
-                                  )
-                                }
-                                className="form-input"
-                              />
-                            </div>
-                            <div className="form-group">
-                              <label className="custom-checkbox">
-                                <input
-                                  type="checkbox"
-                                  checked={experience.isCurrent}
-                                  onChange={(e) =>
-                                    updateWorkExperience(
-                                      index,
-                                      "isCurrent",
-                                      e.target.checked
-                                    )
-                                  }
-                                />
-                                <span className="checkbox-mark"></span>
-                                <span className="checkbox-label">
-                                  Current Job
-                                </span>
-                              </label>
-                            </div>
-                          </div>
-                          <div className="form-group">
-                            <textarea
-                              placeholder="Job description and responsibilities"
-                              value={experience.description}
-                              onChange={(e) =>
-                                updateWorkExperience(
-                                  index,
-                                  "description",
-                                  e.target.value
-                                )
-                              }
-                              className="form-input"
-                              rows="3"
-                              maxLength="300"
-                            />
-                          </div>
-                        </div>
-                        <button
-                          type="button"
-                          onClick={() => removeWorkExperience(index)}
-                          className="remove-btn"
-                        >
-                          Remove
-                        </button>
-                      </div>
-                    ))}
-                  </div> */}
-
-                  {/* Extracurricular Activities Section */}
                   {/* Extracurricular Activities Section */}
 <div className="form-group">
   <div className="section-header">
@@ -3360,133 +3010,6 @@ The more detailed you are, the better our System can match your courses!"
     </div>
   ))}
 </div>
-
-                  {/* <div className="form-group">
-                    <div className="section-header">
-                      <h3 className="section-titles">
-                        Extracurricular Activities
-                      </h3>
-                      <button
-                        type="button"
-                        onClick={addExtracurricularActivity}
-                        className="add-btn"
-                      >
-                        + Add Activity
-                      </button>
-                    </div>
-
-                    {extracurricularActivities.map((activity, index) => (
-                      <div key={index} className="dynamic-item">
-                        <div className="dynamic-item-content">
-                          <div className="form-row">
-                            <div className="form-group">
-                              <input
-                                type="text"
-                                placeholder="Activity Name"
-                                value={activity.activity}
-                                onChange={(e) =>
-                                  updateExtracurricularActivity(
-                                    index,
-                                    "activity",
-                                    e.target.value
-                                  )
-                                }
-                                className="form-input"
-                                required
-                              />
-                            </div>
-                            <div className="form-group">
-                              <input
-                                type="text"
-                                placeholder="Your Role"
-                                value={activity.role}
-                                onChange={(e) =>
-                                  updateExtracurricularActivity(
-                                    index,
-                                    "role",
-                                    e.target.value
-                                  )
-                                }
-                                className="form-input"
-                              />
-                            </div>
-                          </div>
-                          <div className="form-row">
-                            <div className="form-group">
-                              <input
-                                type="text"
-                                placeholder="Organization/Club"
-                                value={activity.organization}
-                                onChange={(e) =>
-                                  updateExtracurricularActivity(
-                                    index,
-                                    "organization",
-                                    e.target.value
-                                  )
-                                }
-                                className="form-input"
-                              />
-                            </div>
-                          </div>
-                          <div className="form-row">
-                            <div className="form-group">
-                              <input
-                                type="date"
-                                placeholder="Start Date"
-                                value={activity.startDate}
-                                onChange={(e) =>
-                                  updateExtracurricularActivity(
-                                    index,
-                                    "startDate",
-                                    e.target.value
-                                  )
-                                }
-                                className="form-input"
-                              />
-                            </div>
-                            <div className="form-group">
-                              <input
-                                type="date"
-                                placeholder="End Date"
-                                value={activity.endDate}
-                                onChange={(e) =>
-                                  updateExtracurricularActivity(
-                                    index,
-                                    "endDate",
-                                    e.target.value
-                                  )
-                                }
-                                className="form-input"
-                              />
-                            </div>
-                          </div>
-                          <div className="form-group">
-                            <textarea
-                              placeholder="Description of the activity and your contributions"
-                              value={activity.description}
-                              onChange={(e) =>
-                                updateExtracurricularActivity(
-                                  index,
-                                  "description",
-                                  e.target.value
-                                )
-                              }
-                              className="form-input"
-                              rows="3"
-                              maxLength="300"
-                            />
-                          </div>
-                        </div>
-                        <button
-                          type="button"
-                          onClick={() => removeExtracurricularActivity(index)}
-                          className="remove-btn"
-                        >
-                          Remove
-                        </button>
-                      </div>
-                    ))}
-                  </div> */}
 
                   {/* Faculty and Department Selection */}
                   <div className="form-grid">

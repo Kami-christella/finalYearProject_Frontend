@@ -213,34 +213,6 @@ const Assessment = () => {
     }
   };
 
-//   const loadSavedAnswer = () => {
-//     if (!currentQuestion) return;
-    
-//     const sectionName = assessmentSections[currentSection];
-//     let savedAnswers = {};
-    
-//     switch (sectionName) {
-//       case 'career':
-//         savedAnswers = careerTest;
-//         break;
-//       case 'skills':
-//         savedAnswers = skillsAssessment;
-//         break;
-//       case 'personality':
-//         savedAnswers = personalityAssessment;
-//         break;
-//     }
-    
-//     //setSelectedAnswer(savedAnswers[currentQuestion._id] || '');
-//     const saved = savedAnswers[currentQuestion._id];
-
-// if (currentQuestion.type === 'checkbox') {
-//   setSelectedAnswer(saved || []);
-// } else {
-//   setSelectedAnswer(saved || '');
-// }
-
-//   };
 
 const loadSavedAnswer = () => {
   if (!currentQuestion) return;
