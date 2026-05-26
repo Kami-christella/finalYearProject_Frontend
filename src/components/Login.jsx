@@ -310,8 +310,7 @@ const Login = () => {
           localStorage.setItem('profileId', data.profileId);
         }
         
-        console.log('✅ Login successful:', userData);
-        console.log('🔑 Token stored:', data.token);
+      
         
         Notify.success('Login successful! Redirecting...');
         
@@ -372,7 +371,7 @@ const Login = () => {
 
             <div className="form-group">
               <div className="input-wrapper">
-                <span className="input-icon">📧</span>
+                {/* <span className="input-icon">📧</span> */}
                 <input
                   id="email"
                   name="email"
@@ -388,7 +387,7 @@ const Login = () => {
 
             <div className="form-group">
               <div className="input-wrapper">
-                <span className="input-icon">🔒</span>
+                {/* <span className="input-icon">🔒</span> */}
                 <input
                   id="password"
                   name="password"

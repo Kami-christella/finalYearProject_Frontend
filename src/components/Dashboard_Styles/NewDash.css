@@ -1,5 +1,5 @@
 /* NewDash.css */
-
+/* #1B3058 */
 /* ── Layout wrapper ─────────────────────────────────── */
 .newdash-wrapper {
   display: flex;
@@ -102,7 +102,7 @@
 }
 
 .sidebar-item.active {
-  background-color: #2c5a99;
+  background-color: #1B3058;
   color: #fff;
 }
 

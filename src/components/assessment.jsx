@@ -580,40 +580,6 @@ const completeAssessment = async () => {
               <h2 className="question-text">{currentQuestion.question}</h2>
               
               <div className="answer-options">
-                {/* {currentQuestion.options && currentQuestion.options.map((option, index) => (
-                  <button
-                    key={index}
-                    onClick={() => handleAnswerSelect(option)}
-                    className={`answer-option ${selectedAnswer === option ? 'selected' : ''}`}
-                  >
-                 
-
-                    <div className="answer-options">
-  {currentQuestion.options.map((option, index) => {
-    const isChecked =
-      currentQuestion.type === 'checkbox'
-        ? selectedAnswer?.includes(option)
-        : selectedAnswer === option;
-
-    return (
-      <button
-        key={index}
-        onClick={() => handleAnswerSelect(option)}
-        className={`answer-option ${isChecked ? 'selected' : ''}`}
-      >
-        <div className={currentQuestion.type === 'checkbox' ? 'option-checkbox' : 'option-radio'}>
-          {isChecked && <div className="check-dot"></div>}
-        </div>
-
-        <span className="option-text">{option}</span>
-      </button>
-    );
-  })}
-</div>
-
-                    <span className="option-text">{option}</span>
-                  </button>
-                ))} */}
 
                 <div className="answer-options">
   {currentQuestion.options.map((option, index) => {

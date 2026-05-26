@@ -167,7 +167,7 @@ const Signup = () => {
             <div className="form-group">
               
               <div className="input-wrapper">
-                <span className="input-icon">👤</span>
+                {/* <span className="input-icon">👤</span> */}
                 <input
                   id="name"
                   name="name"
@@ -186,7 +186,7 @@ const Signup = () => {
                 Email Address
               </label> */}
               <div className="input-wrapper">
-                <span className="input-icon">📧</span>
+                {/* <span className="input-icon">📧</span> */}
                 <input
                   id="email"
                   name="email"
@@ -205,7 +205,7 @@ const Signup = () => {
                 Password
               </label> */}
               <div className="input-wrapper">
-                <span className="input-icon">🔒</span>
+                {/* <span className="input-icon">🔒</span> */}
                 <input
                   id="password"
                   name="password"
@@ -247,7 +247,7 @@ const Signup = () => {
                 Confirm Password
               </label> */}
               <div className="input-wrapper">
-                <span className="input-icon">🔐</span>
+                {/* <span className="input-icon">🔐</span> */}
                 <input
                   id="confirmPassword"
                   name="confirmPassword"
