@@ -545,7 +545,7 @@ const ComprehensiveDashboard = () => {
               className="action-btn recommend-btn"
               disabled={!hasAssessment || generatingRecommendations}
             >
-              <span className="btn-icon">🎯</span>
+              {/* <span className="btn-icon">🎯</span> */}
               {generatingRecommendations
                 ? "Generating..."
                 : "Generate Recommendations"}
