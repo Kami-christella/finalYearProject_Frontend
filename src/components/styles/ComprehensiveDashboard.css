@@ -42,16 +42,27 @@
 
 /* ── Container ──────────────────────────────────── */
 .comprehensive-dashboard-container {
-  width: 100%;
+  /* Match BookAppointment pattern — self-manages sidebar offset */
   margin-top: -35rem;
-  max-width: 100%;          /* never exceed parent width */
+  margin-left: 260px;
+  max-width: calc(100vw - 280px);
+  width: calc(100% - 260px);
   min-height: calc(100vh - 60px);
   background: var(--navy-mist);
   font-family: 'DM Sans', sans-serif;
   color: var(--gray-700);
   padding: 24px 24px 60px;
-  overflow-x: hidden;       /* clip anything that tries to bleed sideways */
+  overflow-x: hidden;
   box-sizing: border-box;
+}
+
+@media (max-width: 991.98px) {
+  .comprehensive-dashboard-container {
+    margin-left: 0;
+    max-width: 100vw;
+    width: 100%;
+    padding: 16px 14px 48px;
+  }
 }
 
 .dashboard-content {
@@ -141,7 +152,7 @@
   display: inline-flex;
   align-items: center;
   gap: 7px;
-  padding: 9px 30px;
+  padding: 9px 25px;
   border: none;
   border-radius: var(--radius);
   font-size: 13px;
