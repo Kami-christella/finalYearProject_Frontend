@@ -118,7 +118,7 @@
 }
 
 .sidebar-item:hover .sidebar-icon {
-  color: #2c5a99;
+  color: #1B3058;
 }
 
 .sidebar-label {
@@ -248,7 +248,7 @@
 /* ── Page content ───────────────────────────────────── */
 .newdash-content {
   flex: 1;
-  padding: 0;          /* let each child page control its own padding */
+  padding: 0;        
   overflow-y: auto;
   min-height: calc(100vh - 60px);
 }
